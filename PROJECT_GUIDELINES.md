@@ -12,7 +12,11 @@ Home Credit Group의 대출 신청/상환 이력 데이터를 기반으로, 대�
 
 ## 3. 데이터
 - 출처: Kaggle "Home Credit Default Risk" (2018)
-- **라이선스 재확인 필요**: AMEX 데이터(CC0)와 달리 이 대회 데이터의 정확한 라이선스/이용 범위는 아직 확인 전. Kaggle 대회 규정(Competition Rules) 페이지에서 재사용·재배포 조건을 Phase 1에서 반드시 확인하고, §4 "공개 범위" 원칙 적용 여부를 재검토한다.
+- **라이선스 확인 완료 (2026-08-22, Phase 1)** — AMEX(CC0)와 달리 **제한적**:
+  - Kaggle Data 탭의 License 필드: **"Subject to Competition Rules"** (별도 오픈 라이선스 없음)
+  - Competition Rules 원문(발췌): *"After your acceptance of these Rules, you may access and use the Competition Data only for the purposes of the Competition."* — 대회 목적 외 사용을 명시적으로 제한하는 조항
+  - *"No private sharing outside teams — Privately sharing code or data outside of teams is not permitted."*
+  - **사용자 결정 (2026-08-22)**: 기존 §4 공개 범위 원칙(원본 CSV 비공개, 코드/집계결과/문서만 공개) **그대로 유지**. 근거: (1) 이 데이터로 코드/분석 결과를 공개하는 포트폴리오·블로그 사례가 Kaggle Notebooks 등에 이미 다수 존재해 관행적으로 통용됨, (2) 원본 데이터 자체를 재배포하는 것이 규정상 가장 문제 소지가 큰 행위이므로 이것만 확실히 피하면(=원본 CSV·원본 고객 단위 데이터를 GitHub에 올리지 않음) 실질적 리스크가 낮다고 판단
 - 다중 테이블(관계형) 구조 — 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결됨:
 
   | 테이블 | 내용 | 키 |
