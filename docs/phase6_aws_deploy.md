@@ -30,15 +30,56 @@ CLI 자동화 없이 콘솔에서 직접 인스턴스를 만드실 거면 Access
 
 | 항목 | 값 | 근거 |
 |---|---|---|
-| 인스턴스 타입 | **t2.micro** (아래 §4 참고 — t3.micro 대비 메모리 차이 없음) | AWS 프리티어(12개월) 대상 |
-| AMI | Ubuntu 24.04 LTS (또는 22.04 LTS), 64비트 (Arm 또는 x86, 아래 참고) | Docker 설치가 쉽고 커뮤니티 자료 많음 |
-| 스토리지 | 8~10GB gp3 (프리티어 30GB까지 무료) | 우리 이미지(238MB) + OS + 여유분 감안하면 충분 |
-| 보안 그룹(인바운드) | SSH(22) — 내 IP만 / HTTP API 포트(8000 또는 80) — 0.0.0.0/0(공개 데모 목적) | 22번은 전체 공개하지 않는 게 안전 |
-| 키 페어 | 위 §1에서 발급받은 .pem | SSH 접속용 |
+| 인스턴스 타입 | **t2.micro** (§4 — t3.micro 대비 메모리 차이 없음) | AWS 프리티어(12개월) 대상 |
+| AMI | **`ami-05fa22e12f2cb12aa`** — Ubuntu 24.04 LTS(Noble) amd64, ap-northeast-2, 2026-07-14 빌드 | `aws ec2 describe-images`로 Canonical(099720109477) 공식 이미지 중 최신 버전을 직접 조회해 확인(추측 아님) |
+| 리전/AZ | `ap-northeast-2` (서울), AZ `ap-northeast-2a` | 이미 설정된 리전 |
+| VPC/서브넷 | 기본 VPC `vpc-05ea55000cfaa1752` / 서브넷 `subnet-0a4fbb138f8268018` | 계정에 이미 존재하는 default VPC 사용(추가 생성 불필요) |
+| 스토리지 | 8GB gp3 (AMI 기본값) | 프리티어 30GB까지 무료, 우리 이미지 238MB 감안하면 충분 |
+| 보안 그룹 | 신규 생성: `home-credit-sg` | 아래 인바운드 규칙 참고 |
+| 키 페어 | **`home-credit-key`** (사용자가 콘솔에서 생성 예정) | SSH 접속용 |
 
-**아키텍처 주의**: 이 Mac은 Apple Silicon(arm64)이라 로컬에서 빌드한 이미지는 arm64용입니다. EC2도 **Arm 기반 t2.micro/t3.micro는 없고(t2/t3 시리즈는 x86_64 전용)**, Arm 인스턴스를 쓰려면 t4g.micro(Graviton, 이것도 프리티어 대상)를 선택해야 합니다. 즉:
-- **t2.micro/t3.micro(x86_64)를 쓸 거면 EC2에서 이미지를 다시 빌드**해야 함(크로스 빌드 or 인스턴스에서 직접 `docker build`)
-- **t4g.micro(Arm)를 쓰면 로컬(Apple Silicon)과 아키텍처가 같아** 이미지를 그대로 옮겨도 됨 — 다만 사용자가 지정한 후보는 t2.micro/t3.micro이므로 이 문서는 그 전제로 진행하고, EC2 인스턴스 안에서 `docker build`로 새로 빌드하는 방식을 기본으로 제안(§3)
+**아키텍처**: 이 Mac은 Apple Silicon(arm64)이지만 t2.micro는 x86_64 전용이라, 위 AMI도 amd64로 골랐고 §3.2 계획대로 **인스턴스 안에서 직접 `docker build`**하므로 크로스 아키텍처 문제가 자동으로 해결됨.
+
+### 보안 그룹 인바운드 규칙
+
+| 포트 | 프로토콜 | 소스 | 용도 |
+|---|---|---|---|
+| 22 (SSH) | TCP | **`218.53.83.49/32`** (현재 이 세션에서 확인한 접속 IP) | SSH 접속. **주의**: IP가 유동적이면 나중에 접속 안 될 수 있어, 그때는 콘솔에서 이 규칙의 소스 IP를 현재 IP로 갱신 필요 |
+| 80 (HTTP) | TCP | `0.0.0.0/0` | 공개 API 데모 접근 (`docker run -p 80:8000`로 매핑 예정) |
+
+### 실행할 명령 (키 페어 생성 후, 아직 미실행 — 확인 후 진행)
+
+```bash
+# 1) 보안 그룹 생성
+aws ec2 create-security-group \
+  --group-name home-credit-sg \
+  --description "Home Credit API demo - SSH(my IP) + HTTP(public)" \
+  --vpc-id vpc-05ea55000cfaa1752 \
+  --region ap-northeast-2
+
+# 2) 인바운드 규칙 추가 (위에서 나온 SG ID로 치환)
+aws ec2 authorize-security-group-ingress \
+  --group-id <SG_ID> \
+  --protocol tcp --port 22 --cidr 218.53.83.49/32 \
+  --region ap-northeast-2
+
+aws ec2 authorize-security-group-ingress \
+  --group-id <SG_ID> \
+  --protocol tcp --port 80 --cidr 0.0.0.0/0 \
+  --region ap-northeast-2
+
+# 3) 인스턴스 생성 (키 페어는 콘솔에서 home-credit-key로 먼저 생성해두어야 함)
+aws ec2 run-instances \
+  --image-id ami-05fa22e12f2cb12aa \
+  --instance-type t2.micro \
+  --key-name home-credit-key \
+  --security-group-ids <SG_ID> \
+  --subnet-id subnet-0a4fbb138f8268018 \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=home-credit-api}]' \
+  --region ap-northeast-2
+```
+
+인스턴스가 뜨면 `aws ec2 describe-instances --filters "Name=tag:Name,Values=home-credit-api"`로 퍼블릭 IP를 확인해 `ssh -i home-credit-key.pem ubuntu@<퍼블릭IP>`로 접속 → §3의 Docker 설치/빌드/실행 순서대로 진행.
 
 ## 3. Docker 설치 + 이미지 배포 방법
 
