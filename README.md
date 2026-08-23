@@ -16,6 +16,15 @@ uvicorn app.main:app --reload
 
 브라우저에서 `http://127.0.0.1:8000/docs`로 Swagger UI 확인 가능.
 
+### Docker로 실행
+
+```bash
+docker build -t home-credit-api:latest .
+docker run -d -p 8000:8000 -v "$(pwd)/data:/app/data:ro" home-credit-api:latest
+```
+
+이미지 크기 약 238MB (서빙에 불필요한 scikit-learn/xgboost/matplotlib 등은 제외한 `requirements-serving.txt` 사용). `data/`는 이미지에 포함하지 않고 런타임에 볼륨으로 마운트 — 상세는 [docs/phase5_docker.md](docs/phase5_docker.md) 참고.
+
 ### 엔드포인트
 
 | 엔드포인트 | 용도 |

@@ -57,4 +57,4 @@ SHAP, FastAPI(서빙), Docker(패키징), pytest
 - Phase 8: 문서화 및 GitHub 포트폴리오 정리
 
 ## 7. 현재 상태
-Phase 1 시작 전 — 8개 CSV 반입 대기 중. 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
+**Phase 5(FastAPI 서빙 + Docker 패키징) 완료.** Phase 1(데이터 검증) ~ Phase 4(모델링·SHAP) 전부 완료, 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정. FastAPI 4개 엔드포인트 구현·로컬 uvicorn 테스트·Docker 이미지 빌드(238MB) 및 컨테이너 테스트까지 완료 — 상세는 `docs/phase1_data_validation.md` ~ `docs/phase5_docker.md` 참고. 다음: Phase 6(Render → AWS 배포). 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).

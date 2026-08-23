@@ -1,0 +1,13 @@
+data/
+archive/
+reports/
+docs/
+.git/
+.gitignore
+.DS_Store
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+README.md
+PROJECT_GUIDELINES.md
+requirements.txt
