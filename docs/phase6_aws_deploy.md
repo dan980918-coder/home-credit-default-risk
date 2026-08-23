@@ -43,7 +43,45 @@ MEM USAGE / LIMIT     MEM %
 
 컨테이너 자체는 200MB 안팎으로 로컬에서 `--memory=1g`로 근사했던 실측치(154~178MB)와 거의 일치 — **사전 검토가 정확했음이 실제 배포로 재확인됨.** 시스템 전체 여유(available)도 287MiB 남아 있어 t3.micro(1GiB)로 안정적으로 운영 가능.
 
-**퍼블릭 데모 URL**: `http://43.203.234.170:8000` (`/docs`에서 Swagger UI, `/predict/live`만 사용 가능)
+**퍼블릭 데모 URL**: `http://43.203.234.170:8000` (`/docs`에서 Swagger UI, `/predict/live`만 사용 가능) — ⚠️ 아래 §0.2에서 인스턴스를 stop했으므로 **현재는 접속 안 됨**
+
+## 0.2 인스턴스 중지 (2026-08-23) 및 재시작 방법
+
+프리티어 시간 관리를 위해 테스트 완료 후 인스턴스를 stop함(terminate 아님 — EBS 볼륨/설정은 그대로 보존, 과금은 중단됨). 상태:
+
+```
+$ aws ec2 stop-instances --instance-ids i-095d7fd112ba42311 --region ap-northeast-2
+$ aws ec2 describe-instances --instance-ids i-095d7fd112ba42311 ...
+stopped   (PublicIpAddress: None)
+```
+
+### 재시작 방법
+
+**1) 인스턴스 시작**
+```bash
+aws ec2 start-instances --instance-ids i-095d7fd112ba42311 --region ap-northeast-2
+aws ec2 wait instance-running --instance-ids i-095d7fd112ba42311 --region ap-northeast-2
+```
+
+**2) ⚠️ 퍼블릭 IP가 바뀝니다** — 이 인스턴스는 고정 IP(Elastic IP)를 안 붙였기 때문에, stop/start를 하면 **매번 새 퍼블릭 IP가 배정됨**(43.203.234.170은 더 이상 유효하지 않을 수 있음). 재시작 후 새 IP 확인:
+```bash
+aws ec2 describe-instances --instance-ids i-095d7fd112ba42311 --region ap-northeast-2 \
+  --query 'Reservations[0].Instances[0].PublicIpAddress' --output text
+```
+(데모 URL을 고정하고 싶으면 Elastic IP를 할당해 붙이는 방법이 있음 — 추후 필요시 검토)
+
+**3) 컨테이너 재시작** — 이미지는 인스턴스 안에 그대로 남아있으므로 다시 빌드할 필요 없이 바로 실행 가능:
+```bash
+ssh -i home-credit-key.pem ubuntu@<새 퍼블릭 IP>
+sudo docker start home-credit-api   # 기존 컨테이너 재사용 (docker run 다시 안 해도 됨)
+# 만약 컨테이너/이미지가 없다면(예: 인스턴스를 새로 만든 경우):
+#   cd ~/home-credit-default-risk && sudo docker build -t home-credit-api:latest .
+#   sudo docker run -d --name home-credit-api -p 8000:8000 -e PUBLIC_DEPLOYMENT=true --restart unless-stopped home-credit-api:latest
+```
+
+**4) 보안그룹**: `sg-0d3618d0bb17ca9d5`의 SSH(22) 인바운드가 특정 IP(`218.53.83.49/32`)로 제한돼 있으므로, 재시작 시점에 내 IP가 바뀌었다면 콘솔에서 이 규칙을 현재 IP로 갱신해야 SSH 접속 가능(HTTP 8000/80 규칙은 계속 공개라 그대로 사용 가능).
+
+**5) 완전히 정리하고 싶을 때(더 이상 안 쓸 경우)**: `aws ec2 terminate-instances --instance-ids i-095d7fd112ba42311` — 이건 되돌릴 수 없음(EBS 볼륨도 함께 삭제, DeleteOnTermination=true였음).
 
 ## 1. AWS CLI / 자격증명 상태
 
