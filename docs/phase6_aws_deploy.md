@@ -14,11 +14,36 @@ Render 대신 AWS EC2 프리티어로 직접 배포하기로 결정. `/predict`(
 
 **계획과 달라진 점**: `t2.micro`로 생성 시도했으나 AWS가 `InvalidParameterCombination: The specified instance type is not eligible for Free Tier`로 거부함 — 이 계정(2026년 생성)은 `t2.micro`가 프리티어 대상이 아니고, `describe-instance-types --filters Name=free-tier-eligible,Values=true`로 확인한 실제 프리티어 대상은 `t3.micro`/`t4g.micro`/`t3.small`/`t4g.small` 등. 처음에 사용자가 제시한 두 후보(t2.micro 또는 t3.micro) 중 **t3.micro로 전환해 생성** — §4에서 이미 "t2.micro와 t3.micro는 RAM 동일(1GiB)"임을 실측 확인해뒀으므로 메모리 결론은 그대로 유효함.
 
-다음 단계: SSH 접속 → Docker 설치 → git clone → docker build → docker run (§3 참고).
+## 0.1 실제 배포 완료 및 테스트 결과 (2026-08-23)
 
-```bash
-ssh -i home-credit-key.pem ubuntu@43.203.234.170
+**배포 과정에서 하나 더 달라진 점**: 저장소가 비공개(private)라 인스턴스에서 익명 `git clone`이 `fatal: could not read Username`으로 실패함 — GitHub 토큰을 인스턴스에 심는 대신(자격증명을 다루지 않는다는 원칙 유지), **로컬 작업 트리를 `rsync`로 직접 전송**해 빌드에 필요한 파일(`app/`, `scripts/`, `models/`, `Dockerfile`, `.dockerignore`, `requirements-serving.txt`)만 옮김. 결과적으로 동일한 이미지가 빌드됨(git clone과 기능적으로 동일).
+
+진행: `apt-get install docker.io` → `rsync`로 소스 전송 → `docker build` → `docker run -p 8000:8000 -e PUBLIC_DEPLOYMENT=true`. (사용자 요청으로 포트는 80 대신 8000 직접 사용 — 보안그룹에 8000 인바운드 0.0.0.0/0 추가로 열어둠)
+
+### 외부(퍼블릭 IP)에서 실제 테스트
+
+| 엔드포인트 | 결과 |
+|---|---|
+| `GET http://43.203.234.170:8000/health` | 200, `{"status":"ok"}` |
+| `GET .../model/info` | 200, **`predict_lookup_enabled: false`** 확인 |
+| `POST .../predict/live` (bureau 이력 포함) | 200, SHAP 상위 요인 포함 정상 응답 |
+| `POST .../predict` (SK_ID_CURR=100001) | **403** — "disabled in public deployments..." 메시지 정상 |
+
+### 실측 메모리 (t3.micro, 실제 인스턴스)
+
 ```
+$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           911Mi       623Mi        62Mi       2.8Mi       405Mi       287Mi
+
+$ docker stats home-credit-api --no-stream
+MEM USAGE / LIMIT     MEM %
+199.9MiB / 911.3MiB   21.93%
+```
+
+컨테이너 자체는 200MB 안팎으로 로컬에서 `--memory=1g`로 근사했던 실측치(154~178MB)와 거의 일치 — **사전 검토가 정확했음이 실제 배포로 재확인됨.** 시스템 전체 여유(available)도 287MiB 남아 있어 t3.micro(1GiB)로 안정적으로 운영 가능.
+
+**퍼블릭 데모 URL**: `http://43.203.234.170:8000` (`/docs`에서 Swagger UI, `/predict/live`만 사용 가능)
 
 ## 1. AWS CLI / 자격증명 상태
 
