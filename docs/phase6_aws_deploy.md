@@ -1,6 +1,24 @@
-# Phase 6: AWS EC2 프리티어 배포 계획 (착수 전, 확인 필요)
+# Phase 6: AWS EC2 프리티어 배포 계획
 
 Render 대신 AWS EC2 프리티어로 직접 배포하기로 결정. `/predict`(사전계산 조회) 제외 원칙은 배포처와 무관하게 그대로 적용.
+
+## 0. 인스턴스 생성 완료 (2026-08-23)
+
+| 항목 | 값 |
+|---|---|
+| Instance ID | `i-095d7fd112ba42311` |
+| 상태 | **running** |
+| 퍼블릭 IP | **`43.203.234.170`** |
+| 인스턴스 타입 | **`t3.micro`** (계획은 t2.micro였으나 아래 참고) |
+| 보안 그룹 | `sg-0d3618d0bb17ca9d5` (home-credit-sg) |
+
+**계획과 달라진 점**: `t2.micro`로 생성 시도했으나 AWS가 `InvalidParameterCombination: The specified instance type is not eligible for Free Tier`로 거부함 — 이 계정(2026년 생성)은 `t2.micro`가 프리티어 대상이 아니고, `describe-instance-types --filters Name=free-tier-eligible,Values=true`로 확인한 실제 프리티어 대상은 `t3.micro`/`t4g.micro`/`t3.small`/`t4g.small` 등. 처음에 사용자가 제시한 두 후보(t2.micro 또는 t3.micro) 중 **t3.micro로 전환해 생성** — §4에서 이미 "t2.micro와 t3.micro는 RAM 동일(1GiB)"임을 실측 확인해뒀으므로 메모리 결론은 그대로 유효함.
+
+다음 단계: SSH 접속 → Docker 설치 → git clone → docker build → docker run (§3 참고).
+
+```bash
+ssh -i home-credit-key.pem ubuntu@43.203.234.170
+```
 
 ## 1. AWS CLI / 자격증명 상태
 
