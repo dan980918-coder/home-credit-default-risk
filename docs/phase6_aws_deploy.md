@@ -53,14 +53,32 @@ sudo usermod -aG docker $USER   # 재로그인 후 sudo 없이 docker 명령 가
 
 (Colima는 로컬 macOS에 Docker Desktop 없이 컨테이너를 돌리기 위한 것이었고, EC2는 Linux라 처음부터 진짜 Docker를 바로 설치하면 됨 — Colima 불필요)
 
-### 3.2 이미지를 인스턴스에 올리는 방법 — 두 후보
+### 3.2 이미지를 인스턴스에 올리는 방법 — **A안(인스턴스에서 직접 빌드)으로 확정**
 
 | 후보 | 방법 | 장단점 |
 |---|---|---|
-| **A. 인스턴스에서 직접 빌드 (제안)** | `git clone` 저장소 → `docker build` | 레지스트리 계정/인증 불필요, 가장 단순. 위 아키텍처 이슈도 자동 해결(인스턴스의 실제 아키텍처로 빌드됨). 단, `data/raw/*.csv`가 git에 없으므로 **`/predict/live`가 요구하는 스키마 정보를 어떻게 확보할지 별도 해결 필요**(§5) |
-| B. Docker Hub/ECR에 push 후 pull | 로컬에서 빌드 → 레지스트리 push → 인스턴스에서 pull | 레지스트리 계정 필요(Docker Hub 무료 계정 또는 AWS ECR), 아키텍처 불일치 시 `--platform` 멀티아치 빌드 필요해 더 복잡 |
+| **A. 인스턴스에서 직접 빌드 (확정)** | `git clone` 저장소 → `docker build` | 레지스트리 계정/인증 불필요, 가장 단순. 아키텍처 이슈도 자동 해결(인스턴스의 실제 아키텍처로 빌드됨). §5에서 `data/` 의존성을 제거해뒀기 때문에 **git clone만으로 완결** — 원본 데이터를 별도로 옮길 필요가 전혀 없음 |
+| B. Docker Hub/ECR에 push 후 pull | 로컬에서 빌드 → 레지스트리 push → 인스턴스에서 pull | 레지스트리 계정 필요, 아키텍처 불일치 시 `--platform` 멀티아치 빌드 필요해 더 복잡 — A안이 더 간단해서 채택 안 함 |
 
-**제안: A안.** `git clone` 후 `docker build -t home-credit-api .` → `docker run -d -p 80:8000 home-credit-api`.
+**실행 명령 (SSH 접속 후, EC2 인스턴스 안에서)**:
+
+```bash
+git clone https://github.com/dan980918-coder/home-credit-default-risk.git
+cd home-credit-default-risk
+docker build -t home-credit-api:latest .
+
+# 공개 배포이므로 PUBLIC_DEPLOYMENT=true 필수 (/predict 비활성화)
+# data/ 볼륨 마운트는 불필요 (모델은 이미지에 포함, /predict/live는 스키마 JSON만 사용)
+docker run -d --name home-credit-api \
+  -p 80:8000 \
+  -e PUBLIC_DEPLOYMENT=true \
+  --restart unless-stopped \
+  home-credit-api:latest
+
+# 확인
+curl http://localhost/health
+curl http://localhost/model/info   # predict_lookup_enabled: false 여야 정상
+```
 
 ## 4. 메모리 검토: t2.micro(1GiB)에서 버틸 수 있는가 — **실측 완료**
 
@@ -78,10 +96,11 @@ sudo usermod -aG docker $USER   # 재로그인 후 sudo 없이 docker 명령 가
 
 → **t2.micro로 진행해도 무방**, t3.micro로 바꿀 이유는 메모리 때문이 아니라면 딱히 없음(원한다면 vCPU 여유·버스트 정책 차이로 t3.micro를 선택할 수는 있음).
 
-## 5. 아직 해결 안 된 것 (배포 전 처리 필요)
+## 5. 반영 완료 (2026-08-23)
 
-- **`/predict` 공개 제외를 코드로 어떻게 구현할지**: 아직 미착수. 제안 — 환경변수(예: `PUBLIC_DEPLOYMENT=true`)로 `/predict` 라우트를 조건부 비활성화
-- **`/predict/live`의 데이터 의존성 제거**: `app/feature_live.py`가 `data/raw/*.csv`의 스키마(컬럼명·타입)만 필요로 함 — 이걸 작은 JSON으로 미리 뽑아 git에 커밋해두면 인스턴스에 데이터 자체가 전혀 필요 없어짐(A안 빌드 방식과도 맞물림)
-- **Dockerfile CMD의 PORT 하드코딩**: EC2는 Render처럼 PORT를 자동 주입하진 않지만(직접 `docker run -p`로 포트 매핑하므로), 그대로 8000 고정도 무방 — 이 항목은 EC2 배포엔 필수는 아님(Render 때와 달리)
+- **`/predict` 공개 제외**: `app/main.py`에 `PUBLIC_DEPLOYMENT` 환경변수 추가. `true`면 `/predict`가 403(명확한 사유 메시지 포함)을 반환하고, `/predict/live`·`/health`·`/model/info`는 그대로 동작. `/model/info` 응답에 `predict_lookup_enabled` 필드로 현재 상태 노출.
+- **`/predict/live`의 데이터 의존성 제거**: `scripts/extract_csv_schemas.py`로 7개 원본 CSV의 컬럼명·타입만(실데이터 0건) `models/csv_schemas.json`(12KB)에 미리 추출해 git에 커밋. `app/feature_live.py`가 더는 `data/raw/*.csv`를 스캔하지 않음.
+- **로컬 검증**: `data/` 디렉터리를 통째로 이름 바꿔 없앤 상태 + `PUBLIC_DEPLOYMENT=true`로 실제 배포 환경을 그대로 재현해 `/health`(200), `/predict`(403), `/predict/live`(200, bureau 이력 포함 정상 처리)까지 전부 확인함 — **위 §3.2의 `git clone`만으로 배포가 완결된다는 것이 실증됨**.
+- **Dockerfile CMD의 PORT 하드코딩**: EC2는 `docker run -p 80:8000`으로 직접 포트 매핑하므로 Render와 달리 PORT 환경변수 대응이 필수가 아니라서 그대로 둠.
 
-이 두 가지(§5의 앞 두 항목)를 지금 반영해도 될까요? 승인해주시면 코드 변경 + AWS 콘솔에서 인스턴스 생성 이후 실행할 정확한 명령어 스크립트까지 준비하겠습니다.
+남은 것은 §1의 자격증명 발급과 실제 인스턴스 생성/배포 실행뿐입니다.
