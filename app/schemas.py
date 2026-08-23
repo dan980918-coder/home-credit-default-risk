@@ -16,6 +16,7 @@ class ModelInfoResponse(BaseModel):
     validation_scheme: str
     feature_count: int
     shap_explanation: bool = True
+    predict_lookup_enabled: bool
     endpoint_guide: dict[str, str] = Field(default_factory=lambda: {
         "/predict": "기존 학습 데이터(application_train/test)에 있던 고객을 SK_ID_CURR으로 조회해 예측 — 사전계산된 feature 사용, 빠름",
         "/predict/live": "신규 고객(학습 데이터에 없는 고객)을 위한 실시간 집계 데모 — 원본 필드를 입력받아 그 자리에서 Lean(A) feature를 계산 후 예측",
