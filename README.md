@@ -2,7 +2,7 @@
 
 대출 채무불이행(연체) 예측 포트폴리오 프로젝트. 진행 원칙과 로드맵은 [PROJECT_GUIDELINES.md](PROJECT_GUIDELINES.md) 참고.
 
-현재 상태: **Phase 5(FastAPI 서빙) 구현 완료**. 최종 모델: **Lean(A) + LightGBM (검증 AUC 0.7825)** — 상세는 [docs/phase4_modeling.md](docs/phase4_modeling.md), 서빙 API 스펙은 [docs/phase5_api_spec.md](docs/phase5_api_spec.md) 참고.
+현재 상태: **Phase 7(모니터링 대시보드) 구현 완료**. 최종 모델: **Lean(A) + LightGBM (검증 AUC 0.7825)** — 상세는 [docs/phase4_modeling.md](docs/phase4_modeling.md), 서빙 API 스펙은 [docs/phase5_api_spec.md](docs/phase5_api_spec.md), 모니터링 대시보드는 [docs/phase7_monitoring.md](docs/phase7_monitoring.md) 참고.
 
 이전에 진행하던 AMEX Default Prediction 기반 버전은 `archive/amex/`에 보존돼 있습니다 (참고용, 현재 로드맵과는 무관).
 
@@ -43,3 +43,12 @@ docker run -d -p 8000:8000 -v "$(pwd)/data:/app/data:ro" home-credit-api:latest
 - 따라서 **이 서빙 모델 자체의 held-out 성능은 별도로 측정되지 않았습니다** — 0.7825는 "이 정도 성능을 내는 방법론으로 학습했다"는 근거로 인용하는 것이며, 서빙 모델의 정확한 성능 보증치가 아닙니다.
 
 상세 구현 노트는 [docs/phase5_serving.md](docs/phase5_serving.md) 참고.
+
+## 모니터링 대시보드 실행
+
+```bash
+python3 scripts/train_monitoring_model.py   # held-out 모델 학습 (최초 1회)
+streamlit run dashboard/monitoring_dashboard.py
+```
+
+실제 운영 로그가 없어 `application_train`을 배치로 나눠 "시간에 따라 데이터가 들어온다"를 시뮬레이션합니다. 무작위 배치(정상 상태 대조군)와 의도적 드리프트 주입(synthetic) 두 모드를 토글로 제공하고, PSI/KS 기반 drift 지표와 배치별 실제 AUC를 추적합니다. 상세는 [docs/phase7_monitoring.md](docs/phase7_monitoring.md) 참고.
