@@ -1,6 +1,6 @@
 # Phase 6: AWS EC2 프리티어 배포 계획
 
-Render 대신 AWS EC2 프리티어로 직접 배포하기로 결정. `/predict`(사전계산 조회) 제외 원칙은 배포처와 무관하게 그대로 적용.
+Render 대신 AWS EC2 프리티어로 직접 배포하기로 결정(Render 검토 당시 계획: [phase6_deploy_plan.md](phase6_deploy_plan.md)). `/predict`(사전계산 조회) 제외 원칙은 배포처와 무관하게 그대로 적용.
 
 ## 0. 인스턴스 생성 완료 (2026-08-23)
 

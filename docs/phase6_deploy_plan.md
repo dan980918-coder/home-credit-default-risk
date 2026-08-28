@@ -1,6 +1,8 @@
-# Phase 6: Render 배포 계획 (착수 전, 확인 필요)
+# Phase 6: Render 배포 계획 (미채택 — AWS EC2로 전환)
 
-목표: GitHub 저장소 연결 → Render가 `Dockerfile` 기반으로 자동 빌드/배포. **이 문서는 계획이며, 아직 실제 배포는 진행하지 않았습니다.**
+> ⚠️ **실제로는 Render가 아니라 AWS EC2로 배포했습니다.** 이 문서는 Render를 검토하던 단계의 계획 원본이며(의사결정 기록 보존 목적), 실제 배포 내역은 [phase6_aws_deploy.md](phase6_aws_deploy.md) 참고. 다만 여기서 내린 핵심 결정 — **`/predict`를 공개 배포에서 제외**(라이선스 리스크 회피) — 은 배포처와 무관하게 그대로 AWS 배포에도 적용됨.
+
+목표(당시): GitHub 저장소 연결 → Render가 `Dockerfile` 기반으로 자동 빌드/배포.
 
 ## ⚠️ 가장 중요한 결정: `/predict`(사전계산 조회)를 공개 배포에 포함할지
 
