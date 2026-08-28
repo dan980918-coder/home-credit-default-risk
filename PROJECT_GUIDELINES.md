@@ -57,4 +57,4 @@ SHAP, FastAPI(서빙), Docker(패키징), pytest
 - Phase 8: 문서화 및 GitHub 포트폴리오 정리
 
 ## 7. 현재 상태
-**Phase 7(모니터링 대시보드) 완료.** Phase 1(데이터 검증) ~ Phase 6(AWS EC2 배포) 전부 완료, 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정. FastAPI 서빙 + Docker 패키징 + AWS t3.micro 배포·검증(현재 인스턴스는 stop 상태) 완료. Streamlit 모니터링 대시보드(PSI/KS drift 지표, 무작위/synthetic 배치 시뮬레이션, held-out AUC 추적)까지 구현 — 상세는 `docs/phase1_data_validation.md` ~ `docs/phase7_monitoring.md` 참고. 다음: Phase 8(문서화 및 GitHub 포트폴리오 정리). 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
+**Phase 8(문서화 및 GitHub 포트폴리오 정리) 완료 — 전체 로드맵(Phase 1~8) 종료.** 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정, EDA/모델링/SHAP/FastAPI 서빙/Docker/AWS EC2 배포/Streamlit 모니터링까지 전 과정 구현·문서화 완료. README.md 최종본 정리, 계획 문서에 실제 구현 결과로 연결되는 교차 참조 추가, `archive/amex/`에 안내 README 추가. **GitHub 저장소를 공개(public)로 전환**(전체 커밋 히스토리에 원본 데이터·자격증명·대용량 파일이 한 번도 포함된 적 없음을 확인 후 진행) — https://github.com/dan980918-coder/home-credit-default-risk . 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
