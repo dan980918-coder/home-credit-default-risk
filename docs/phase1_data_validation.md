@@ -56,7 +56,7 @@
 
 ## 5. 라이선스 확인
 
-Kaggle Competition Rules 확인 완료. PROJECT_GUIDELINES.md §3(데이터), §4(공개 범위 원칙) 참고.
+Kaggle Competition Rules 확인 완료. PROJECT_GUIDELINES.md §3(데이터, 공개 범위 원칙 포함) 참고.
 
 ## 다음: 조인/집계 계획 (후보만 제시, 미착수)
 

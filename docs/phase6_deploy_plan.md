@@ -9,7 +9,7 @@
 로컬/컨테이너 테스트 때는 문제없었지만, **인터넷에 공개되는 서비스로 올리는 순간 상황이 달라집니다.**
 
 - `/predict`는 `SK_ID_CURR`만 입력하면 `train/test_features_leanA.parquet`에서 **실제 고객의 원본에 가까운 feature 값**(소득, 대출액, 생년월일 기반 나이 등)을 조회해 `top_factors.feature_value`로 그대로 응답에 실어 보냅니다.
-- Phase 1에서 확인한 Kaggle 대회 규정: *"you may access and use the Competition Data only for the purposes of the Competition"*, *"No private sharing outside teams"*. PROJECT_GUIDELINES.md §4는 "원본 데이터는 비공개, 코드/집계결과만 공개"로 정했는데, **`/predict`를 공개 배포하면 사실상 SK_ID_CURR을 아는 누구나 개별 고객의 데이터를 조회할 수 있는 통로가 생겨** 이 원칙과 정면으로 부딪힙니다. `train_features_leanA.parquet`은 "집계결과"라기보다 고객 단위 원본에 파생 feature를 얹은 것에 가까워서, §4의 "집계결과는 공개 가능" 예외로 보기 어렵다고 판단했습니다.
+- Phase 1에서 확인한 Kaggle 대회 규정: *"you may access and use the Competition Data only for the purposes of the Competition"*, *"No private sharing outside teams"*. PROJECT_GUIDELINES.md §3은 "원본 데이터는 비공개, 코드/집계결과만 공개"로 정했는데, **`/predict`를 공개 배포하면 사실상 SK_ID_CURR을 아는 누구나 개별 고객의 데이터를 조회할 수 있는 통로가 생겨** 이 원칙과 정면으로 부딪힙니다. `train_features_leanA.parquet`은 "집계결과"라기보다 고객 단위 원본에 파생 feature를 얹은 것에 가까워서, §3의 "집계결과는 공개 가능" 예외로 보기 어렵다고 판단했습니다.
 
 ### 후보
 

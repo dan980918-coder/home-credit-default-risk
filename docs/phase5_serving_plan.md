@@ -2,7 +2,7 @@
 
 > ✅ **아래 2.1~2.3 전부 결정 완료(A+C 병행 / 전체 재학습 / SHAP 상위 5개 포함)하고 구현까지 끝남.** 이 문서는 의사결정 기록 보존 목적으로 원본 그대로 둠 — 실제 구현 결과는 [phase5_serving.md](phase5_serving.md), API 스펙은 [phase5_api_spec.md](phase5_api_spec.md), Docker는 [phase5_docker.md](phase5_docker.md) 참고.
 
-최종 확정 모델: **Lean(A) + LightGBM (AUC 0.7825)**. 이 문서는 실제 구현 전 설계 후보를 정리한 것 — PROJECT_GUIDELINES.md §4 원칙에 따라 중요 결정은 후보만 제시하고 착수하지 않음.
+최종 확정 모델: **Lean(A) + LightGBM (AUC 0.7825)**. 이 문서는 실제 구현 전 설계 후보를 정리한 것 — 중요 결정은 후보만 제시하고 사용자 선택 후 착수하는 방식에 따라 이 시점엔 착수하지 않음.
 
 ## 1. 구현 범위 (제안)
 
@@ -38,7 +38,7 @@ Phase 4에서 쓴 모델은 train의 80%로만 학습(20%는 검증용). 서빙 
 - **포함 시 장점**: "왜 이 고객이 고위험으로 분류됐는지" 상위 요인을 응답에 같이 줄 수 있음 — 신용평가 모델에서 설명가능성(explainability)은 실무 적용 시 중요한 요구사항이므로 이를 보여주는 강력한 차별점. 단, 요청마다 SHAP 계산이 들어가면 응답 속도가 느려짐(LightGBM TreeExplainer는 빠른 편이라 실사용엔 큰 무리 없을 것으로 예상)
 - **제안**: 기본 `/predict` 응답에 상위 5개 SHAP 요인(변수명+기여방향)을 포함
 
-### 2.4 배포 목표 (참고, PROJECT_GUIDELINES 로드맵 §6 그대로)
+### 2.4 배포 목표 (참고, PROJECT_GUIDELINES Phase 진행 경과 §5 그대로)
 
 Phase 5는 FastAPI+Docker까지, 실제 배포(Render→AWS)는 Phase 6에서 별도 진행.
 

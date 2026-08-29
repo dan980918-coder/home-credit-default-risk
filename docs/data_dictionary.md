@@ -1,6 +1,6 @@
 # 데이터 딕셔너리 (data/raw/ 8개 테이블)
 
-`data/raw/` 원본 CSV를 DuckDB로 직접 스캔해 생성한 컬럼별 통계 요약. 원본 데이터 자체는 GitHub에 포함하지 않으며(§4), 이 문서는 집계 결과만 담는다.
+`data/raw/` 원본 CSV를 DuckDB로 직접 스캔해 생성한 컬럼별 통계 요약. 원본 데이터 자체는 GitHub에 포함하지 않으며(§3), 이 문서는 집계 결과만 담는다.
 
 - 카디널리티는 `COUNT(DISTINCT ...)`로 정확히 계산한 값
 - median은 `SUMMARIZE`의 q50(근사 분위수) 값
