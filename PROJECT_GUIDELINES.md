@@ -11,23 +11,18 @@ Home Credit Group의 대출 신청/상환 이력 데이터를 기반으로, 대�
 
 ## 3. 데이터
 - 출처: Kaggle "Home Credit Default Risk" (2018)
-- **라이선스 확인 완료 (2026-08-22, Phase 1)** — AMEX(CC0)와 달리 **제한적**:
-  - Kaggle Data 탭의 License 필드: **"Subject to Competition Rules"** (별도 오픈 라이선스 없음)
-  - Competition Rules 원문(발췌): *"After your acceptance of these Rules, you may access and use the Competition Data only for the purposes of the Competition."* — 대회 목적 외 사용을 명시적으로 제한하는 조항
-  - *"No private sharing outside teams — Privately sharing code or data outside of teams is not permitted."*
-  - **사용자 결정 (2026-08-22)**: 기존 §4 공개 범위 원칙(원본 CSV 비공개, 코드/집계결과/문서만 공개) **그대로 유지**. 근거: (1) 이 데이터로 코드/분석 결과를 공개하는 포트폴리오·블로그 사례가 Kaggle Notebooks 등에 이미 다수 존재해 관행적으로 통용됨, (2) 원본 데이터 자체를 재배포하는 것이 규정상 가장 문제 소지가 큰 행위이므로 이것만 확실히 피하면(=원본 CSV·원본 고객 단위 데이터를 GitHub에 올리지 않음) 실질적 리스크가 낮다고 판단
 - 다중 테이블(관계형) 구조 — 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결됨:
 
-  | 테이블 | 내용 | 키 |
-  |---|---|---|
-  | `application_train.csv` | 대출 신청 정보 + 정답 라벨(`TARGET`) | `SK_ID_CURR` (PK) |
-  | `application_test.csv` | 대출 신청 정보 (라벨 없음) | `SK_ID_CURR` (PK) |
-  | `bureau.csv` | 타 금융기관에 보고된 과거/현재 신용 이력 | `SK_ID_CURR` → 연결, `SK_ID_BUREAU` (PK) |
-  | `bureau_balance.csv` | `bureau`의 월별 잔액 스냅샷 | `SK_ID_BUREAU` → 연결 |
-  | `previous_application.csv` | Home Credit 자체 과거 대출 신청 이력 | `SK_ID_CURR` → 연결, `SK_ID_PREV` (PK) |
-  | `credit_card_balance.csv` | 과거 Home Credit 신용카드의 월별 잔액 | `SK_ID_PREV` → 연결 |
-  | `POS_CASH_balance.csv` | 과거 POS/현금 대출의 월별 상태 | `SK_ID_PREV` → 연결 |
-  | `installments_payments.csv` | 과거 대출 상환 이력(예정 대비 실제) | `SK_ID_PREV` → 연결 |
+  | 테이블 | 내용 | 행 수 | 컬럼 수 | 키 |
+  |---|---|---|---|---|
+  | `application_train.csv` | 대출 신청 정보 + 정답 라벨(`TARGET`) | 307,511 | 122 | `SK_ID_CURR` (PK) |
+  | `application_test.csv` | 대출 신청 정보 (라벨 없음) | 48,744 | 121 | `SK_ID_CURR` (PK) |
+  | `bureau.csv` | 타 금융기관에 보고된 과거/현재 신용 이력 | 1,716,428 | 17 | `SK_ID_CURR` → 연결, `SK_ID_BUREAU` (PK) |
+  | `bureau_balance.csv` | `bureau`의 월별 잔액 스냅샷 | 27,299,925 | 3 | `SK_ID_BUREAU` → 연결 |
+  | `previous_application.csv` | Home Credit 자체 과거 대출 신청 이력 | 1,670,214 | 37 | `SK_ID_CURR` → 연결, `SK_ID_PREV` (PK) |
+  | `credit_card_balance.csv` | 과거 Home Credit 신용카드의 월별 잔액 | 3,840,312 | 23 | `SK_ID_PREV` → 연결 |
+  | `POS_CASH_balance.csv` | 과거 POS/현금 대출의 월별 상태 | 10,001,358 | 8 | `SK_ID_PREV` → 연결 |
+  | `installments_payments.csv` | 과거 대출 상환 이력(예정 대비 실제) | 13,605,401 | 8 | `SK_ID_PREV` → 연결 |
 
   조인 구조 요약: `application_train/test`(SK_ID_CURR 기준) ← `bureau`(SK_ID_CURR) ← `bureau_balance`(SK_ID_BUREAU) / `application_train/test` ← `previous_application`(SK_ID_CURR, SK_ID_PREV 발급) ← `credit_card_balance`·`POS_CASH_balance`·`installments_payments`(SK_ID_PREV 기준). 즉 SK_ID_CURR이 최상위 키, SK_ID_PREV/SK_ID_BUREAU는 하위 이력 테이블을 연결하는 중간 키.
 
@@ -39,7 +34,7 @@ Home Credit Group의 대출 신청/상환 이력 데이터를 기반으로, 대�
 - **Phase 단위 진행**: Phase마다 작업을 끊고, 매 Phase 종료 시 커밋/push하며 중간 결과·diff를 사용자에게 검토받는다. 사용자 검토 없이 다음 Phase로 넘어가지 않는다.
 - **판단 필요 이슈 처리 방식**: 구조적 중단 조건이 아닌 전처리/정제성 이슈는 즉시 멈추지 않고 합리적 기본값으로 처리한 뒤 `docs/decisions_pending_review.md`에 계속 기록하고, 나중에 한 번에 몰아서 검토한다. 단, 이후 단계 성립 여부에 직결되는 중대한 결정은 즉시 확인받는다.
 - **데이터 누수 방지**: 예측 시점(대출 심사 시점) 이후에 발생하는 정보는 feature에서 제외한다.
-- **공개 범위**: 원본 대용량 데이터·고객별 원본 ID는 GitHub에 공개하지 않는다. 코드/집계결과/모델평가/문서만 공개한다. (§3의 라이선스 재확인 결과에 따라 추가 제약이 생길 수 있음)
+- **공개 범위**: 원본 대용량 데이터·고객별 원본 ID는 GitHub에 공개하지 않는다. 코드/집계결과/모델평가/문서만 공개한다.
 
 ## 5. 기술 스택 (예정)
 Python, Pandas/Polars, DuckDB 또는 Parquet 직접 처리, scikit-learn/XGBoost/LightGBM,

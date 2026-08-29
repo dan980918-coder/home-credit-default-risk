@@ -79,4 +79,4 @@ streamlit run dashboard/monitoring_dashboard.py
 
 ## 데이터 및 라이선스 안내
 
-Kaggle "Home Credit Default Risk"(2018) 데이터를 사용했습니다. 대회 규정(Competition Rules)상 데이터를 "대회 목적 외로 사용하지 말 것", "팀 외부 비공개 공유 금지" 조항이 있어(자세한 확인 경위는 [phase1_data_validation.md](docs/phase1_data_validation.md) 참고), **이 저장소에는 원본 CSV·고객 단위 원본 데이터를 포함하지 않습니다**(`.gitignore`로 `data/` 전체 제외). 공개하는 것은 코드·집계 결과·모델 평가·문서뿐이며, 배포된 API(Phase 6)에서도 개별 고객 데이터를 조회할 수 있는 `/predict`는 비활성화되어 있습니다. 데이터를 직접 사용하려면 [Kaggle 대회 페이지](https://www.kaggle.com/competitions/home-credit-default-risk)에서 규정에 동의한 뒤 내려받아 `data/raw/`에 넣으면 됩니다.
+Kaggle "Home Credit Default Risk"(2018) 데이터를 사용했습니다. **이 저장소에는 원본 CSV·고객 단위 원본 데이터를 포함하지 않습니다**(`.gitignore`로 `data/` 전체 제외). 공개하는 것은 코드·집계 결과·모델 평가·문서뿐이며, 배포된 API(Phase 6)에서도 개별 고객 데이터를 조회할 수 있는 `/predict`는 비활성화되어 있습니다. 데이터를 직접 사용하려면 [Kaggle 대회 페이지](https://www.kaggle.com/competitions/home-credit-default-risk)에서 규정에 동의한 뒤 내려받아 `data/raw/`에 넣으면 됩니다.

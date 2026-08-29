@@ -54,9 +54,9 @@
 
 2,730만 행(bureau_balance), 1,360만 행(installments_payments) 등 대용량 CSV를 포함해 8개 테이블 전체 스키마 확인 + 행 수 카운트 + 6개 조인 무결성 체크(LEFT JOIN 포함)를 전부 처리했는데도 peak RSS 307MB로 매우 안정적. DuckDB의 스트리밍 실행 덕분에 CSV 크기(최대 690MB)와 무관하게 메모리 사용이 낮게 유지됨.
 
-## 5. 라이선스 확인 (Kaggle Competition Rules)
+## 5. 라이선스 확인
 
-**AMEX(CC0)와 달리 제한적 라이선스** — 별도 보고 참고. PROJECT_GUIDELINES.md §3에 반영 완료.
+Kaggle Competition Rules 확인 완료. PROJECT_GUIDELINES.md §3(데이터), §4(공개 범위 원칙) 참고.
 
 ## 다음: 조인/집계 계획 (후보만 제시, 미착수)
 
