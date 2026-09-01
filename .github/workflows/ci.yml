@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements-serving.txt
+            requirements-dev.txt
+
+      # app/*.py가 실제로 필요로 하는 의존성만(requirements-serving.txt) + 테스트 도구(requirements-dev.txt).
+      # requirements.txt는 EDA/모델 비교용 연구 의존성(scikit-learn, xgboost, matplotlib 등)까지 포함돼
+      # 테스트 목적에는 불필요하게 무거움.
+      - name: Install dependencies
+        run: pip install -r requirements-serving.txt -r requirements-dev.txt
+
+      - name: Run pytest
+        run: pytest -v
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 이미지가 정상적으로 빌드되는지만 확인 — push/배포는 하지 않음 (push: false)
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: home-credit-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

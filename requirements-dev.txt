@@ -1,0 +1,4 @@
+# 테스트 전용 의존성. requirements.txt(연구/개발)와 별도로 분리 —
+# CI의 test job에서만 pip install -r requirements.txt -r requirements-dev.txt로 함께 설치.
+pytest==8.3.4
+httpx==0.28.1

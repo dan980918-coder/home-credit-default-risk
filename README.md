@@ -1,5 +1,7 @@
 # Home Credit Default Risk
 
+[![CI](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml/badge.svg)](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml)
+
 > Kaggle "Home Credit Default Risk" 데이터로 대출 채무불이행 가능성을 예측하는 모델을 구축했습니다. 신용이력 중심으로 설계한 Lean(A) feature 세트에 LightGBM을 적용한 모델이 12개 모델·데이터셋 조합 중 최고 성능(검증 AUC **0.7825**)을 기록해 최종 채택됐습니다. FastAPI 서빙, Docker 패키징, AWS EC2 배포, Streamlit 기반 드리프트 모니터링까지 구현했습니다.
 
 ## 1. 개요
