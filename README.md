@@ -10,7 +10,7 @@
 
 ## 2. 데이터
 
-Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결된 다중 테이블(관계형) 구조입니다.
+Kaggle "Home Credit Default Risk"(2018) 데이터는 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결된 다중 테이블(관계형) 구조입니다.
 
 | 테이블 | 내용 | 행 수 | 컬럼 수 | 키 |
 |---|---|---|---|---|
@@ -33,7 +33,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 | 소득/대출조건 | 연소득, 신청 대출 금액·유형, 연금(할부금), 상품 가격, 자산 보유 여부 | `AMT_INCOME_TOTAL`, `AMT_CREDIT`, `NAME_CONTRACT_TYPE`, `AMT_ANNUITY`, `FLAG_OWN_CAR`, `FLAG_OWN_REALTY` |
 | 고용/재직 | 직업, 재직일수, 근무처 업종 | `OCCUPATION_TYPE`, `DAYS_EMPLOYED`, `ORGANIZATION_TYPE` |
 | 외부 신용점수 | 외부 기관이 산출한 정규화 신용점수 3종 | `EXT_SOURCE_1`, `EXT_SOURCE_2`, `EXT_SOURCE_3` |
-| 거주지 특성(건물정보) | 아파트/공용면적, 엘리베이터, 벽 재질 등 거주 건물 관련 지표 — 동일 속성이 평균(`_AVG`)/최빈값(`_MODE`)/중앙값(`_MEDI`) 3개 버전으로 반복돼, 47개 컬럼이지만 실질적으로 독립적인 속성은 14\~18개 정도 | `APARTMENTS_AVG/MODE/MEDI`, `ELEVATORS_AVG/MODE/MEDI`, `WALLSMATERIAL_MODE` |
+| 거주지 특성(건물정보) | 아파트/공용면적, 엘리베이터, 벽 재질 등 거주 건물 관련 지표(동일 속성이 평균(`_AVG`)/최빈값(`_MODE`)/중앙값(`_MEDI`) 3개 버전으로 반복돼, 47개 컬럼이지만 실질적으로 독립적인 속성은 14\~18개 정도) | `APARTMENTS_AVG/MODE/MEDI`, `ELEVATORS_AVG/MODE/MEDI`, `WALLSMATERIAL_MODE` |
 | 신용조회 이력 | 최근 시간/일/주/월/분기/년 단위로 신용조회국에 조회된 횟수 | `AMT_REQ_CREDIT_BUREAU_HOUR/DAY/WEEK/MON/QRT/YEAR` |
 | 사회관계망 | 신청자 지인 중 30일/60일 연체 이력이 있는 사람 수 | `OBS_30_CNT_SOCIAL_CIRCLE`, `DEF_30_CNT_SOCIAL_CIRCLE`, `DEF_60_CNT_SOCIAL_CIRCLE` |
 | 기타 부가정보 | 제출 서류 여부(20종), 신청 요일/시각, 거주지-근무지 일치 여부 플래그 등 | `FLAG_DOCUMENT_3`, `WEEKDAY_APPR_PROCESS_START`, `REG_CITY_NOT_WORK_CITY` |
@@ -50,7 +50,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 
 **조인 구조**: `application_train/test`(SK_ID_CURR) ← `bureau`(SK_ID_CURR) ← `bureau_balance`(SK_ID_BUREAU) / `application_train/test` ← `previous_application`(SK_ID_CURR, SK_ID_PREV 발급) ← `credit_card_balance`·`POS_CASH_balance`·`installments_payments`(SK_ID_PREV). SK_ID_CURR이 최상위 키이고, SK_ID_PREV/SK_ID_BUREAU는 하위 이력 테이블을 연결하는 중간 키입니다.
 
-조인 무결성을 검증한 결과 SK_ID_CURR 레벨(최상위)은 고아 레코드 0건으로 완전히 깨끗했지만, 하위 이력 테이블에서는 SK_ID_BUREAU/SK_ID_PREV 기준 고아 레코드가 발견됐습니다 — `bureau_balance` 11.4%, `credit_card_balance` 28.2%, `POS_CASH_balance` 3.4%, `installments_payments` 9.2%. 이 레코드들은 SK_ID_CURR로 연결할 방법이 없어 최종 feature 테이블 구축 시 자연스럽게 제외됩니다.
+조인 무결성을 검증한 결과 SK_ID_CURR 레벨(최상위)은 고아 레코드 0건으로 완전히 깨끗했지만, 하위 이력 테이블에서는 SK_ID_BUREAU/SK_ID_PREV 기준 고아 레코드가 발견됐습니다: `bureau_balance` 11.4%, `credit_card_balance` 28.2%, `POS_CASH_balance` 3.4%, `installments_payments` 9.2%. 이 레코드들은 SK_ID_CURR로 연결할 방법이 없어 최종 feature 테이블 구축 시 자연스럽게 제외됩니다.
 
 **데이터 자체의 알려진 제약**: Kaggle 공식 컬럼 설명(`HomeCredit_columns_description.csv`)에는 `AMT_INCOME_TOTAL`, `AMT_CREDIT` 등 금액 컬럼의 화폐 단위가 명시돼 있지 않고, `EXT_SOURCE_1/2/3`도 "Normalized score from external data source"라고만 돼 있을 뿐 어떤 기관의 점수인지는 밝혀져 있지 않습니다. 전체 339개 컬럼의 통계 요약은 [docs/data_dictionary.md](docs/data_dictionary.md)에서 확인할 수 있습니다.
 
@@ -112,7 +112,7 @@ Lean(A)는 테이블별로 부채/신용 비율, 신용카드 이용률, 연체 
 | 집계 대상 | 대표 feature | 의미 |
 |---|---|---|
 | `bureau_balance` → `bureau`(SK_ID_BUREAU 단위) | `bb_dpd_ever_frac`, `bb_max_dpd_severity` | 신용 계좌의 월별 연체 이력 요약(연체 있었던 개월 비율, 최대 연체 심각도) |
-| `bureau`(+위 결과) → SK_ID_CURR | `bureau_debt_credit_ratio`, `bureau_active_ratio`, `bureau_overdue_ratio` | 타 금융기관 신용 이력 — 총부채/총신용 비율, 활성 계좌 비율, 연체 계좌 비율 |
+| `bureau`(+위 결과) → SK_ID_CURR | `bureau_debt_credit_ratio`, `bureau_active_ratio`, `bureau_overdue_ratio` | 타 금융기관 신용 이력(총부채/총신용 비율, 활성 계좌 비율, 연체 계좌 비율) |
 | `credit_card_balance` → SK_ID_PREV | `ccb_utilization_mean`, `ccb_dpd_ever_frac` | 신용카드 이용률(잔액/한도), 연체 발생 비율 |
 | `POS_CASH_balance` → SK_ID_PREV | `pos_completed_frac`, `pos_dpd_ever_frac` | 할부/현금대출 완납 비율, 연체 발생 비율 |
 | `installments_payments` → SK_ID_PREV | `inst_late_frac`, `inst_payment_ratio_mean` | 상환 연체 비율, 납부액/예정액 비율(과소·과다납부 신호) |

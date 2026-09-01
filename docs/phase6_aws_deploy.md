@@ -43,7 +43,7 @@ MEM USAGE / LIMIT     MEM %
 
 컨테이너 자체는 200MB 안팎으로 로컬에서 `--memory=1g`로 근사했던 실측치(154~178MB)와 거의 일치 — **사전 검토가 정확했음이 실제 배포로 재확인됨.** 시스템 전체 여유(available)도 287MiB 남아 있어 t3.micro(1GiB)로 안정적으로 운영 가능.
 
-**퍼블릭 데모 URL**: `http://43.203.234.170:8000` (`/docs`에서 Swagger UI, `/predict/live`만 사용 가능) — ⚠️ 아래 §0.2에서 인스턴스를 stop했으므로 **현재는 접속 안 됨**
+**퍼블릭 데모 URL**: `http://43.203.234.170:8000` (`/docs`에서 Swagger UI, `/predict/live`만 사용 가능) — 아래 §0.2에서 인스턴스를 stop했으므로 **현재는 접속 안 됨**
 
 ## 0.2 인스턴스 중지 (2026-08-23) 및 재시작 방법
 
@@ -63,7 +63,7 @@ aws ec2 start-instances --instance-ids i-095d7fd112ba42311 --region ap-northeast
 aws ec2 wait instance-running --instance-ids i-095d7fd112ba42311 --region ap-northeast-2
 ```
 
-**2) ⚠️ 퍼블릭 IP가 바뀝니다** — 이 인스턴스는 고정 IP(Elastic IP)를 안 붙였기 때문에, stop/start를 하면 **매번 새 퍼블릭 IP가 배정됨**(43.203.234.170은 더 이상 유효하지 않을 수 있음). 재시작 후 새 IP 확인:
+**2) 퍼블릭 IP가 바뀝니다** — 이 인스턴스는 고정 IP(Elastic IP)를 안 붙였기 때문에, stop/start를 하면 **매번 새 퍼블릭 IP가 배정됨**(43.203.234.170은 더 이상 유효하지 않을 수 있음). 재시작 후 새 IP 확인:
 ```bash
 aws ec2 describe-instances --instance-ids i-095d7fd112ba42311 --region ap-northeast-2 \
   --query 'Reservations[0].Instances[0].PublicIpAddress' --output text

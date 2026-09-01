@@ -1,6 +1,6 @@
 # Phase 5: FastAPI 서빙 + Docker 패키징 — 계획
 
-> ✅ **아래 2.1~2.3 전부 결정 완료(A+C 병행 / 전체 재학습 / SHAP 상위 5개 포함)하고 구현까지 끝남.** 이 문서는 의사결정 기록 보존 목적으로 원본 그대로 둠 — 실제 구현 결과는 [phase5_serving.md](phase5_serving.md), API 스펙은 [phase5_api_spec.md](phase5_api_spec.md), Docker는 [phase5_docker.md](phase5_docker.md) 참고.
+> **아래 2.1~2.3 전부 결정 완료(A+C 병행 / 전체 재학습 / SHAP 상위 5개 포함)하고 구현까지 끝남.** 이 문서는 의사결정 기록 보존 목적으로 원본 그대로 둠 — 실제 구현 결과는 [phase5_serving.md](phase5_serving.md), API 스펙은 [phase5_api_spec.md](phase5_api_spec.md), Docker는 [phase5_docker.md](phase5_docker.md) 참고.
 
 최종 확정 모델: **Lean(A) + LightGBM (AUC 0.7825)**. 이 문서는 실제 구현 전 설계 후보를 정리한 것 — 중요 결정은 후보만 제시하고 사용자 선택 후 착수하는 방식에 따라 이 시점엔 착수하지 않음.
 

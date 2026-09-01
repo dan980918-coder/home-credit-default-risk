@@ -1,17 +1,17 @@
 # PROJECT_GUIDELINES.md
 
 ## 1. 프로젝트명
-대출 채무불이행(연체) 예측 — Home Credit Default Risk 데이터 기반
+Home Credit Default Risk 데이터 기반 대출 채무불이행(연체) 예측
 
 ## 2. 목적
 Home Credit Group의 대출 신청/상환 이력 데이터를 기반으로, 대출 채무불이행
 가능성을 예측하는 모델을 구축했다. (2026-08-22: 기존 AMEX 카드 데이터 기반
-프로젝트에서 전환 — 해석 가능한 feature 구조가 필요해 다중 테이블(관계형)
-구조의 Home Credit 데이터로 변경. 이전 진행 내역은 `archive/amex/`에 보존.)
+프로젝트에서 전환했다. 해석 가능한 feature 구조가 필요해 다중 테이블(관계형)
+구조의 Home Credit 데이터로 변경했다. 이전 진행 내역은 `archive/amex/`에 보존.)
 
 ## 3. 데이터
 - 출처: Kaggle "Home Credit Default Risk" (2018)
-- 다중 테이블(관계형) 구조 — 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결됨:
+- 다중 테이블(관계형) 구조로, 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결됨:
 
   | 테이블 | 내용 | 행 수 | 컬럼 수 | 키 |
   |---|---|---|---|---|
@@ -37,7 +37,7 @@ FastAPI(API 서빙) + Docker(패키징), AWS EC2(배포), Streamlit(모니터링
 ## 5. Phase 진행 경과
 - Phase 1: 원본 데이터 검증(8개 테이블 스키마/용량/조인 무결성 확인), 라이선스 확인 완료
 - Phase 2: EDA 완료 (분포, 결측치 패턴, 클래스 불균형, 테이블 간 관계 확인)
-- Phase 3: Feature Engineering 완료 (다중 테이블 집계, 도메인 기반 파생변수 — Lean(A)/Full(B) 두 버전 비교)
+- Phase 3: Feature Engineering 완료 (다중 테이블 집계, 도메인 기반 파생변수, Lean(A)/Full(B) 두 버전 비교)
 - Phase 4: 모델링 및 비교 완료 (LogisticRegression/RandomForest/XGBoost/LightGBM 비교 + SHAP 해석)
 - Phase 5: FastAPI 서빙 + Docker 패키징 완료
 - Phase 6: AWS EC2 프리티어 배포 완료 (Render 검토 후 AWS EC2로 전환)
@@ -45,4 +45,4 @@ FastAPI(API 서빙) + Docker(패키징), AWS EC2(배포), Streamlit(모니터링
 - Phase 8: 문서화 및 GitHub 공개 전환 완료
 
 ## 6. 현재 상태
-**Phase 8(문서화 및 GitHub 공개 전환) 완료 — 전체 로드맵(Phase 1~8) 종료.** 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정, EDA/모델링/SHAP/FastAPI 서빙/Docker/AWS EC2 배포/Streamlit 모니터링까지 전 과정 구현·문서화 완료. README.md 최종본 정리, 계획 문서에 실제 구현 결과로 연결되는 교차 참조 추가, `archive/amex/`에 안내 README 추가. **GitHub 저장소를 공개(public)로 전환**(전체 커밋 히스토리에 원본 데이터·자격증명·대용량 파일이 한 번도 포함된 적 없음을 확인 후 진행) — https://github.com/dan980918-coder/home-credit-default-risk . 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
+**Phase 8(문서화 및 GitHub 공개 전환) 완료. 전체 로드맵(Phase 1~8) 종료.** 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정, EDA/모델링/SHAP/FastAPI 서빙/Docker/AWS EC2 배포/Streamlit 모니터링까지 전 과정 구현·문서화 완료. README.md 최종본 정리, 계획 문서에 실제 구현 결과로 연결되는 교차 참조 추가, `archive/amex/`에 안내 README 추가. **GitHub 저장소를 공개(public)로 전환**(전체 커밋 히스토리에 원본 데이터·자격증명·대용량 파일이 한 번도 포함된 적 없음을 확인 후 진행): https://github.com/dan980918-coder/home-credit-default-risk . 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).

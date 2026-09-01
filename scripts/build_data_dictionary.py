@@ -182,7 +182,7 @@ def main():
 
     if not DESC_FILE.exists():
         header.append(
-            "- ⚠️ `HomeCredit_columns_description.csv`가 `data/raw/`에 없어 '설명' 컬럼은 비어 있음 "
+            "- `HomeCredit_columns_description.csv`가 `data/raw/`에 없어 '설명' 컬럼은 비어 있음 "
             "(Kaggle에서 내려받아 `data/raw/`에 추가하면 재실행 시 자동 반영됨)"
         )
     header.append("")
