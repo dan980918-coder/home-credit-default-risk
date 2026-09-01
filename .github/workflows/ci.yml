@@ -29,7 +29,7 @@ jobs:
         run: pip install -r requirements-serving.txt -r requirements-dev.txt
 
       - name: Run pytest
-        run: pytest -v
+        run: python -m pytest -v
 
   docker-build:
     runs-on: ubuntu-latest
