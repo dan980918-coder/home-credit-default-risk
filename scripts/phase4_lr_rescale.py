@@ -13,6 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 from _preprocessing import clean_application_sql
+from _train_common import prepare_categorical_columns
 
 LEAN_A_PATH = "data/processed/train_features_leanA.parquet"
 FULL_B_PATH = "data/processed/train_features_fullB.parquet"
@@ -30,9 +31,7 @@ def load(path, restrict_cols=None):
         df = df[[c for c in restrict_cols if c in df.columns]]
     y = df["TARGET"].astype(int)
     X = df.drop(columns=["SK_ID_CURR", "TARGET"])
-    cat_cols = [c for c in X.columns if X[c].dtype == object or str(X[c].dtype) == "bool"]
-    for c in cat_cols:
-        X[c] = X[c].astype(str).astype("category")
+    X, cat_cols = prepare_categorical_columns(X)
     return X, y, cat_cols
 
 

@@ -10,7 +10,7 @@ import json
 import datetime
 import joblib
 import pandas as pd
-import lightgbm as lgb
+from _train_common import prepare_categorical_columns, train_lightgbm
 
 LEAN_A_PATH = "data/processed/train_features_leanA.parquet"
 MODEL_DIR = "models"
@@ -20,20 +20,13 @@ df = pd.read_parquet(LEAN_A_PATH)
 y = df["TARGET"].astype(int)
 X = df.drop(columns=["SK_ID_CURR", "TARGET"])
 
-cat_cols = [c for c in X.columns if X[c].dtype == object or str(X[c].dtype) == "bool"]
-categories = {}
-for c in cat_cols:
-    X[c] = X[c].astype(str).astype("category")
-    categories[c] = X[c].cat.categories.tolist()
+X, cat_cols = prepare_categorical_columns(X)
+categories = {c: X[c].cat.categories.tolist() for c in cat_cols}
 
 scale_pos_weight = (len(y) - y.sum()) / y.sum()
 print(f"training on full data: {X.shape}, scale_pos_weight={scale_pos_weight:.2f}")
 
-model = lgb.LGBMClassifier(
-    n_estimators=200, scale_pos_weight=scale_pos_weight,
-    random_state=RANDOM_STATE, verbosity=-1,
-)
-model.fit(X, y, categorical_feature=cat_cols)
+model = train_lightgbm(X, y, scale_pos_weight, random_state=RANDOM_STATE, categorical_feature=cat_cols)
 print("model trained on 100% of application_train")
 
 import os

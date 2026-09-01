@@ -4,8 +4,8 @@ phase4_modeling.py와 동일한 split/하이퍼파라미터로 재학습 후 Tre
 """
 import numpy as np
 import pandas as pd
-import lightgbm as lgb
 import shap
+from _train_common import prepare_categorical_columns, train_lightgbm
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -20,20 +20,15 @@ SHAP_SAMPLE_SIZE = 5000
 df = pd.read_parquet(LEAN_A_PATH)
 y = df["TARGET"].astype(int)
 X = df.drop(columns=["SK_ID_CURR", "TARGET"])
-cat_cols = [c for c in X.columns if X[c].dtype == object or str(X[c].dtype) == "bool"]
-for c in cat_cols:
-    X[c] = X[c].astype(str).astype("category")
+X, cat_cols = prepare_categorical_columns(X)
 
 X_train, X_val, y_train, y_val = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE
 )
 scale_pos_weight = (len(y_train) - y_train.sum()) / y_train.sum()
 
-model = lgb.LGBMClassifier(
-    n_estimators=200, scale_pos_weight=scale_pos_weight,
-    random_state=RANDOM_STATE, verbosity=-1,
-)
-model.fit(X_train, y_train, categorical_feature=cat_cols)
+model = train_lightgbm(X_train, y_train, scale_pos_weight, random_state=RANDOM_STATE,
+                        categorical_feature=cat_cols)
 print("model trained")
 
 X_shap = X_val.sample(n=SHAP_SAMPLE_SIZE, random_state=RANDOM_STATE)

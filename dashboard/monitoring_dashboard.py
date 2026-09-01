@@ -15,6 +15,7 @@ docs/phase7_monitoring.md 참고). 따라서 여기서의 "배치"는 실제 시
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 import numpy as np
 import pandas as pd
@@ -28,6 +29,7 @@ from drift_metrics import (
     psi_continuous, psi_categorical, ks_test, psi_status,
     PSI_STATUS_COLOR, PSI_STATUS_LABEL_KO, PSI_STABLE, PSI_WARNING,
 )
+from _train_common import prepare_categorical_columns
 
 DATA_PATH = "data/processed/monitoring_holdout.parquet"
 MODEL_PATH = "models/lean_a_lightgbm_holdout_v1.joblib"
@@ -58,11 +60,8 @@ def load_model():
 def load_data():
     df = pd.read_parquet(DATA_PATH)
     model = load_model()
-    cat_cols = [c for c in df.columns if df[c].dtype == object or str(df[c].dtype) == "bool"]
     X = df.drop(columns=["SK_ID_CURR", "TARGET"]).copy()
-    for c in cat_cols:
-        if c in X.columns:
-            X[c] = X[c].astype(str).astype("category")
+    X, _ = prepare_categorical_columns(X)
     df["_pred_proba"] = model.predict_proba(X)[:, 1]
     return df
 

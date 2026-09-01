@@ -15,8 +15,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 import xgboost as xgb
-import lightgbm as lgb
 from _preprocessing import clean_application_sql
+from _train_common import prepare_categorical_columns, train_lightgbm
 
 LEAN_A_PATH = "data/processed/train_features_leanA.parquet"
 FULL_B_PATH = "data/processed/train_features_fullB.parquet"
@@ -34,9 +34,7 @@ def load(path, restrict_cols=None):
         df = df[[c for c in restrict_cols if c in df.columns]]
     y = df["TARGET"].astype(int)
     X = df.drop(columns=["SK_ID_CURR", "TARGET"])
-    cat_cols = [c for c in X.columns if X[c].dtype == object or str(X[c].dtype) == "bool"]
-    for c in cat_cols:
-        X[c] = X[c].astype(str).astype("category")
+    X, cat_cols = prepare_categorical_columns(X)
     return X, y, cat_cols
 
 
@@ -114,11 +112,8 @@ def run_dataset(name, path, restrict_cols=None):
     print(f"[XGBoost] {results['XGBoost']}")
 
     t0 = time.time()
-    lgbm = lgb.LGBMClassifier(
-        n_estimators=200, scale_pos_weight=scale_pos_weight,
-        random_state=RANDOM_STATE, verbosity=-1,
-    )
-    lgbm.fit(Xt_train, y_train, categorical_feature=cat_cols if cat_cols else "auto")
+    lgbm = train_lightgbm(Xt_train, y_train, scale_pos_weight, random_state=RANDOM_STATE,
+                           categorical_feature=cat_cols if cat_cols else "auto")
     prob = lgbm.predict_proba(Xt_val)[:, 1]
     pred = (prob >= 0.5).astype(int)
     results["LightGBM"] = {**evaluate(y_val, prob, pred), "elapsed": time.time() - t0}

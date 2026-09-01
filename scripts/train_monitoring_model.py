@@ -11,8 +11,8 @@ reference/배치 풀로 사용한다.
 """
 import joblib
 import pandas as pd
-import lightgbm as lgb
 from sklearn.model_selection import train_test_split
+from _train_common import prepare_categorical_columns, train_lightgbm
 
 LEAN_A_PATH = "data/processed/train_features_leanA.parquet"
 OUT_MODEL = "models/lean_a_lightgbm_holdout_v1.joblib"
@@ -23,9 +23,7 @@ df = pd.read_parquet(LEAN_A_PATH)
 y = df["TARGET"].astype(int)
 X = df.drop(columns=["TARGET"])  # SK_ID_CURR은 남겨둠(참고용, 학습에는 안 씀)
 
-cat_cols = [c for c in X.columns if X[c].dtype == object or str(X[c].dtype) == "bool"]
-for c in cat_cols:
-    X[c] = X[c].astype(str).astype("category")
+X, cat_cols = prepare_categorical_columns(X)
 
 X_train, X_holdout, y_train, y_holdout = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE
@@ -35,11 +33,7 @@ X_train_fit = X_train.drop(columns=["SK_ID_CURR"])
 scale_pos_weight = (len(y_train) - y_train.sum()) / y_train.sum()
 print(f"train: {X_train_fit.shape}, holdout(never seen): {X_holdout.shape}")
 
-model = lgb.LGBMClassifier(
-    n_estimators=200, scale_pos_weight=scale_pos_weight,
-    random_state=RANDOM_STATE, verbosity=-1,
-)
-model.fit(X_train_fit, y_train, categorical_feature=cat_cols)
+model = train_lightgbm(X_train_fit, y_train, scale_pos_weight, random_state=RANDOM_STATE, categorical_feature=cat_cols)
 joblib.dump(model, OUT_MODEL)
 print(f"saved {OUT_MODEL}")
 
