@@ -33,7 +33,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 | 소득/대출조건 | 연소득, 신청 대출 금액·유형, 연금(할부금), 상품 가격, 자산 보유 여부 | `AMT_INCOME_TOTAL`, `AMT_CREDIT`, `NAME_CONTRACT_TYPE`, `AMT_ANNUITY`, `FLAG_OWN_CAR`, `FLAG_OWN_REALTY` |
 | 고용/재직 | 직업, 재직일수, 근무처 업종 | `OCCUPATION_TYPE`, `DAYS_EMPLOYED`, `ORGANIZATION_TYPE` |
 | 외부 신용점수 | 외부 기관이 산출한 정규화 신용점수 3종 | `EXT_SOURCE_1`, `EXT_SOURCE_2`, `EXT_SOURCE_3` |
-| 거주지 특성(건물정보) | 아파트/공용면적, 엘리베이터, 벽 재질 등 거주 건물 관련 지표 — 동일 속성이 평균(`_AVG`)/최빈값(`_MODE`)/중앙값(`_MEDI`) 3개 버전으로 반복돼, 47개 컬럼이지만 실질적으로 독립적인 속성은 14~18개 정도 | `APARTMENTS_AVG/MODE/MEDI`, `ELEVATORS_AVG/MODE/MEDI`, `WALLSMATERIAL_MODE` |
+| 거주지 특성(건물정보) | 아파트/공용면적, 엘리베이터, 벽 재질 등 거주 건물 관련 지표 — 동일 속성이 평균(`_AVG`)/최빈값(`_MODE`)/중앙값(`_MEDI`) 3개 버전으로 반복돼, 47개 컬럼이지만 실질적으로 독립적인 속성은 14\~18개 정도 | `APARTMENTS_AVG/MODE/MEDI`, `ELEVATORS_AVG/MODE/MEDI`, `WALLSMATERIAL_MODE` |
 | 신용조회 이력 | 최근 시간/일/주/월/분기/년 단위로 신용조회국에 조회된 횟수 | `AMT_REQ_CREDIT_BUREAU_HOUR/DAY/WEEK/MON/QRT/YEAR` |
 | 사회관계망 | 신청자 지인 중 30일/60일 연체 이력이 있는 사람 수 | `OBS_30_CNT_SOCIAL_CIRCLE`, `DEF_30_CNT_SOCIAL_CIRCLE`, `DEF_60_CNT_SOCIAL_CIRCLE` |
 | 기타 부가정보 | 제출 서류 여부(20종), 신청 요일/시각, 거주지-근무지 일치 여부 플래그 등 | `FLAG_DOCUMENT_3`, `WEEKDAY_APPR_PROCESS_START`, `REG_CITY_NOT_WORK_CITY` |
@@ -42,7 +42,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 
 - **application_test.csv**: `application_train`과 동일한 구조지만 `TARGET`(정답 라벨)이 없는 대출 신청 정보입니다. 원래 Kaggle 대회에서 제출용 예측 대상이었던 세트입니다.
 - **bureau.csv**: 신청자가 Home Credit 외 다른 금융기관에 보고한 과거/현재 신용 계좌 이력입니다. 계좌 활성 여부(`CREDIT_ACTIVE`), 신용한도·부채 잔액(`AMT_CREDIT_SUM`/`AMT_CREDIT_SUM_DEBT`), 신용 종류(`CREDIT_TYPE`) 등을 담고 있으며, 한 신청자가 여러 계좌를 가질 수 있어 SK_ID_CURR 기준 다대일 관계입니다.
-- **bureau_balance.csv**: `bureau`의 각 신용 계좌를 월 단위로 쪼갠 상태 스냅샷입니다. 매월 연체 심각도(`STATUS`: 0~5, C=완납, X=미상)를 기록해 상환 이력의 시계열 패턴을 담고 있습니다.
+- **bureau_balance.csv**: `bureau`의 각 신용 계좌를 월 단위로 쪼갠 상태 스냅샷입니다. 매월 연체 심각도(`STATUS`: 0\~5, C=완납, X=미상)를 기록해 상환 이력의 시계열 패턴을 담고 있습니다.
 - **previous_application.csv**: 신청자가 과거 Home Credit에 냈던 대출 신청 이력입니다. 신청/승인 금액(`AMT_APPLICATION`/`AMT_CREDIT`), 승인 여부(`NAME_CONTRACT_STATUS`), 신청 시점(`DAYS_DECISION`) 등을 담고 있습니다.
 - **credit_card_balance.csv**: 과거 Home Credit 신용카드 상품의 월별 잔액 스냅샷입니다. 잔액(`AMT_BALANCE`), 한도(`AMT_CREDIT_LIMIT_ACTUAL`), 연체일수(`SK_DPD`) 등 카드 이용 패턴을 담고 있습니다.
 - **POS_CASH_balance.csv**: 과거 POS(할부)/현금 대출 상품의 월별 상태입니다. 남은 할부 개월 수(`CNT_INSTALMENT_FUTURE`), 연체일수(`SK_DPD`) 등을 담고 있습니다.
@@ -70,7 +70,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 
   ![가족 구성별 TARGET 비율](assets/figures/children_family_target_rate.png)
 
-  자녀 수·가족 상태 모두 TARGET 비율에 완만한 차이를 만들지만, 그 폭은 크지 않습니다(대략 6~10% 범위).
+  자녀 수·가족 상태 모두 TARGET 비율에 완만한 차이를 만들지만, 그 폭은 크지 않습니다(대략 6\~10% 범위).
 
 - **외부 신용점수(EXT_SOURCE) 분포**: `EXT_SOURCE_1/2/3` 모두 TARGET=1(연체) 그룹의 분포가 TARGET=0보다 왼쪽(낮은 점수)으로 뚜렷하게 치우쳐 있어, 육안으로도 판별력이 확인됩니다. 결측률은 `EXT_SOURCE_1` 56.4%, `EXT_SOURCE_2` 0.2%, `EXT_SOURCE_3` 19.8%로 컬럼별 편차가 컸습니다.
 
@@ -90,7 +90,7 @@ Kaggle "Home Credit Default Risk"(2018) — 단일 파일이 아니라 8개 CSV�
 
   처리 전 분포에는 365243 지점에 뚜렷한 스파이크가 있었고, 이 값을 NULL로 치환하고 `DAYS_EMPLOYED_ANOMALY` 플래그를 추가하는 전처리를 적용한 뒤에는 정상적인 재직일수 분포만 남았습니다.
 
-- **파생 지표의 방향성 검증**: `ccb_utilization_mean_mean`(신용카드 이용률, corr +0.144), `prev_refused_ratio`(+0.078), `bureau_active_ratio`(+0.077) 등 신용이력 파생 지표들이 개별 상관은 크지 않아도(0.03~0.14) 방향성이 모두 도메인 직관과 일치해, 실제 신호를 담고 있음을 확인했습니다.
+- **파생 지표의 방향성 검증**: `ccb_utilization_mean_mean`(신용카드 이용률, corr +0.144), `prev_refused_ratio`(+0.078), `bureau_active_ratio`(+0.077) 등 신용이력 파생 지표들이 개별 상관은 크지 않아도(0.03\~0.14) 방향성이 모두 도메인 직관과 일치해, 실제 신호를 담고 있음을 확인했습니다.
 
 ## 4. Feature Engineering
 
@@ -142,7 +142,7 @@ App-only/Lean(A)/Full(B) 3개 데이터셋 × LogisticRegression/RandomForest/XG
 > 위 수치는 단일 80/20 split 기준입니다. §4의 3-way 벤치마크 표는 LightGBM 기본 하이퍼파라미터 + **5-fold CV 평균**(예: App-only 0.7562)으로 평가 방식이 달라, 같은 데이터셋이라도 두 표의 수치가 정확히 일치하지는 않습니다(예: App-only+LightGBM이 §4에서는 0.7562, 여기서는 0.7607). 두 표 모두 App-only → Lean(A) 개선폭이 뚜렷하고 Lean(A) ≈ Full(B)라는 방향성 자체는 동일합니다.
 
 - **LightGBM이 3개 데이터셋 모두에서 최고 성능**을 기록했고, 그중 **Lean(A) + LightGBM(AUC 0.7825)이 12개 조합 중 최고**로 Full(B) + LightGBM(0.7799)보다도 근소하게 높았습니다.
-- RandomForest는 ROC-AUC 자체는 준수했지만(0.72~0.74) 임계값 0.5 기준 Recall이 0.0014~0.0016으로 사실상 0에 가까웠습니다. `class_weight='balanced'`가 손실 함수 가중치만 조정할 뿐 트리 투표 기반 확률을 0.5 근처로 보정해주지는 않기 때문으로 판단했고, RF 자체 성능보다는 이 비교의 임계값 설정이 RF에 맞지 않았던 것으로 정리했습니다.
+- RandomForest는 ROC-AUC 자체는 준수했지만(0.72\~0.74) 임계값 0.5 기준 Recall이 0.0014\~0.0016으로 사실상 0에 가까웠습니다. `class_weight='balanced'`가 손실 함수 가중치만 조정할 뿐 트리 투표 기반 확률을 0.5 근처로 보정해주지는 않기 때문으로 판단했고, RF 자체 성능보다는 이 비교의 임계값 설정이 RF에 맞지 않았던 것으로 정리했습니다.
 - LogisticRegression은 초기 실행에서 feature 스케일을 맞추지 않아 수렴하지 않는 문제(ConvergenceWarning)가 있었습니다. `StandardScaler`를 추가해 재실행한 뒤에는 3개 데이터셋 모두에서 AUC가 큰 폭으로 개선됐습니다(예: Lean(A) 0.6346 → 0.7643).
 - 최종적으로 **Lean(A) + LightGBM(AUC 0.7825)**을 서빙에 사용할 모델로 확정했습니다.
 
@@ -152,7 +152,7 @@ Lean(A) + LightGBM 모델에 `shap.TreeExplainer`를 적용해 validation set 5,
 
 **상위 feature (mean |SHAP| 기준, 상위 10개)**: `EXT_SOURCE_2` > `EXT_SOURCE_3` > `EXT_SOURCE_1` > `inst_amt_instalment_sum_total` > `ORGANIZATION_TYPE` > `AMT_CREDIT` > `AMT_GOODS_PRICE` > `pos_cnt_instalment_mean_mean` > `CODE_GENDER` > `DAYS_EMPLOYED`
 
-- **EXT_SOURCE_1/2/3(외부 신용평가 점수)가 압도적 1~3위**를 차지했습니다. 값이 높을수록 SHAP이 음수(위험 감소) 방향으로 뚜렷하게 몰려, 강한 보호 요인으로 작용하는 것으로 나타났습니다.
+- **EXT_SOURCE_1/2/3(외부 신용평가 점수)가 압도적 1\~3위**를 차지했습니다. 값이 높을수록 SHAP이 음수(위험 감소) 방향으로 뚜렷하게 몰려, 강한 보호 요인으로 작용하는 것으로 나타났습니다.
 - 상위 20개 feature 중 7개(`inst_amt_instalment_sum_total`, `pos_cnt_instalment_mean_mean`, `bureau_debt_credit_ratio`, `inst_late_frac_mean`, `prev_cnt_payment_mean`, `ccb_utilization_mean_mean`, `prev_refused_ratio`)가 직접 설계한 Lean(A) 파생 지표였습니다. application 원본 변수 외에 신용이력 요약 feature도 실제로 강한 신호를 담고 있음을 확인했습니다.
 - SHAP 방향성은 Phase 2 EDA에서 확인한 Pearson 상관 방향과 정확히 일치했습니다(`bureau_debt_credit_ratio`, `inst_late_frac_mean`, `prev_refused_ratio` 모두 값이 높을수록 위험 증가 방향).
 
@@ -199,9 +199,9 @@ streamlit run dashboard/monitoring_dashboard.py
 
 **배치 모드 2종**을 토글로 구현했습니다: 무작위 배치(정상 상태 대조군), 그리고 EXT_SOURCE_2 기준으로 정렬해 의도적으로 드리프트를 주입하는 synthetic 모드(화면에 항상 경고 배너로 표시).
 
-**Drift 지표**: PSI(연속형은 분위수 10구간, 표준 임계값 `<0.10` 안정 / `0.10~0.25` 주의 / `>0.25` 경고)와 KS 통계량을 직접 구현해 사용했습니다.
+**Drift 지표**: PSI(연속형은 분위수 10구간, 표준 임계값 `<0.10` 안정 / `0.10\~0.25` 주의 / `>0.25` 경고)와 KS 통계량을 직접 구현해 사용했습니다.
 
-**검증 결과**: 무작위 배치 모드에서는 PSI가 전 구간 0.00~0.02로 안정적이었고 경고가 발생하지 않았습니다. Synthetic 모드에서는 정렬 기준으로 쓴 `EXT_SOURCE_2`의 PSI가 6.2~7.1까지 치솟았고 예측 확률 분포에서도 경고가 정확히 발생해(총 12건), 의도적으로 주입한 drift를 지표가 오탐·미탐 없이 잡아낸다는 것을 확인했습니다. 최초 구현에서는 배치 평가에 학습 때 이미 사용한 모델을 재사용해 AUC가 0.80~0.86으로 부풀려지는 in-sample 오염 버그가 있었는데, 별도의 held-out 전용 모델을 새로 학습해 수정했고 수정 후 held-out AUC는 0.7833으로 Phase 4 검증치(0.7825)와 거의 일치했습니다.
+**검증 결과**: 무작위 배치 모드에서는 PSI가 전 구간 0.00\~0.02로 안정적이었고 경고가 발생하지 않았습니다. Synthetic 모드에서는 정렬 기준으로 쓴 `EXT_SOURCE_2`의 PSI가 6.2\~7.1까지 치솟았고 예측 확률 분포에서도 경고가 정확히 발생해(총 12건), 의도적으로 주입한 drift를 지표가 오탐·미탐 없이 잡아낸다는 것을 확인했습니다. 최초 구현에서는 배치 평가에 학습 때 이미 사용한 모델을 재사용해 AUC가 0.80\~0.86으로 부풀려지는 in-sample 오염 버그가 있었는데, 별도의 held-out 전용 모델을 새로 학습해 수정했고 수정 후 held-out AUC는 0.7833으로 Phase 4 검증치(0.7825)와 거의 일치했습니다.
 
 | 무작위 배치 모드 | Synthetic 드리프트 주입 모드 |
 |---|---|
@@ -212,7 +212,7 @@ streamlit run dashboard/monitoring_dashboard.py
 - **화폐 단위 불명**: Kaggle 공식 컬럼 설명에 `AMT_INCOME_TOTAL`, `AMT_CREDIT` 등 금액 컬럼의 화폐 단위가 명시돼 있지 않습니다.
 - **EXT_SOURCE 출처 불명**: `EXT_SOURCE_1/2/3`은 "Normalized score from external data source"로만 설명돼 있어 어떤 기관·산정 방식의 점수인지 알 수 없습니다. 다만 SHAP 분석에서는 가장 강한 신호로 확인됐습니다.
 - **검증 AUC의 기준**: 본 문서와 API가 인용하는 AUC 0.7825는 80/20 stratified split(Phase 4) 기준입니다. 실제 서빙 모델은 전체 application_train(100%)으로 재학습되어 있어, 이 서빙 모델 자체의 held-out 성능은 별도로 측정되지 않았습니다.
-- **RandomForest 임계값 이슈**: 임계값 0.5 기준으로는 Recall이 사실상 0에 가까워(0.0014~0.0016), 이 비교에서는 최적 임계값 탐색을 별도로 진행하지 않았습니다.
+- **RandomForest 임계값 이슈**: 임계값 0.5 기준으로는 Recall이 사실상 0에 가까워(0.0014\~0.0016), 이 비교에서는 최적 임계값 탐색을 별도로 진행하지 않았습니다.
 - **`/predict/live`의 범위**: `bureau_balance`(월별 상태 이력) 중첩 입력은 지원하지 않아, 관련 파생 feature(`bb_*`)는 항상 NULL로 처리됩니다.
 - **하이퍼파라미터 미튜닝**: Phase 4 모델 비교는 튜닝 없는 1차 비교 기준입니다.
 - **배포 인스턴스 상태**: AWS EC2 데모 인스턴스는 프리티어 사용 시간 관리를 위해 현재 stop 상태이며, 재시작 시 퍼블릭 IP가 바뀝니다.
