@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fastapi",
+      "runtimeExecutable": "/opt/anaconda3/bin/python3",
+      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "streamlit",
+      "runtimeExecutable": "/opt/anaconda3/bin/python3",
+      "runtimeArgs": ["-m", "streamlit", "run", "dashboard/monitoring_dashboard.py", "--server.port", "8501", "--server.headless", "true"],
+      "port": 8501
+    }
+  ]
+}
