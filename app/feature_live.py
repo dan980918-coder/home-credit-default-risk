@@ -33,6 +33,21 @@ with open(SCHEMAS_PATH) as _f:
     _SCHEMAS: dict[str, list[list[str]]] = json.load(_f)
 
 
+class FeatureTypeError(ValueError):
+    """스키마상 numeric 컬럼에 숫자로 변환할 수 없는 값이 들어왔을 때 발생.
+    값 자체가 없는 경우(None/필드 누락)는 정상적인 결측치이므로 이 예외 대상이 아님 —
+    "값은 왔는데 타입이 안 맞는 경우"만 여기 해당. app/main.py에서 잡아 422로 변환한다."""
+
+    def __init__(self, table: str, field: str, value, expected_dtype: str, index: int | None = None):
+        self.table = table
+        self.field = field
+        self.value = value
+        self.expected_dtype = expected_dtype
+        self.index = index
+        where = f"{table}[{index}].{field}" if index is not None else f"{table}.{field}"
+        super().__init__(f"{where}: {value!r}은(는) {expected_dtype} 타입으로 변환할 수 없습니다")
+
+
 def _get_csv_schema(csv_name: str) -> list[tuple[str, str]]:
     return [(c, t) for c, t in _SCHEMAS[csv_name]]
 
@@ -41,14 +56,17 @@ def _is_numeric_dtype(dtype: str) -> bool:
     return any(dtype.upper().startswith(t) for t in NUMERIC_TYPES)
 
 
-def _coerce(value, dtype: str):
+def _coerce(value, dtype: str, *, table: str, field: str, index: int | None = None):
+    """value가 None(필드 미전송 또는 명시적 null)이면 결측치로 보고 그대로 None을 반환한다.
+    value가 실제로 왔는데 dtype에 맞게 변환할 수 없으면(예: numeric 컬럼에 "abc") 조용히
+    None으로 넘기지 않고 FeatureTypeError를 던져 422로 명확히 거부한다."""
     if value is None:
         return None
     if _is_numeric_dtype(dtype):
         try:
             return float(value)
         except (TypeError, ValueError):
-            return None
+            raise FeatureTypeError(table, field, value, dtype, index=index)
     return str(value)
 
 
@@ -84,7 +102,7 @@ def _records_to_df(csv_name: str, records: list[dict], overrides: dict) -> pd.Da
                 ov = overrides[col]
                 row[col] = ov[i] if isinstance(ov, list) else ov
             else:
-                row[col] = _coerce(rec.get(col), dtype)
+                row[col] = _coerce(rec.get(col), dtype, table=csv_name, field=col, index=i)
         rows.append(row)
     return _cast_df_to_schema(pd.DataFrame(rows), schema)
 
@@ -100,7 +118,7 @@ def build_live_feature_row(payload: dict) -> pd.DataFrame:
 
     # ---------- application: 1행, SK_ID_CURR 합성 + DAYS_EMPLOYED anomaly 처리 ----------
     app_schema = _get_csv_schema("application_test")  # TARGET 없는 스키마가 입력에 맞음
-    app_row = {col: _coerce(application.get(col), dtype) for col, dtype in app_schema}
+    app_row = {col: _coerce(application.get(col), dtype, table="application", field=col) for col, dtype in app_schema}
     app_row["SK_ID_CURR"] = SYNTHETIC_SK_ID_CURR
     raw_days_employed = app_row.get("DAYS_EMPLOYED")
     is_anomaly = raw_days_employed == 365243

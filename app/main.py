@@ -12,14 +12,15 @@ true로 설정 — /predict가 SK_ID_CURR으로 라이선스가 제한적인 Hom
 /predict를 그대로 사용 가능.
 """
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 
 from app.schemas import (
     HealthResponse, ModelInfoResponse, PredictRequest, PredictResponse, LivePredictRequest,
 )
 from app.model import get_bundle
 from app.serving_lookup import lookup
-from app.feature_live import build_live_feature_row
+from app.feature_live import build_live_feature_row, FeatureTypeError
 
 PUBLIC_DEPLOYMENT = os.environ.get("PUBLIC_DEPLOYMENT", "false").lower() == "true"
 
@@ -32,6 +33,23 @@ app = FastAPI(
         + (" [PUBLIC_DEPLOYMENT 모드: /predict는 비활성화됨]" if PUBLIC_DEPLOYMENT else "")
     ),
 )
+
+
+@app.exception_handler(FeatureTypeError)
+def feature_type_error_handler(request: Request, exc: FeatureTypeError):
+    """/predict/live에서 값은 왔지만 스키마 타입으로 변환 불가능한 필드가 있을 때
+    422로 명확히 거부. 필드 자체가 없는(진짜 결측) 경우는 이 핸들러를 타지 않고
+    정상적으로 None 처리된다 — feature_live.FeatureTypeError 참고."""
+    loc = ["body", exc.table] + ([str(exc.index)] if exc.index is not None else []) + [exc.field]
+    return JSONResponse(
+        status_code=422,
+        content={"detail": [{
+            "loc": loc,
+            "msg": f"value is not a valid {exc.expected_dtype.lower()}",
+            "type": "type_error",
+            "input": None if exc.value is None else str(exc.value),
+        }]},
+    )
 
 
 @app.get("/health", response_model=HealthResponse)
