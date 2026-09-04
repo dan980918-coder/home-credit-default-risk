@@ -1,4 +1,5 @@
-# Home Credit Default Risk
+# 대출 채무불이행(연체) 예측
+### Home Credit Default Risk
 
 [![CI](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml/badge.svg)](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml)
 
