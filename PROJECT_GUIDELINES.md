@@ -43,6 +43,7 @@ FastAPI(API 서빙) + Docker(패키징), AWS EC2(배포), Streamlit(모니터링
 - Phase 6: AWS EC2 프리티어 배포 완료 (Render 검토 후 AWS EC2로 전환)
 - Phase 7: 모니터링 대시보드 구축 완료 (예측 분포·PSI/KS drift 추적)
 - Phase 8: 문서화 및 GitHub 공개 전환 완료
+- Phase 9: 임계값별 심사 시나리오 분석 완료 (승인율/연체율/포착률 트레이드오프, 운영 시나리오 3개 제시)
 
 ## 6. 현재 상태
-**Phase 8(문서화 및 GitHub 공개 전환) 완료. 전체 로드맵(Phase 1~8) 종료.** 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정, EDA/모델링/SHAP/FastAPI 서빙/Docker/AWS EC2 배포/Streamlit 모니터링까지 전 과정 구현·문서화 완료. README.md 최종본 정리, 계획 문서에 실제 구현 결과로 연결되는 교차 참조 추가, `archive/amex/`에 안내 README 추가. **GitHub 저장소를 공개(public)로 전환**(전체 커밋 히스토리에 원본 데이터·자격증명·대용량 파일이 한 번도 포함된 적 없음을 확인 후 진행): https://github.com/dan980918-coder/home-credit-default-risk . 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
+**Phase 8(문서화 및 GitHub 공개 전환) 완료 후, 포트폴리오 보완 차원에서 Phase 9(임계값 분석)를 추가했다.** 최종 모델 Lean(A) + LightGBM(검증 AUC 0.7825) 확정, EDA/모델링/SHAP/FastAPI 서빙/Docker/AWS EC2 배포/Streamlit 모니터링까지 전 과정 구현·문서화 완료. README.md 최종본 정리, 계획 문서에 실제 구현 결과로 연결되는 교차 참조 추가, `archive/amex/`에 안내 README 추가. **GitHub 저장소를 공개(public)로 전환**(전체 커밋 히스토리에 원본 데이터·자격증명·대용량 파일이 한 번도 포함된 적 없음을 확인 후 진행): https://github.com/dan980918-coder/home-credit-default-risk . 이전 AMEX 진행 내역은 `archive/amex/`에 보존됨(참고용, 현재 로드맵과 무관).
