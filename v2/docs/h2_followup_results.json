@@ -1,0 +1,168 @@
+{
+  "annuity_to_income_distribution": {
+    "p50": 0.1627,
+    "p90": 0.3021,
+    "p95": 0.3551,
+    "p99": 0.4853,
+    "p99.9": 0.7289,
+    "max": 1.4516,
+    "n_valid": 184499
+  },
+  "annuity_to_income_spikes_pct_of_n": {
+    "0.15": 5.777,
+    "0.14": 5.27,
+    "0.12": 5.251,
+    "0.13": 4.907,
+    "0.1": 4.814,
+    "0.16": 4.64,
+    "0.11": 4.615,
+    "0.18": 4.383,
+    "0.17": 4.363,
+    "0.19": 4.139
+  },
+  "credit_to_annuity_decile_vs_extsource": [
+    {
+      "cta_decile": "(8.036000000000001, 10.519]",
+      "n": 18443,
+      "credit_to_annuity_mean": 9.574,
+      "ext_source_mean_avg": 0.5226,
+      "bad_rate": 0.04928699235482297,
+      "bad_rate_pct": 4.929
+    },
+    {
+      "cta_decile": "(10.519, 14.658]",
+      "n": 18453,
+      "credit_to_annuity_mean": 12.808,
+      "ext_source_mean_avg": 0.4802,
+      "bad_rate": 0.11250203218988783,
+      "bad_rate_pct": 11.25
+    },
+    {
+      "cta_decile": "(14.658, 17.791]",
+      "n": 18420,
+      "credit_to_annuity_mean": 15.98,
+      "ext_source_mean_avg": 0.4911,
+      "bad_rate": 0.0965798045602606,
+      "bad_rate_pct": 9.658
+    },
+    {
+      "cta_decile": "(17.791, 19.537]",
+      "n": 18560,
+      "credit_to_annuity_mean": 18.801,
+      "ext_source_mean_avg": 0.4952,
+      "bad_rate": 0.09994612068965517,
+      "bad_rate_pct": 9.995
+    },
+    {
+      "cta_decile": "(19.537, 20.0]",
+      "n": 20284,
+      "credit_to_annuity_mean": 19.946,
+      "ext_source_mean_avg": 0.5104,
+      "bad_rate": 0.059455728653125615,
+      "bad_rate_pct": 5.946
+    },
+    {
+      "cta_decile": "(20.0, 21.581]",
+      "n": 16472,
+      "credit_to_annuity_mean": 20.792,
+      "ext_source_mean_avg": 0.4683,
+      "bad_rate": 0.143152015541525,
+      "bad_rate_pct": 14.315
+    },
+    {
+      "cta_decile": "(21.581, 25.214]",
+      "n": 18527,
+      "credit_to_annuity_mean": 23.64,
+      "ext_source_mean_avg": 0.5375,
+      "bad_rate": 0.051762292869865605,
+      "bad_rate_pct": 5.176
+    },
+    {
+      "cta_decile": "(25.214, 30.143]",
+      "n": 18350,
+      "credit_to_annuity_mean": 27.245,
+      "ext_source_mean_avg": 0.5203,
+      "bad_rate": 0.07198910081743869,
+      "bad_rate_pct": 7.199
+    },
+    {
+      "cta_decile": "(30.143, 34.063]",
+      "n": 18963,
+      "credit_to_annuity_mean": 32.121,
+      "ext_source_mean_avg": 0.5224,
+      "bad_rate": 0.07208774982861361,
+      "bad_rate_pct": 7.209
+    },
+    {
+      "cta_decile": "(34.063, 45.305]",
+      "n": 17915,
+      "credit_to_annuity_mean": 35.438,
+      "ext_source_mean_avg": 0.5393,
+      "bad_rate": 0.05877756070332124,
+      "bad_rate_pct": 5.878
+    }
+  ],
+  "corr_credit_to_annuity_vs_ext_source_mean": 0.0878,
+  "within_ext_source_quintile_credit_to_annuity_direction": [
+    {
+      "ext_quintile": "Q1(낮음)",
+      "n": 36878,
+      "spearman_rho": -0.3,
+      "bad_rate_by_cta_bin_pct": [
+        18.153,
+        20.705,
+        18.156,
+        19.632,
+        16.477
+      ]
+    },
+    {
+      "ext_quintile": "Q2",
+      "n": 36877,
+      "spearman_rho": -0.6,
+      "bad_rate_by_cta_bin_pct": [
+        8.867,
+        10.48,
+        10.415,
+        8.35,
+        8.462
+      ]
+    },
+    {
+      "ext_quintile": "Q3",
+      "n": 36877,
+      "spearman_rho": -0.8,
+      "bad_rate_by_cta_bin_pct": [
+        6.508,
+        6.658,
+        6.454,
+        4.729,
+        5.714
+      ]
+    },
+    {
+      "ext_quintile": "Q4",
+      "n": 36877,
+      "spearman_rho": -0.6,
+      "bad_rate_by_cta_bin_pct": [
+        4.243,
+        3.726,
+        5.149,
+        3.501,
+        3.553
+      ]
+    },
+    {
+      "ext_quintile": "Q5(높음)",
+      "n": 36878,
+      "spearman_rho": 0.2,
+      "bad_rate_by_cta_bin_pct": [
+        2.02,
+        2.719,
+        2.751,
+        2.427,
+        2.516
+      ]
+    }
+  ]
+}
