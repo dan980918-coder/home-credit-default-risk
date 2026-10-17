@@ -1,0 +1,1225 @@
+{
+  "file_info": {
+    "application_train": {
+      "file": "application_train.csv",
+      "size_mb": 158.4,
+      "n_rows": 307511,
+      "n_cols": 122,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "application_test": {
+      "file": "application_test.csv",
+      "size_mb": 25.3,
+      "n_rows": 48744,
+      "n_cols": 121,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "bureau": {
+      "file": "bureau.csv",
+      "size_mb": 162.1,
+      "n_rows": 1716428,
+      "n_cols": 17,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "bureau_balance": {
+      "file": "bureau_balance.csv",
+      "size_mb": 358.2,
+      "n_rows": 27299925,
+      "n_cols": 3,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "previous_application": {
+      "file": "previous_application.csv",
+      "size_mb": 386.2,
+      "n_rows": 1670214,
+      "n_cols": 37,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "POS_CASH_balance": {
+      "file": "POS_CASH_balance.csv",
+      "size_mb": 374.5,
+      "n_rows": 10001358,
+      "n_cols": 8,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "installments_payments": {
+      "file": "installments_payments.csv",
+      "size_mb": 689.6,
+      "n_rows": 13605401,
+      "n_cols": 8,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    },
+    "credit_card_balance": {
+      "file": "credit_card_balance.csv",
+      "size_mb": 404.9,
+      "n_rows": 3840312,
+      "n_cols": 23,
+      "encoding": "utf-8 (가정, 오류 없음)",
+      "read_error": null
+    }
+  },
+  "grain": {
+    "application_train": "대출 신청 1건 = 신청자 1명 (SK_ID_CURR 1개당 1행)",
+    "application_test": "대출 신청 1건 = 신청자 1명 (TARGET 없음, 예측 대상)",
+    "bureau": "신청자(SK_ID_CURR)가 타 금융기관에 보유한 과거/현재 신용 1건 (SK_ID_BUREAU 1개당 1행)",
+    "bureau_balance": "bureau의 각 신용(SK_ID_BUREAU)에 대한 월별(MONTHS_BALANCE) 상태 스냅샷 1행",
+    "previous_application": "신청자(SK_ID_CURR)의 과거 Home Credit 대출 신청 1건 (SK_ID_PREV 1개당 1행)",
+    "POS_CASH_balance": "previous_application(SK_ID_PREV)의 POS/현금대출에 대한 월별 상태 스냅샷 1행",
+    "installments_payments": "previous_application(SK_ID_PREV)의 분할상환 회차(또는 실제 납부)별 1행",
+    "credit_card_balance": "previous_application(SK_ID_PREV)의 신용카드 대출에 대한 월별 잔액 스냅샷 1행"
+  },
+  "key_checks": {
+    "application_train": {
+      "key": "SK_ID_CURR",
+      "total_rows": 307511,
+      "distinct_keys": 307511,
+      "duplicated": false
+    },
+    "application_test": {
+      "key": "SK_ID_CURR",
+      "total_rows": 48744,
+      "distinct_keys": 48744,
+      "duplicated": false
+    },
+    "bureau": {
+      "key": "SK_ID_BUREAU",
+      "total_rows": 1716428,
+      "distinct_keys": 1716428,
+      "duplicated": false
+    },
+    "previous_application": {
+      "key": "SK_ID_PREV",
+      "total_rows": 1670214,
+      "distinct_keys": 1670214,
+      "duplicated": false
+    }
+  },
+  "train_test_overlap": 0,
+  "orphan_results": {
+    "bureau_to_application": {
+      "child_total_rows": 1716428,
+      "child_orphan_rows": 251103,
+      "child_orphan_pct": 14.629,
+      "parent_total_distinct_keys": 307511,
+      "parent_unmatched_keys": 44020,
+      "parent_unmatched_pct": 14.315
+    },
+    "bureau_balance_to_bureau": {
+      "child_total_rows": 27299925,
+      "child_orphan_rows": 3120184,
+      "child_orphan_pct": 11.429,
+      "parent_total_distinct_keys": 1716428,
+      "parent_unmatched_keys": 942074,
+      "parent_unmatched_pct": 54.886
+    },
+    "previous_application_to_application": {
+      "child_total_rows": 1670214,
+      "child_orphan_rows": 256513,
+      "child_orphan_pct": 15.358,
+      "parent_total_distinct_keys": 307511,
+      "parent_unmatched_keys": 16454,
+      "parent_unmatched_pct": 5.351
+    },
+    "POS_CASH_to_previous_application": {
+      "child_total_rows": 10001358,
+      "child_orphan_rows": 340561,
+      "child_orphan_pct": 3.405,
+      "parent_total_distinct_keys": 1670214,
+      "parent_unmatched_keys": 771311,
+      "parent_unmatched_pct": 46.18
+    },
+    "installments_to_previous_application": {
+      "child_total_rows": 13605401,
+      "child_orphan_rows": 1250826,
+      "child_orphan_pct": 9.194,
+      "parent_total_distinct_keys": 1670214,
+      "parent_unmatched_keys": 711309,
+      "parent_unmatched_pct": 42.588
+    },
+    "credit_card_to_previous_application": {
+      "child_total_rows": 3840312,
+      "child_orphan_rows": 1082816,
+      "child_orphan_pct": 28.196,
+      "parent_total_distinct_keys": 1670214,
+      "parent_unmatched_keys": 1577279,
+      "parent_unmatched_pct": 94.436
+    }
+  },
+  "bureau_orphan_vs_train_plus_test": {
+    "orphan_rows": 0,
+    "total_rows": 1716428,
+    "orphan_pct": 0.0
+  },
+  "previous_application_orphan_vs_train_plus_test": {
+    "orphan_rows": 0,
+    "total_rows": 1670214,
+    "orphan_pct": 0.0
+  },
+  "history": {
+    "bureau": {
+      "n_with_history": 263491,
+      "pct_with_history": 85.69
+    },
+    "previous_application": {
+      "n_with_history": 291057,
+      "pct_with_history": 94.65
+    },
+    "installments_payments": {
+      "n_with_history": 289406,
+      "pct_with_history": 94.11
+    },
+    "credit_card_balance": {
+      "n_with_history": 77934,
+      "pct_with_history": 25.34
+    },
+    "POS_CASH_balance": {
+      "n_with_history": 286967,
+      "pct_with_history": 93.32
+    },
+    "no_history_at_all": {
+      "n": 2470,
+      "pct": 0.8
+    },
+    "n_train_total": 307511
+  },
+  "target_distribution": [
+    {
+      "TARGET": 0,
+      "cnt": 282686,
+      "pct": 91.927
+    },
+    {
+      "TARGET": 1,
+      "cnt": 24825,
+      "pct": 8.073
+    }
+  ],
+  "test_has_target_column": false,
+  "target_definition_raw": [
+    {
+      "Table": "application_{train|test}.csv",
+      "Row": "TARGET",
+      "Description": "Target variable (1 - client with payment difficulties: he/she had late payment more than X days on at least one of the first Y installments of the loan in our sample, 0 - all other cases)",
+      "Special": NaN
+    }
+  ],
+  "missing_bucket_summary": {
+    "application_train": {
+      "0%": 56,
+      "0~10%": 9,
+      "10~50%": 16,
+      "50%+": 41
+    },
+    "application_test": {
+      "0%": 57,
+      "0~10%": 7,
+      "10~50%": 28,
+      "50%+": 29
+    },
+    "bureau": {
+      "0%": 10,
+      "0~10%": 2,
+      "10~50%": 3,
+      "50%+": 2
+    },
+    "bureau_balance": {
+      "0%": 3,
+      "0~10%": 0,
+      "10~50%": 0,
+      "50%+": 0
+    },
+    "previous_application": {
+      "0%": 22,
+      "0~10%": 1,
+      "10~50%": 10,
+      "50%+": 4
+    },
+    "POS_CASH_balance": {
+      "0%": 6,
+      "0~10%": 2,
+      "10~50%": 0,
+      "50%+": 0
+    },
+    "installments_payments": {
+      "0%": 6,
+      "0~10%": 2,
+      "10~50%": 0,
+      "50%+": 0
+    },
+    "credit_card_balance": {
+      "0%": 14,
+      "0~10%": 2,
+      "10~50%": 7,
+      "50%+": 0
+    }
+  },
+  "missing_summary": {
+    "application_train": {
+      "SK_ID_CURR": 0.0,
+      "TARGET": 0.0,
+      "NAME_CONTRACT_TYPE": 0.0,
+      "CODE_GENDER": 0.0,
+      "FLAG_OWN_CAR": 0.0,
+      "FLAG_OWN_REALTY": 0.0,
+      "CNT_CHILDREN": 0.0,
+      "AMT_INCOME_TOTAL": 0.0,
+      "AMT_CREDIT": 0.0,
+      "AMT_ANNUITY": 0.004,
+      "AMT_GOODS_PRICE": 0.09,
+      "NAME_TYPE_SUITE": 0.42,
+      "NAME_INCOME_TYPE": 0.0,
+      "NAME_EDUCATION_TYPE": 0.0,
+      "NAME_FAMILY_STATUS": 0.0,
+      "NAME_HOUSING_TYPE": 0.0,
+      "REGION_POPULATION_RELATIVE": 0.0,
+      "DAYS_BIRTH": 0.0,
+      "DAYS_EMPLOYED": 0.0,
+      "DAYS_REGISTRATION": 0.0,
+      "DAYS_ID_PUBLISH": 0.0,
+      "OWN_CAR_AGE": 65.991,
+      "FLAG_MOBIL": 0.0,
+      "FLAG_EMP_PHONE": 0.0,
+      "FLAG_WORK_PHONE": 0.0,
+      "FLAG_CONT_MOBILE": 0.0,
+      "FLAG_PHONE": 0.0,
+      "FLAG_EMAIL": 0.0,
+      "OCCUPATION_TYPE": 31.346,
+      "CNT_FAM_MEMBERS": 0.001,
+      "REGION_RATING_CLIENT": 0.0,
+      "REGION_RATING_CLIENT_W_CITY": 0.0,
+      "WEEKDAY_APPR_PROCESS_START": 0.0,
+      "HOUR_APPR_PROCESS_START": 0.0,
+      "REG_REGION_NOT_LIVE_REGION": 0.0,
+      "REG_REGION_NOT_WORK_REGION": 0.0,
+      "LIVE_REGION_NOT_WORK_REGION": 0.0,
+      "REG_CITY_NOT_LIVE_CITY": 0.0,
+      "REG_CITY_NOT_WORK_CITY": 0.0,
+      "LIVE_CITY_NOT_WORK_CITY": 0.0,
+      "ORGANIZATION_TYPE": 0.0,
+      "EXT_SOURCE_1": 56.381,
+      "EXT_SOURCE_2": 0.215,
+      "EXT_SOURCE_3": 19.825,
+      "APARTMENTS_AVG": 50.75,
+      "BASEMENTAREA_AVG": 58.516,
+      "YEARS_BEGINEXPLUATATION_AVG": 48.781,
+      "YEARS_BUILD_AVG": 66.498,
+      "COMMONAREA_AVG": 69.872,
+      "ELEVATORS_AVG": 53.296,
+      "ENTRANCES_AVG": 50.349,
+      "FLOORSMAX_AVG": 49.761,
+      "FLOORSMIN_AVG": 67.849,
+      "LANDAREA_AVG": 59.377,
+      "LIVINGAPARTMENTS_AVG": 68.355,
+      "LIVINGAREA_AVG": 50.193,
+      "NONLIVINGAPARTMENTS_AVG": 69.433,
+      "NONLIVINGAREA_AVG": 55.179,
+      "APARTMENTS_MODE": 50.75,
+      "BASEMENTAREA_MODE": 58.516,
+      "YEARS_BEGINEXPLUATATION_MODE": 48.781,
+      "YEARS_BUILD_MODE": 66.498,
+      "COMMONAREA_MODE": 69.872,
+      "ELEVATORS_MODE": 53.296,
+      "ENTRANCES_MODE": 50.349,
+      "FLOORSMAX_MODE": 49.761,
+      "FLOORSMIN_MODE": 67.849,
+      "LANDAREA_MODE": 59.377,
+      "LIVINGAPARTMENTS_MODE": 68.355,
+      "LIVINGAREA_MODE": 50.193,
+      "NONLIVINGAPARTMENTS_MODE": 69.433,
+      "NONLIVINGAREA_MODE": 55.179,
+      "APARTMENTS_MEDI": 50.75,
+      "BASEMENTAREA_MEDI": 58.516,
+      "YEARS_BEGINEXPLUATATION_MEDI": 48.781,
+      "YEARS_BUILD_MEDI": 66.498,
+      "COMMONAREA_MEDI": 69.872,
+      "ELEVATORS_MEDI": 53.296,
+      "ENTRANCES_MEDI": 50.349,
+      "FLOORSMAX_MEDI": 49.761,
+      "FLOORSMIN_MEDI": 67.849,
+      "LANDAREA_MEDI": 59.377,
+      "LIVINGAPARTMENTS_MEDI": 68.355,
+      "LIVINGAREA_MEDI": 50.193,
+      "NONLIVINGAPARTMENTS_MEDI": 69.433,
+      "NONLIVINGAREA_MEDI": 55.179,
+      "FONDKAPREMONT_MODE": 68.386,
+      "HOUSETYPE_MODE": 50.176,
+      "TOTALAREA_MODE": 48.269,
+      "WALLSMATERIAL_MODE": 50.841,
+      "EMERGENCYSTATE_MODE": 47.398,
+      "OBS_30_CNT_SOCIAL_CIRCLE": 0.332,
+      "DEF_30_CNT_SOCIAL_CIRCLE": 0.332,
+      "OBS_60_CNT_SOCIAL_CIRCLE": 0.332,
+      "DEF_60_CNT_SOCIAL_CIRCLE": 0.332,
+      "DAYS_LAST_PHONE_CHANGE": 0.0,
+      "FLAG_DOCUMENT_2": 0.0,
+      "FLAG_DOCUMENT_3": 0.0,
+      "FLAG_DOCUMENT_4": 0.0,
+      "FLAG_DOCUMENT_5": 0.0,
+      "FLAG_DOCUMENT_6": 0.0,
+      "FLAG_DOCUMENT_7": 0.0,
+      "FLAG_DOCUMENT_8": 0.0,
+      "FLAG_DOCUMENT_9": 0.0,
+      "FLAG_DOCUMENT_10": 0.0,
+      "FLAG_DOCUMENT_11": 0.0,
+      "FLAG_DOCUMENT_12": 0.0,
+      "FLAG_DOCUMENT_13": 0.0,
+      "FLAG_DOCUMENT_14": 0.0,
+      "FLAG_DOCUMENT_15": 0.0,
+      "FLAG_DOCUMENT_16": 0.0,
+      "FLAG_DOCUMENT_17": 0.0,
+      "FLAG_DOCUMENT_18": 0.0,
+      "FLAG_DOCUMENT_19": 0.0,
+      "FLAG_DOCUMENT_20": 0.0,
+      "FLAG_DOCUMENT_21": 0.0,
+      "AMT_REQ_CREDIT_BUREAU_HOUR": 13.502,
+      "AMT_REQ_CREDIT_BUREAU_DAY": 13.502,
+      "AMT_REQ_CREDIT_BUREAU_WEEK": 13.502,
+      "AMT_REQ_CREDIT_BUREAU_MON": 13.502,
+      "AMT_REQ_CREDIT_BUREAU_QRT": 13.502,
+      "AMT_REQ_CREDIT_BUREAU_YEAR": 13.502
+    },
+    "application_test": {
+      "SK_ID_CURR": 0.0,
+      "NAME_CONTRACT_TYPE": 0.0,
+      "CODE_GENDER": 0.0,
+      "FLAG_OWN_CAR": 0.0,
+      "FLAG_OWN_REALTY": 0.0,
+      "CNT_CHILDREN": 0.0,
+      "AMT_INCOME_TOTAL": 0.0,
+      "AMT_CREDIT": 0.0,
+      "AMT_ANNUITY": 0.049,
+      "AMT_GOODS_PRICE": 0.0,
+      "NAME_TYPE_SUITE": 1.869,
+      "NAME_INCOME_TYPE": 0.0,
+      "NAME_EDUCATION_TYPE": 0.0,
+      "NAME_FAMILY_STATUS": 0.0,
+      "NAME_HOUSING_TYPE": 0.0,
+      "REGION_POPULATION_RELATIVE": 0.0,
+      "DAYS_BIRTH": 0.0,
+      "DAYS_EMPLOYED": 0.0,
+      "DAYS_REGISTRATION": 0.0,
+      "DAYS_ID_PUBLISH": 0.0,
+      "OWN_CAR_AGE": 66.289,
+      "FLAG_MOBIL": 0.0,
+      "FLAG_EMP_PHONE": 0.0,
+      "FLAG_WORK_PHONE": 0.0,
+      "FLAG_CONT_MOBILE": 0.0,
+      "FLAG_PHONE": 0.0,
+      "FLAG_EMAIL": 0.0,
+      "OCCUPATION_TYPE": 32.014,
+      "CNT_FAM_MEMBERS": 0.0,
+      "REGION_RATING_CLIENT": 0.0,
+      "REGION_RATING_CLIENT_W_CITY": 0.0,
+      "WEEKDAY_APPR_PROCESS_START": 0.0,
+      "HOUR_APPR_PROCESS_START": 0.0,
+      "REG_REGION_NOT_LIVE_REGION": 0.0,
+      "REG_REGION_NOT_WORK_REGION": 0.0,
+      "LIVE_REGION_NOT_WORK_REGION": 0.0,
+      "REG_CITY_NOT_LIVE_CITY": 0.0,
+      "REG_CITY_NOT_WORK_CITY": 0.0,
+      "LIVE_CITY_NOT_WORK_CITY": 0.0,
+      "ORGANIZATION_TYPE": 0.0,
+      "EXT_SOURCE_1": 42.122,
+      "EXT_SOURCE_2": 0.016,
+      "EXT_SOURCE_3": 17.783,
+      "APARTMENTS_AVG": 49.005,
+      "BASEMENTAREA_AVG": 56.706,
+      "YEARS_BEGINEXPLUATATION_AVG": 46.89,
+      "YEARS_BUILD_AVG": 65.276,
+      "COMMONAREA_AVG": 68.716,
+      "ELEVATORS_AVG": 51.676,
+      "ENTRANCES_AVG": 48.373,
+      "FLOORSMAX_AVG": 47.844,
+      "FLOORSMIN_AVG": 66.605,
+      "LANDAREA_AVG": 57.964,
+      "LIVINGAPARTMENTS_AVG": 67.249,
+      "LIVINGAREA_AVG": 48.318,
+      "NONLIVINGAPARTMENTS_AVG": 68.413,
+      "NONLIVINGAREA_AVG": 53.512,
+      "APARTMENTS_MODE": 49.005,
+      "BASEMENTAREA_MODE": 56.706,
+      "YEARS_BEGINEXPLUATATION_MODE": 46.89,
+      "YEARS_BUILD_MODE": 65.276,
+      "COMMONAREA_MODE": 68.716,
+      "ELEVATORS_MODE": 51.676,
+      "ENTRANCES_MODE": 48.373,
+      "FLOORSMAX_MODE": 47.844,
+      "FLOORSMIN_MODE": 66.605,
+      "LANDAREA_MODE": 57.964,
+      "LIVINGAPARTMENTS_MODE": 67.249,
+      "LIVINGAREA_MODE": 48.318,
+      "NONLIVINGAPARTMENTS_MODE": 68.413,
+      "NONLIVINGAREA_MODE": 53.512,
+      "APARTMENTS_MEDI": 49.005,
+      "BASEMENTAREA_MEDI": 56.706,
+      "YEARS_BEGINEXPLUATATION_MEDI": 46.89,
+      "YEARS_BUILD_MEDI": 65.276,
+      "COMMONAREA_MEDI": 68.716,
+      "ELEVATORS_MEDI": 51.676,
+      "ENTRANCES_MEDI": 48.373,
+      "FLOORSMAX_MEDI": 47.844,
+      "FLOORSMIN_MEDI": 66.605,
+      "LANDAREA_MEDI": 57.964,
+      "LIVINGAPARTMENTS_MEDI": 67.249,
+      "LIVINGAREA_MEDI": 48.318,
+      "NONLIVINGAPARTMENTS_MEDI": 68.413,
+      "NONLIVINGAREA_MEDI": 53.512,
+      "FONDKAPREMONT_MODE": 67.284,
+      "HOUSETYPE_MODE": 48.455,
+      "TOTALAREA_MODE": 46.414,
+      "WALLSMATERIAL_MODE": 49.017,
+      "EMERGENCYSTATE_MODE": 45.563,
+      "OBS_30_CNT_SOCIAL_CIRCLE": 0.059,
+      "DEF_30_CNT_SOCIAL_CIRCLE": 0.059,
+      "OBS_60_CNT_SOCIAL_CIRCLE": 0.059,
+      "DEF_60_CNT_SOCIAL_CIRCLE": 0.059,
+      "DAYS_LAST_PHONE_CHANGE": 0.0,
+      "FLAG_DOCUMENT_2": 0.0,
+      "FLAG_DOCUMENT_3": 0.0,
+      "FLAG_DOCUMENT_4": 0.0,
+      "FLAG_DOCUMENT_5": 0.0,
+      "FLAG_DOCUMENT_6": 0.0,
+      "FLAG_DOCUMENT_7": 0.0,
+      "FLAG_DOCUMENT_8": 0.0,
+      "FLAG_DOCUMENT_9": 0.0,
+      "FLAG_DOCUMENT_10": 0.0,
+      "FLAG_DOCUMENT_11": 0.0,
+      "FLAG_DOCUMENT_12": 0.0,
+      "FLAG_DOCUMENT_13": 0.0,
+      "FLAG_DOCUMENT_14": 0.0,
+      "FLAG_DOCUMENT_15": 0.0,
+      "FLAG_DOCUMENT_16": 0.0,
+      "FLAG_DOCUMENT_17": 0.0,
+      "FLAG_DOCUMENT_18": 0.0,
+      "FLAG_DOCUMENT_19": 0.0,
+      "FLAG_DOCUMENT_20": 0.0,
+      "FLAG_DOCUMENT_21": 0.0,
+      "AMT_REQ_CREDIT_BUREAU_HOUR": 12.41,
+      "AMT_REQ_CREDIT_BUREAU_DAY": 12.41,
+      "AMT_REQ_CREDIT_BUREAU_WEEK": 12.41,
+      "AMT_REQ_CREDIT_BUREAU_MON": 12.41,
+      "AMT_REQ_CREDIT_BUREAU_QRT": 12.41,
+      "AMT_REQ_CREDIT_BUREAU_YEAR": 12.41
+    },
+    "bureau": {
+      "SK_ID_CURR": 0.0,
+      "SK_ID_BUREAU": 0.0,
+      "CREDIT_ACTIVE": 0.0,
+      "CREDIT_CURRENCY": 0.0,
+      "DAYS_CREDIT": 0.0,
+      "CREDIT_DAY_OVERDUE": 0.0,
+      "DAYS_CREDIT_ENDDATE": 6.15,
+      "DAYS_ENDDATE_FACT": 36.917,
+      "AMT_CREDIT_MAX_OVERDUE": 65.513,
+      "CNT_CREDIT_PROLONG": 0.0,
+      "AMT_CREDIT_SUM": 0.001,
+      "AMT_CREDIT_SUM_DEBT": 15.012,
+      "AMT_CREDIT_SUM_LIMIT": 34.477,
+      "AMT_CREDIT_SUM_OVERDUE": 0.0,
+      "CREDIT_TYPE": 0.0,
+      "DAYS_CREDIT_UPDATE": 0.0,
+      "AMT_ANNUITY": 71.473
+    },
+    "bureau_balance": {
+      "SK_ID_BUREAU": 0.0,
+      "MONTHS_BALANCE": 0.0,
+      "STATUS": 0.0
+    },
+    "previous_application": {
+      "SK_ID_PREV": 0.0,
+      "SK_ID_CURR": 0.0,
+      "NAME_CONTRACT_TYPE": 0.0,
+      "AMT_ANNUITY": 22.287,
+      "AMT_APPLICATION": 0.0,
+      "AMT_CREDIT": 0.0,
+      "AMT_DOWN_PAYMENT": 53.636,
+      "AMT_GOODS_PRICE": 23.082,
+      "WEEKDAY_APPR_PROCESS_START": 0.0,
+      "HOUR_APPR_PROCESS_START": 0.0,
+      "FLAG_LAST_APPL_PER_CONTRACT": 0.0,
+      "NFLAG_LAST_APPL_IN_DAY": 0.0,
+      "RATE_DOWN_PAYMENT": 53.636,
+      "RATE_INTEREST_PRIMARY": 99.644,
+      "RATE_INTEREST_PRIVILEGED": 99.644,
+      "NAME_CASH_LOAN_PURPOSE": 0.0,
+      "NAME_CONTRACT_STATUS": 0.0,
+      "DAYS_DECISION": 0.0,
+      "NAME_PAYMENT_TYPE": 0.0,
+      "CODE_REJECT_REASON": 0.0,
+      "NAME_TYPE_SUITE": 49.12,
+      "NAME_CLIENT_TYPE": 0.0,
+      "NAME_GOODS_CATEGORY": 0.0,
+      "NAME_PORTFOLIO": 0.0,
+      "NAME_PRODUCT_TYPE": 0.0,
+      "CHANNEL_TYPE": 0.0,
+      "SELLERPLACE_AREA": 0.0,
+      "NAME_SELLER_INDUSTRY": 0.0,
+      "CNT_PAYMENT": 22.286,
+      "NAME_YIELD_GROUP": 0.0,
+      "PRODUCT_COMBINATION": 0.021,
+      "DAYS_FIRST_DRAWING": 40.298,
+      "DAYS_FIRST_DUE": 40.298,
+      "DAYS_LAST_DUE_1ST_VERSION": 40.298,
+      "DAYS_LAST_DUE": 40.298,
+      "DAYS_TERMINATION": 40.298,
+      "NFLAG_INSURED_ON_APPROVAL": 40.298
+    },
+    "POS_CASH_balance": {
+      "SK_ID_PREV": 0.0,
+      "SK_ID_CURR": 0.0,
+      "MONTHS_BALANCE": 0.0,
+      "CNT_INSTALMENT": 0.261,
+      "CNT_INSTALMENT_FUTURE": 0.261,
+      "NAME_CONTRACT_STATUS": 0.0,
+      "SK_DPD": 0.0,
+      "SK_DPD_DEF": 0.0
+    },
+    "installments_payments": {
+      "SK_ID_PREV": 0.0,
+      "SK_ID_CURR": 0.0,
+      "NUM_INSTALMENT_VERSION": 0.0,
+      "NUM_INSTALMENT_NUMBER": 0.0,
+      "DAYS_INSTALMENT": 0.0,
+      "DAYS_ENTRY_PAYMENT": 0.021,
+      "AMT_INSTALMENT": 0.0,
+      "AMT_PAYMENT": 0.021
+    },
+    "credit_card_balance": {
+      "SK_ID_PREV": 0.0,
+      "SK_ID_CURR": 0.0,
+      "MONTHS_BALANCE": 0.0,
+      "AMT_BALANCE": 0.0,
+      "AMT_CREDIT_LIMIT_ACTUAL": 0.0,
+      "AMT_DRAWINGS_ATM_CURRENT": 19.525,
+      "AMT_DRAWINGS_CURRENT": 0.0,
+      "AMT_DRAWINGS_OTHER_CURRENT": 19.525,
+      "AMT_DRAWINGS_POS_CURRENT": 19.525,
+      "AMT_INST_MIN_REGULARITY": 7.948,
+      "AMT_PAYMENT_CURRENT": 19.998,
+      "AMT_PAYMENT_TOTAL_CURRENT": 0.0,
+      "AMT_RECEIVABLE_PRINCIPAL": 0.0,
+      "AMT_RECIVABLE": 0.0,
+      "AMT_TOTAL_RECEIVABLE": 0.0,
+      "CNT_DRAWINGS_ATM_CURRENT": 19.525,
+      "CNT_DRAWINGS_CURRENT": 0.0,
+      "CNT_DRAWINGS_OTHER_CURRENT": 19.525,
+      "CNT_DRAWINGS_POS_CURRENT": 19.525,
+      "CNT_INSTALMENT_MATURE_CUM": 7.948,
+      "NAME_CONTRACT_STATUS": 0.0,
+      "SK_DPD": 0.0,
+      "SK_DPD_DEF": 0.0
+    }
+  },
+  "constant_cols": {
+    "application_train": [
+      {
+        "col": "FLAG_MOBIL",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_2",
+        "top_value_pct": 99.996
+      },
+      {
+        "col": "FLAG_DOCUMENT_4",
+        "top_value_pct": 99.992
+      },
+      {
+        "col": "FLAG_DOCUMENT_7",
+        "top_value_pct": 99.981
+      },
+      {
+        "col": "FLAG_DOCUMENT_10",
+        "top_value_pct": 99.998
+      },
+      {
+        "col": "FLAG_DOCUMENT_12",
+        "top_value_pct": 99.999
+      },
+      {
+        "col": "FLAG_DOCUMENT_17",
+        "top_value_pct": 99.973
+      },
+      {
+        "col": "FLAG_DOCUMENT_19",
+        "top_value_pct": 99.94
+      },
+      {
+        "col": "FLAG_DOCUMENT_20",
+        "top_value_pct": 99.949
+      },
+      {
+        "col": "FLAG_DOCUMENT_21",
+        "top_value_pct": 99.967
+      }
+    ],
+    "application_test": [
+      {
+        "col": "FLAG_MOBIL",
+        "top_value_pct": 99.998
+      },
+      {
+        "col": "FLAG_DOCUMENT_2",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_4",
+        "top_value_pct": 99.99
+      },
+      {
+        "col": "FLAG_DOCUMENT_7",
+        "top_value_pct": 99.996
+      },
+      {
+        "col": "FLAG_DOCUMENT_10",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_12",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_13",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_14",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_15",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_16",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_17",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_19",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_20",
+        "top_value_pct": 100.0
+      },
+      {
+        "col": "FLAG_DOCUMENT_21",
+        "top_value_pct": 100.0
+      }
+    ],
+    "bureau": [
+      {
+        "col": "CREDIT_CURRENCY",
+        "top_value_pct": 99.918
+      }
+    ],
+    "bureau_balance": [],
+    "previous_application": [],
+    "POS_CASH_balance": [],
+    "installments_payments": [],
+    "credit_card_balance": []
+  },
+  "duplicate_rows": {
+    "application_train": 0,
+    "application_test": 0,
+    "bureau": 0,
+    "bureau_balance": 0,
+    "previous_application": 0,
+    "POS_CASH_balance": 0,
+    "installments_payments": 0,
+    "credit_card_balance": 0
+  },
+  "days_anomalies": {
+    "application_train.DAYS_BIRTH": {
+      "min": -25229.0,
+      "max": -7489.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_train.DAYS_EMPLOYED": {
+      "min": -17912.0,
+      "max": 365243.0,
+      "n_positive": 55374,
+      "n_365243": 55374
+    },
+    "application_train.DAYS_REGISTRATION": {
+      "min": -24672.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_train.DAYS_ID_PUBLISH": {
+      "min": -7197.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_train.DAYS_LAST_PHONE_CHANGE": {
+      "min": -4292.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_test.DAYS_BIRTH": {
+      "min": -25195.0,
+      "max": -7338.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_test.DAYS_EMPLOYED": {
+      "min": -17463.0,
+      "max": 365243.0,
+      "n_positive": 9274,
+      "n_365243": 9274
+    },
+    "application_test.DAYS_REGISTRATION": {
+      "min": -23722.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_test.DAYS_ID_PUBLISH": {
+      "min": -6348.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "application_test.DAYS_LAST_PHONE_CHANGE": {
+      "min": -4361.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "bureau.DAYS_CREDIT": {
+      "min": -2922.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "bureau.DAYS_CREDIT_ENDDATE": {
+      "min": -42060.0,
+      "max": 31199.0,
+      "n_positive": 602603,
+      "n_365243": 0
+    },
+    "bureau.DAYS_ENDDATE_FACT": {
+      "min": -42023.0,
+      "max": 0.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "bureau.DAYS_CREDIT_UPDATE": {
+      "min": -41947.0,
+      "max": 372.0,
+      "n_positive": 17,
+      "n_365243": 0
+    },
+    "previous_application.DAYS_DECISION": {
+      "min": -2922.0,
+      "max": -1.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "previous_application.DAYS_FIRST_DRAWING": {
+      "min": -2922.0,
+      "max": 365243.0,
+      "n_positive": 934444,
+      "n_365243": 934444
+    },
+    "previous_application.DAYS_FIRST_DUE": {
+      "min": -2892.0,
+      "max": 365243.0,
+      "n_positive": 40645,
+      "n_365243": 40645
+    },
+    "previous_application.DAYS_LAST_DUE_1ST_VERSION": {
+      "min": -2801.0,
+      "max": 365243.0,
+      "n_positive": 318256,
+      "n_365243": 93864
+    },
+    "previous_application.DAYS_LAST_DUE": {
+      "min": -2889.0,
+      "max": 365243.0,
+      "n_positive": 211221,
+      "n_365243": 211221
+    },
+    "previous_application.DAYS_TERMINATION": {
+      "min": -2874.0,
+      "max": 365243.0,
+      "n_positive": 225913,
+      "n_365243": 225913
+    },
+    "installments_payments.DAYS_INSTALMENT": {
+      "min": -2922.0,
+      "max": -1.0,
+      "n_positive": 0,
+      "n_365243": 0
+    },
+    "installments_payments.DAYS_ENTRY_PAYMENT": {
+      "min": -4921.0,
+      "max": -1.0,
+      "n_positive": 0,
+      "n_365243": 0
+    }
+  },
+  "special_cat_values": {
+    "application_train.CODE_GENDER.XNA": 4,
+    "application_train.NAME_FAMILY_STATUS.Unknown": 2,
+    "application_train.ORGANIZATION_TYPE.XNA": 55374,
+    "application_test.ORGANIZATION_TYPE.XNA": 9274,
+    "bureau.CREDIT_TYPE.Unknown type of loan": 555,
+    "previous_application.NAME_CONTRACT_TYPE.XNA": 346,
+    "previous_application.NAME_CASH_LOAN_PURPOSE.XNA": 677918,
+    "previous_application.NAME_CASH_LOAN_PURPOSE.XAP": 922661,
+    "previous_application.NAME_PAYMENT_TYPE.XNA": 627384,
+    "previous_application.CODE_REJECT_REASON.XNA": 5244,
+    "previous_application.CODE_REJECT_REASON.XAP": 1353093,
+    "previous_application.NAME_CLIENT_TYPE.XNA": 1941,
+    "previous_application.NAME_GOODS_CATEGORY.XNA": 950809,
+    "previous_application.NAME_PORTFOLIO.XNA": 372230,
+    "previous_application.NAME_PRODUCT_TYPE.XNA": 1063666,
+    "previous_application.NAME_SELLER_INDUSTRY.XNA": 855720,
+    "previous_application.NAME_YIELD_GROUP.XNA": 517215,
+    "POS_CASH_balance.NAME_CONTRACT_STATUS.XNA": 2
+  },
+  "amt_anomalies": {
+    "application_train.AMT_INCOME_TOTAL": {
+      "min": 25650.0,
+      "max": 117000000.0,
+      "n_negative": 0,
+      "p99.9": 900000.0
+    },
+    "application_train.AMT_CREDIT": {
+      "min": 45000.0,
+      "max": 4050000.0,
+      "n_negative": 0,
+      "p99.9": 2517300.0
+    },
+    "application_train.AMT_ANNUITY": {
+      "min": 1615.5,
+      "max": 258025.5,
+      "n_negative": 0,
+      "p99.9": 110047.5
+    },
+    "application_train.AMT_GOODS_PRICE": {
+      "min": 40500.0,
+      "max": 4050000.0,
+      "n_negative": 0,
+      "p99.9": 2250000.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_HOUR": {
+      "min": 0.0,
+      "max": 4.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_DAY": {
+      "min": 0.0,
+      "max": 9.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_WEEK": {
+      "min": 0.0,
+      "max": 8.0,
+      "n_negative": 0,
+      "p99.9": 2.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_MON": {
+      "min": 0.0,
+      "max": 27.0,
+      "n_negative": 0,
+      "p99.9": 12.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_QRT": {
+      "min": 0.0,
+      "max": 261.0,
+      "n_negative": 0,
+      "p99.9": 4.0
+    },
+    "application_train.AMT_REQ_CREDIT_BUREAU_YEAR": {
+      "min": 0.0,
+      "max": 25.0,
+      "n_negative": 0,
+      "p99.9": 9.0
+    },
+    "application_test.AMT_INCOME_TOTAL": {
+      "min": 26941.5,
+      "max": 4410000.0,
+      "n_negative": 0,
+      "p99.9": 900000.0
+    },
+    "application_test.AMT_CREDIT": {
+      "min": 45000.0,
+      "max": 2245500.0,
+      "n_negative": 0,
+      "p99.9": 2156400.0
+    },
+    "application_test.AMT_ANNUITY": {
+      "min": 2295.0,
+      "max": 180576.0,
+      "n_negative": 0,
+      "p99.9": 123592.5
+    },
+    "application_test.AMT_GOODS_PRICE": {
+      "min": 45000.0,
+      "max": 2245500.0,
+      "n_negative": 0,
+      "p99.9": 1800000.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_HOUR": {
+      "min": 0.0,
+      "max": 2.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_DAY": {
+      "min": 0.0,
+      "max": 2.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_WEEK": {
+      "min": 0.0,
+      "max": 2.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_MON": {
+      "min": 0.0,
+      "max": 6.0,
+      "n_negative": 0,
+      "p99.9": 1.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_QRT": {
+      "min": 0.0,
+      "max": 7.0,
+      "n_negative": 0,
+      "p99.9": 4.0
+    },
+    "application_test.AMT_REQ_CREDIT_BUREAU_YEAR": {
+      "min": 0.0,
+      "max": 17.0,
+      "n_negative": 0,
+      "p99.9": 9.0
+    },
+    "bureau.AMT_CREDIT_MAX_OVERDUE": {
+      "min": 0.0,
+      "max": 115987185.0,
+      "n_negative": 0,
+      "p99.9": 211324.20695999236
+    },
+    "bureau.AMT_CREDIT_SUM": {
+      "min": 0.0,
+      "max": 585000000.0,
+      "n_negative": 0,
+      "p99.9": 11021003.66699991
+    },
+    "bureau.AMT_CREDIT_SUM_DEBT": {
+      "min": -4705600.32,
+      "max": 170100000.0,
+      "n_negative": 8418,
+      "p99.9": 8841941.727660041
+    },
+    "bureau.AMT_CREDIT_SUM_LIMIT": {
+      "min": -586406.115,
+      "max": 4705600.32,
+      "n_negative": 351,
+      "p99.9": 562500.0
+    },
+    "bureau.AMT_CREDIT_SUM_OVERDUE": {
+      "min": 0.0,
+      "max": 3756681.0,
+      "n_negative": 0,
+      "p99.9": 450.0
+    },
+    "bureau.AMT_ANNUITY": {
+      "min": 0.0,
+      "max": 118453423.5,
+      "n_negative": 0,
+      "p99.9": 950008.5
+    },
+    "previous_application.AMT_ANNUITY": {
+      "min": 0.0,
+      "max": 418058.145,
+      "n_negative": 0,
+      "p99.9": 119231.415
+    },
+    "previous_application.AMT_APPLICATION": {
+      "min": 0.0,
+      "max": 6905160.0,
+      "n_negative": 0,
+      "p99.9": 2250000.0
+    },
+    "previous_application.AMT_CREDIT": {
+      "min": 0.0,
+      "max": 6905160.0,
+      "n_negative": 0,
+      "p99.9": 2517300.0
+    },
+    "previous_application.AMT_DOWN_PAYMENT": {
+      "min": -0.9,
+      "max": 3060045.0,
+      "n_negative": 2,
+      "p99.9": 208801.96020001118
+    },
+    "previous_application.AMT_GOODS_PRICE": {
+      "min": 0.0,
+      "max": 6905160.0,
+      "n_negative": 0,
+      "p99.9": 2250000.0
+    },
+    "installments_payments.AMT_INSTALMENT": {
+      "min": 0.0,
+      "max": 3771487.845,
+      "n_negative": 0,
+      "p99.9": 790314.3359999878
+    },
+    "installments_payments.AMT_PAYMENT": {
+      "min": 0.0,
+      "max": 3771487.845,
+      "n_negative": 0,
+      "p99.9": 852835.5706502845
+    },
+    "credit_card_balance.AMT_BALANCE": {
+      "min": -420250.185,
+      "max": 1505902.185,
+      "n_negative": 2345,
+      "p99.9": 805651.8109199863
+    },
+    "credit_card_balance.AMT_CREDIT_LIMIT_ACTUAL": {
+      "min": 0.0,
+      "max": 1350000.0,
+      "n_negative": 0,
+      "p99.9": 900000.0
+    },
+    "credit_card_balance.AMT_DRAWINGS_ATM_CURRENT": {
+      "min": -6827.31,
+      "max": 2115000.0,
+      "n_negative": 1,
+      "p99.9": 346500.0
+    },
+    "credit_card_balance.AMT_DRAWINGS_CURRENT": {
+      "min": -6211.62,
+      "max": 2287098.315,
+      "n_negative": 3,
+      "p99.9": 418146.11549996934
+    },
+    "credit_card_balance.AMT_DRAWINGS_OTHER_CURRENT": {
+      "min": 0.0,
+      "max": 1529847.0,
+      "n_negative": 0,
+      "p99.9": 91800.0
+    },
+    "credit_card_balance.AMT_DRAWINGS_POS_CURRENT": {
+      "min": 0.0,
+      "max": 2239274.16,
+      "n_negative": 0,
+      "p99.9": 268219.16324999515
+    },
+    "credit_card_balance.AMT_INST_MIN_REGULARITY": {
+      "min": 0.0,
+      "max": 202882.005,
+      "n_negative": 0,
+      "p99.9": 40245.7184999997
+    },
+    "credit_card_balance.AMT_PAYMENT_CURRENT": {
+      "min": 0.0,
+      "max": 4289207.445,
+      "n_negative": 0,
+      "p99.9": 477045.0
+    },
+    "credit_card_balance.AMT_PAYMENT_TOTAL_CURRENT": {
+      "min": 0.0,
+      "max": 4278315.69,
+      "n_negative": 0,
+      "p99.9": 458919.97843498725
+    },
+    "credit_card_balance.AMT_RECEIVABLE_PRINCIPAL": {
+      "min": -423305.82,
+      "max": 1472316.795,
+      "n_negative": 2428,
+      "p99.9": 773501.7234599377
+    },
+    "credit_card_balance.AMT_RECIVABLE": {
+      "min": -420250.185,
+      "max": 1493338.185,
+      "n_negative": 109338,
+      "p99.9": 800514.4342499916
+    },
+    "credit_card_balance.AMT_TOTAL_RECEIVABLE": {
+      "min": -420250.185,
+      "max": 1493338.185,
+      "n_negative": 109330,
+      "p99.9": 800514.4342499916
+    }
+  },
+  "gender_check": [
+    {
+      "CODE_GENDER": "F",
+      "cnt": 202448
+    },
+    {
+      "CODE_GENDER": "M",
+      "cnt": 105059
+    },
+    {
+      "CODE_GENDER": "XNA",
+      "cnt": 4
+    }
+  ],
+  "absolute_date_columns": [],
+  "leakage_candidates": {
+    "POS_CASH_balance": {
+      "col": "MONTHS_BALANCE",
+      "n_future": 0,
+      "pct_future": 0.0
+    },
+    "credit_card_balance": {
+      "col": "MONTHS_BALANCE",
+      "n_future": 0,
+      "pct_future": 0.0
+    },
+    "bureau_balance": {
+      "col": "MONTHS_BALANCE",
+      "n_future": 0,
+      "pct_future": 0.0
+    },
+    "previous_application.DAYS_DECISION": {
+      "col": "DAYS_DECISION",
+      "n_future_excl_365243": 0
+    },
+    "previous_application.DAYS_FIRST_DRAWING": {
+      "col": "DAYS_FIRST_DRAWING",
+      "n_future_excl_365243": 0
+    },
+    "previous_application.DAYS_FIRST_DUE": {
+      "col": "DAYS_FIRST_DUE",
+      "n_future_excl_365243": 0
+    },
+    "previous_application.DAYS_LAST_DUE_1ST_VERSION": {
+      "col": "DAYS_LAST_DUE_1ST_VERSION",
+      "n_future_excl_365243": 224392
+    },
+    "previous_application.DAYS_LAST_DUE": {
+      "col": "DAYS_LAST_DUE",
+      "n_future_excl_365243": 0
+    },
+    "previous_application.DAYS_TERMINATION": {
+      "col": "DAYS_TERMINATION",
+      "n_future_excl_365243": 0
+    }
+  }
+}
