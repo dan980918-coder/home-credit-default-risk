@@ -1,142 +1,227 @@
-# 대출 채무불이행 예측
-Home Credit Default Risk
+# 연체 위험 기반 대출 승인 기준 설계
+Loan Approval Risk Scoring
 
-한 줄 요약: 8개 신용이력 테이블로 대출 신청자의 연체 가능성을 예측하고, 심사 임계값별 승인율-연체율 트레이드오프까지 제시하는 분석이다.
+> 승인율 80%로 심사하면 승인 고객 연체율이 8.1%에서 4.6%로 떨어진다. 외부 신용점수만 쓸 때(5.3%)보다 12% 더 낮은 수준으로, 신청 1만 건당 연체 고객이 약 52명 줄어든다. 같은 연체율을 유지한다면 승인을 6%p(1만 건당 600건) 더 늘릴 수 있다.
 
-[![CI](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml/badge.svg)](https://github.com/dan980918-coder/home-credit-default-risk/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/Python-3.13-blue?style=flat-square)
-![LightGBM](https://img.shields.io/badge/LightGBM-4.6-brightgreen?style=flat-square)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.141-teal?style=flat-square)
-![Docker](https://img.shields.io/badge/Docker-238MB_image-blue?style=flat-square)
-
-![임계값에 따른 승인율-연체율 트레이드오프](assets/figures/threshold_tradeoff.png)
+![승인율별 연체율: 현행 기준 vs 새 점수](v2/docs/figures/tradeoff_champion_vs_challenger.png)
 
 ## 한눈에 보기
 
 | 항목 | 내용 |
 |---|---|
-| 문제 | 대출 신청자의 상환 이력 데이터로 연체 가능성을 예측하고, 심사에 쓸 임계값 기준을 설계 |
+| 문제 | 대출 신청자의 상환 이력 데이터로 연체 위험을 점수화하고, 승인 기준으로 쓸 수 있는 근거를 설계 |
 | 데이터 | Kaggle Home Credit Default Risk(2018), 8개 테이블, 신청자 307,511명 |
-| 역할·기간 | 팀(3명) 모델링(2026.08) + 개인 확장(서빙·배포·모니터링·임계값 분석, 2026.08~09) |
-| 기술 | Python, DuckDB, LightGBM, SHAP, FastAPI, Docker, AWS EC2, Streamlit |
-
-**핵심 결과**
-- Lean(A) + LightGBM이 12개 모델·데이터셋 조합 중 최고 성능(검증 AUC **0.7825**, App-only 대비 **+0.0202**, 5-fold CV 기준)을 기록해 최종 채택됐다.
-- 임계값을 0.60으로 두면 승인율 81.4%를 유지하면서 승인군 연체율을 기저치 8.1%의 절반 수준인 4.6%까지 낮출 수 있다(Recall 53.8%).
-- Docker 이미지 238MB, 정상 상태 PSI(모집단 안정성 지표) 0.00~0.02, 드리프트 주입 시 6.2~7.1까지 치솟아 경고 12건을 오탐·미탐 없이 탐지했다.
-
-**제안**: 별도 기준이 없다면 임계값 0.60을 심사 기본값으로 채택해 승인율 81%대를 유지하면서 연체율을 거의 절반으로 낮출 것을 제안한다.
+| 역할·기간 | 팀(3명) 모델링(2026.08) + 개인 재설계(2026.10) |
+| 기술 | Python, DuckDB, scikit-learn, LightGBM, SHAP |
 
 ## 목차
 
 1. [문제 정의](#1-문제-정의)
-2. [데이터](#2-데이터)
-3. [분석 설계](#3-분석-설계)
-4. [핵심 결과](#4-핵심-결과)
-5. [제안](#5-제안)
-6. [판단 기록](#6-판단-기록)
-7. [한계와 다음 단계](#7-한계와-다음-단계)
-8. [재현 방법](#8-재현-방법)
-9. [저장소 구조](#9-저장소-구조)
-10. [역할](#10-역할)
+2. [결과](#2-결과)
+3. [한계와 다음 단계](#3-한계와-다음-단계)
+4. [판단 기록](#4-판단-기록)
+5. [데이터](#5-데이터)
+6. [분석 과정](#6-분석-과정)
+7. [SQL 하이라이트](#7-sql-하이라이트)
+8. [AI 활용 방식](#8-ai-활용-방식)
+9. [재현 방법](#9-재현-방법)
+10. [저장소 구조](#10-저장소-구조)
+11. [역할](#11-역할)
+12. [이전 버전(v1)](#12-이전-버전v1)
+13. [데이터 이용 조건과 라이선스](#데이터-이용-조건과-라이선스)
 
 ## 1. 문제 정의
 
-대출 신청자 중 상환 능력이 부족한 사람을 사전에 가려내는 일은 금융기관의 핵심 리스크 관리 과제다. 신청 건수가 많아지면 수기 심사만으로는 감당하기 어렵고, 심사자마다 기준이 달라질 위험도 있다. 이 프로젝트는 신청자의 신용 이력 데이터로 연체 가능성을 점수화하는 모델을 만들고, 그 점수를 실제 심사에 쓸 수 있는 임계값 기준으로 바꾸는 것을 목표로 한다. 신용평가 모델 담당자나 리스크 심사 정책 담당자가 참고할 수 있는 분석이다.
+| 구분 | 내용 |
+|---|---|
+| 현상 | 신청 건수가 늘어날수록 수기 심사만으로는 감당하기 어렵고, 심사자마다 기준이 달라질 위험이 있다 |
+| 문제 | 외부 신용점수만으로는 승인 여부를 가르는 근거가 충분하지 않다 |
+| 목표 | 신청자의 상환 이력 데이터로 연체 위험을 점수화해, 외부 신용점수 대비 더 나은 승인 기준을 만든다 |
 
-## 2. 데이터
+국내에서도 카드대출 연체율이 상승하는 추세이며, 이는 대출 심사 기준을 데이터로 재설계할 필요성을 보여주는 배경이다([참고 기사](https://www.tfmedia.co.kr/news/article.html?no=196669)).
 
-Kaggle "Home Credit Default Risk"(2018)는 단일 파일이 아니라 8개 CSV가 `SK_ID_CURR`(고객·신청 단위 키) 중심으로 연결된 다중 테이블 구조다.
+## 2. 결과
 
-| 테이블 | 내용 | 행 수 | 키 |
-|---|---|---|---|
-| `application_train.csv` | 대출 신청 정보 + 정답 라벨(`TARGET`) | 307,511 | `SK_ID_CURR`(PK) |
-| `application_test.csv` | 대출 신청 정보(라벨 없음) | 48,744 | `SK_ID_CURR`(PK) |
-| `bureau.csv` | 타 금융기관에 보고된 신용 이력 | 1,716,428 | `SK_ID_CURR` → 연결 |
-| `bureau_balance.csv` | `bureau`의 월별 잔액 스냅샷 | 27,299,925 | `SK_ID_BUREAU` → 연결 |
-| `previous_application.csv` | Home Credit 자체 과거 대출 신청 이력 | 1,670,214 | `SK_ID_CURR` → 연결 |
-| `credit_card_balance.csv` | 과거 신용카드 월별 잔액 | 3,840,312 | `SK_ID_PREV` → 연결 |
-| `POS_CASH_balance.csv` | 과거 POS/현금 대출 월별 상태 | 10,001,358 | `SK_ID_PREV` → 연결 |
-| `installments_payments.csv` | 과거 대출 상환 이력(예정 대비 실제) | 13,605,401 | `SK_ID_PREV` → 연결 |
+**같은 승인율에서 새 점수가 연체율을 더 낮춘다.**
 
-분석 단위(grain)는 신청 1건(`SK_ID_CURR`)이고, 하위 7개 테이블은 이 신청자의 과거 신용 행적을 집계해 붙이는 보조 테이블이다. `application_train.csv`(122컬럼)는 인구통계·소득/대출조건·고용·외부 신용점수(`EXT_SOURCE_1/2/3`)·거주지 특성·신용조회 이력·사회관계망 등을 담고 있다. 전체 339개 컬럼의 dtype·결측률·분포는 [docs/data_dictionary.md](docs/data_dictionary.md)에서 확인할 수 있다.
+| 승인율 | 현행 기준 연체율 | 새 점수 연체율 | 차이 | 95% 신뢰구간 |
+|---|---|---|---|---|
+| 70% | 4.522% | 3.798% | 0.725%p | [0.592, 0.871] |
+| 80% | 5.256% | 4.610% | 0.646%p | [0.524, 0.768] |
+| 90% | 6.242% | 5.821% | 0.421%p | [0.327, 0.529] |
 
-**알려진 데이터 한계**: `AMT_INCOME_TOTAL`, `AMT_CREDIT` 등 금액 컬럼의 화폐 단위가 공식 문서에 명시돼 있지 않고, `EXT_SOURCE_1/2/3`도 어떤 기관이 산정한 점수인지 밝혀져 있지 않다. 조인 무결성 검증 결과 `SK_ID_CURR` 레벨은 고아 레코드 0건이었지만, 하위 이력 테이블에서는 `bureau_balance` 11.4%, `credit_card_balance` 28.2% 등 고아 레코드가 발견됐고 이 레코드는 feature 집계에서 자연스럽게 제외된다(자세한 내용 [docs/phase1_data_validation.md](docs/phase1_data_validation.md)).
+세 승인율 모두 95% 신뢰구간(참값이 있을 것으로 추정되는 범위) 하한이 0보다 크다. 같은 연체율 기준으로 보면 현행 기준의 승인율 80% 지점 연체율(5.256%)을 새 점수는 승인율 86%에서도 달성한다(95% CI [5, 7]%p 증가).
 
-이전에는 American Express Default Prediction(Kaggle) 데이터로 진행했으나 데이터셋을 전환했다. 이유는 [6. 판단 기록](#6-판단-기록) 참고. 이전 버전은 [archive/amex/README.md](archive/amex/README.md)에 보존돼 있다.
+**스왑셋**(두 기준의 승인 여부가 엇갈리는 집단, 승인율 80% 기준)을 보면 두 모델의 차이가 더 분명해진다. 현행은 승인했지만 새 점수가 거절한 집단(swap-out)의 연체율은 16.93%로, 현행은 거절했지만 새 점수가 승인한 집단(swap-in)의 8.64%보다 두 배 가까이 높다. 새 점수가 현행 기준이 놓친 고위험군을 더 정확히 짚어낸다는 뜻이다.
 
-## 3. 분석 설계
+**수익 가정을 바꿔도 결론은 비슷하다.** 이자수익률 10~30%, 손실률 40~60%를 조합한 6개 시나리오(가정값) 모두에서 새 점수의 이익 최대 지점이 승인율 50~100% 범위 안쪽에 있었다. 이 모델이 돈이 되는 곳은 마진이 낮고 손실이 큰 상품이다. 이자수익률 10%·손실률 60% 조합에서 이익 지수가 현행 대비 +6.0(114.0→120.0) 올랐지만, 이자수익률 20~30% 조합에서는 최적 승인율이 95~99%로 이미 높아 개선폭이 +0.04~1.2에 그쳤다.
 
-| 가설/질문 | 검증 지표 | 방법 |
-|---|---|---|
-| 신용이력 파생 feature가 application 원본 변수만으로는 못 잡는 신호를 추가한다 | ROC-AUC(5-fold CV) | App-only/Lean(A)/Full(B) 3개 feature 세트 비교([docs/phase3_benchmark.md](docs/phase3_benchmark.md)) |
-| 어떤 모델이 이 데이터에 가장 적합한가 | ROC-AUC/Precision/Recall/F1 | LogisticRegression/RandomForest/XGBoost/LightGBM 4개 모델 × 3개 feature 세트, 80/20 stratified split([docs/phase4_modeling.md](docs/phase4_modeling.md)) |
-| 어떤 변수가 예측에 가장 크게 기여하는가 | mean &#124;SHAP&#124; | `shap.TreeExplainer`, validation 5,000명 샘플 |
-| 운영 목표(승인율/연체율/포착률)별로 어떤 임계값을 써야 하는가 | 승인율, 승인군 연체율, Recall | 임계값 0.10~0.90 스캔([docs/phase9_threshold_analysis.md](docs/phase9_threshold_analysis.md)) |
+![수익 시나리오별 이익 지수](v2/docs/figures/profit_scenarios.png)
 
-전체 파이프라인:
+상세 수치와 판정 기준은 [v2/docs/07_final_evaluation.md](v2/docs/07_final_evaluation.md) 참고.
+
+## 3. 한계와 다음 단계
+
+- **승인된 고객만 있는 데이터다.** 과거에 거절된 신청자의 실제 상환 여부는 알 수 없어, 이 데이터로 학습한 모델은 "승인했다면 어땠을까"를 거절자에게 그대로 적용하기 어렵다.
+- **현행 기준은 대용(proxy)이다.** 실제 회사의 기존 심사 점수가 아니라 외부 신용점수만 쓰는 심사를 가정해 만든 비교 기준이다.
+- **날짜 정보가 없다.** 신청일 기준 상대 일수만 있어 시간순 분할을 할 수 없었고, 학습/검증/평가 세트는 무작위 층화추출로 나눴다.
+- **수익 가정은 가정값이다.** 이자수익률과 손실률은 실제 재무 데이터가 아니라 6개 시나리오로 가정한 값이다.
+
+다음 단계로는 기존 심사와 새 점수를 동시에 운영하며 결과를 비교하는 챔피언-챌린저 병행 검증, 거절 대상 중 일부를 실험적으로 승인해 실제 상환 데이터를 확보하는 작업을 검토할 수 있다.
+
+## 4. 판단 기록
+
+**1) 1단계 보고서의 고아 비율 분모 오류 수정**
+상황: "credit_card_balance의 94.4%가 고아"라고 적혀 있었다.
+선택: 양방향으로 다시 계산해 분모를 분리했다.
+이유: 94.4%는 previous_application 쪽 비율이었고, credit_card_balance 자체의 고아 비율은 28.2%였다.
+결과: 하위 테이블 집계 시 진짜 고아만 제외하고 자체 SK_ID_CURR로 직접 연결하는 원칙을 세웠다.
+
+**2) H2(상환부담) 기각 원인 추적**
+상황: 소득 대비 상환액 비율(IV 0.0060)이 예상과 달리 거의 변별력이 없었다.
+선택: "기존 심사가 이미 부담이 큰 신청자를 걸러냈다"는 가설을 정황 증거로만 탐색했다.
+이유: 단정할 근거(심사 로그 등)가 없어 결과를 과장하지 않으려 했다.
+결과: 외부 신용점수를 통제하면 관련 변수의 역방향 신호가 약해진다는 점만 확인했다.
+
+**3) 설명 가능성과 성능의 교환**
+상황: application 컬럼 전체(133개)를 쓰면 검증 AUC가 0.7747까지 오른다.
+선택: 가설 변수 중심의 23개 변수로 구성된 모델을 최종으로 썼다.
+이유: 변수 하나하나의 의미를 설명할 수 있어야 승인 기준으로 쓸 수 있다.
+결과: 포기한 성능은 AUC 기준 약 0.007이었다.
+
+**4) 민감 정보 제외**
+상황: 성별, 주변인 연체 관측, 나이가 모두 모델 성능에 기여할 수 있었다.
+선택: 성별과 주변인 연체 관측 4개는 처음부터 완전히 뺐고, 나이는 미리 정한 기준(제외 시 AUC 하락 0.005 미만)으로 뺐다.
+이유: 차별 소지가 있는 정보를 심사 기준에 넣지 않기 위해서다.
+결과: 나이를 빼도 AUC는 0.7699에서 0.7680으로 0.0020만 떨어져 손해가 거의 없었다.
+
+**5) 결과를 보기 전에 기준을 먼저 고정**
+상황: 가설 판정, 모델 선택, 승인 개선 판정 기준을 미리 정하지 않으면 결과에 맞춰 기준을 바꿀 위험이 있다.
+선택: IV 0.02, 모델 선택 AUC 차이 0.01, 나이 판정 AUC 하락 0.005, H6/H7 판정 기준을 작업 시작 전에 코드 상수로 고정했다.
+이유: 기준이 결과를 따라가면 어떤 결론도 사후에 정당화할 수 있어 버린다.
+결과: H2처럼 기각된 가설도 그대로 보고했다.
+
+**6) 외부 점수 몫과 모델 몫 분리**
+상황: 외부 신용점수(EXT_SOURCE)만으로도 AUC 0.72가 나와, 새 모델의 개선분이 외부 점수 덕분인지 다른 변수 덕분인지 불분명했다.
+선택: 외부 점수만 쓰는 로지스틱 회귀를 "현행 기준(Champion)"으로 따로 만들어 비교 기준으로 삼았다.
+이유: 새 점수가 외부 점수 위에 실제로 무엇을 더했는지 분리해서 봐야 한다.
+결과: 검증 세트 기준 외부 점수 단독 AUC 0.7225 대비 새 점수 AUC 0.7680로, 상환 행동·거절 이력 등 추가 변수가 AUC 기준 약 0.046을 더했다.
+
+## 5. 데이터
+
+Kaggle "Home Credit Default Risk"(2018)는 `SK_ID_CURR`(신청자 단위 키) 중심으로 연결된 8개 테이블로 구성된다.
+
+```mermaid
+graph LR
+    APP["application_train/test<br/>(SK_ID_CURR)"]
+    BUR["bureau<br/>(SK_ID_BUREAU)"]
+    BURBAL["bureau_balance"]
+    PREV["previous_application<br/>(SK_ID_PREV)"]
+    POS["POS_CASH_balance"]
+    INST["installments_payments"]
+    CC["credit_card_balance"]
+
+    APP -->|SK_ID_CURR| BUR --> BURBAL
+    APP -->|SK_ID_CURR| PREV
+    PREV --> POS
+    PREV --> INST
+    PREV --> CC
+```
+
+신청자 307,511명 기준 기저 연체율은 8.07%다. 이력 보유 현황은 과거 자사 신청 이력 94.6%, 타 금융기관 이력 85.7%였고, 둘 다 전혀 없는 신청자는 0.8%뿐이었다. 신규 고객보다 재이용 고객이 압도적으로 많은 모집단이다.
+
+**처리한 데이터 품질 문제**:
+- **고아 레코드**: 하위 테이블의 키가 상위 테이블에 없는 행(예: credit_card_balance의 28.2%)을 제외하고, 각 테이블이 자체 보유한 SK_ID_CURR로 직접 연결했다.
+- **365243 특수값**: 재직일수(DAYS_EMPLOYED)의 18%가 비현실적인 365243이었다. 결측으로 바꾸고 별도 플래그를 만들었다.
+- **누수 컬럼 제외**: 신청 시점 이후에만 알 수 있는 컬럼(과거 신청의 실제 종료일 등)은 변수 생성에 쓰지 않았다.
+- **날짜 부재**: 절대 날짜 컬럼이 없어 시간순 검증을 할 수 없었다. 무작위 층화추출로 학습 184,506명, 검증 61,502명, 최종평가 61,503명으로 나눴다.
+
+전체 테이블 구조와 결측률은 [v2/docs/01_data_audit.md](v2/docs/01_data_audit.md), 122개 컬럼의 업무 의미별 분류는 [v2/docs/02_variable_catalog.md](v2/docs/02_variable_catalog.md) 참고.
+
+## 6. 분석 과정
 
 ```mermaid
 flowchart LR
-    A["원본 CSV 8개"] --> B["DuckDB 정제·클리닝"]
-    B --> C["테이블별 집계<br/>bureau_balance→bureau, ccb/pos/inst→prev"]
-    C --> D["Lean A 163 feature / Full B 392 feature"]
-    D --> E["80/20 stratified split"]
-    E --> F["모델 비교: LR/RF/XGBoost/LightGBM"]
-    F --> G["Lean A + LightGBM 채택<br/>AUC 0.7825"]
-    G --> H["SHAP 해석"]
-    G --> I["FastAPI 서빙 + Docker"]
-    I --> J["AWS EC2 배포"]
-    G --> K["Streamlit 드리프트 모니터링"]
-    G --> L["임계값별 심사 시나리오 분석"]
+    A["원데이터 점검"] --> B["가설 수립"]
+    B --> C["신호 검증(IV/WoE)"]
+    C --> D["모델링"]
+    D --> E["최종 평가"]
 ```
 
-## 4. 핵심 결과
+5개 가설을 세우고 학습 세트(60%)에서만 검증했다. 핵심 지표는 **IV**(Information Value, 변수가 정상/연체를 얼마나 잘 가르는지 나타내는 값으로 0.02 이상이면 변별력이 있다고 본다)다.
 
-**1) 외부 신용점수(EXT_SOURCE)가 가장 강한 판별 신호다.** TARGET=1(연체) 그룹의 분포가 TARGET=0보다 뚜렷하게 왼쪽(낮은 점수)으로 치우쳐 있고, 이 결과는 SHAP 분석에서 `EXT_SOURCE_1/2/3`이 상위 1~3위를 차지한 것과 일치한다.
+| 가설 | 핵심 변수 | IV | 위험군이 안전군보다 연체할 배수 | 판정 |
+|---|---|---|---|---|
+| H1 상환행동 | 분할상환 지연 비율 | 0.0645 | 1.88배 | 채택 |
+| H2 상환부담 | 소득 대비 상환액 비율 | 0.0060 | - | 기각 |
+| H3 자금압박 | 과거 거절 비율 | 0.0677 | 1.96배 | 채택 |
+| H4 생활안정성 | 재직 기간 | 0.1130 | 2.53배 | 채택 |
+| H5 대출조건 | 대출금÷물건가격 | 0.0680 | 1.86배 | 채택 |
 
-![EXT_SOURCE 분포 비교](assets/figures/ext_source_distributions.png)
+채택된 가설의 변수와 외부 신용점수를 합쳐 모델 후보 세 가지를 만들고, 검증 세트(20%)로 비교했다.
 
-**2) feature를 2.4배 늘려도 성능 개선은 작다.** App-only(121개) → Lean(A, 163개)는 AUC가 +0.0202 뛰었지만, Lean(A) → Full(B, 392개)는 +0.0036에 그쳤다. Lean(A) + LightGBM(AUC 0.7825)이 오히려 Full(B) + LightGBM(0.7799)보다 근소하게 높아, 해석 가능한 Lean(A)을 최종 채택하는 근거가 됐다.
+| 모델 | 변수 수 | 검증 AUC | KS | Gini |
+|---|---|---|---|---|
+| 현행 기준(외부 신용점수만) | 6 | 0.7225 | 0.3309 | 0.4450 |
+| 스코어카드(로지스틱 회귀) | 24 | 0.7533 | 0.3811 | 0.5066 |
+| LightGBM(나이 포함) | 24 | 0.7699 | 0.4067 | 0.5398 |
+| **최종: LightGBM(나이 제외)** | **23** | **0.7680** | 0.4074 | 0.5359 |
+| 참고용(application 전체 컬럼) | 133 | 0.7747 | 0.4115 | 0.5494 |
 
-![SHAP 변수 중요도](reports/figures/phase4_shap_bar.png)
+모델 선택 기준은 작업 전에 고정했다: LightGBM과 스코어카드의 AUC 차이가 0.01 이상이면 LightGBM을 선택하고(0.0166으로 충족), 선택된 모델에서 나이를 뺐을 때 AUC 하락이 0.005 미만이면 나이를 뺀 버전을 최종으로 쓴다(0.0020으로 충족). 가설 검증 전 과정은 [v2/docs/04_signal_hypotheses.md](v2/docs/04_signal_hypotheses.md), 모델링 전 과정은 [v2/docs/06_modeling.md](v2/docs/06_modeling.md) 참고.
 
-**3) 드리프트 모니터링이 오탐·미탐 없이 동작한다.** 정상(무작위) 배치에서는 PSI가 0.00~0.02로 안정적이었고, 의도적으로 드리프트를 주입한 배치에서는 PSI가 6.2~7.1까지 치솟아 경고 12건이 정확히 발생했다.
+## 7. SQL 하이라이트
 
-![Synthetic 드리프트 모드](assets/screenshots/dashboard_synthetic.png)
+[v2/scripts/04_build_hypothesis_features.py](v2/scripts/04_build_hypothesis_features.py)에서 발췌한 쿼리 두 개다.
 
-**4) 임계값에 따라 승인율과 연체율이 뚜렷하게 맞바뀐다.** 기저 연체율 8.07% 대비, 임계값 0.60에서는 승인율 81.4%·승인군 연체율 4.59%(Recall 53.8%), 임계값 0.45에서는 승인율 65.7%·승인군 연체율 3.30%(Recall 73.2%)로 운영 목표에 따라 쓸 수 있는 구간이 명확히 갈린다(위 대표 그림, [docs/phase9_threshold_analysis.md](docs/phase9_threshold_analysis.md)).
+**카드 최신 월 이용률**. 신청자가 카드를 여러 장 가진 경우, 카드별로 가장 최근 월의 잔액/한도만 남겨야 "현재 이용률"의 의미가 성립한다.
 
-## 5. 제안
+```sql
+cc_latest AS (
+    SELECT SK_ID_CURR, SK_ID_PREV, AMT_BALANCE, AMT_CREDIT_LIMIT_ACTUAL,
+           ROW_NUMBER() OVER (PARTITION BY SK_ID_PREV ORDER BY MONTHS_BALANCE DESC) AS rn
+    FROM cc_filtered
+),
+cc_util_agg AS (
+    SELECT SK_ID_CURR,
+           SUM(AMT_BALANCE) * 1.0 / NULLIF(SUM(AMT_CREDIT_LIMIT_ACTUAL), 0) AS card_utilization
+    FROM cc_latest
+    WHERE rn = 1
+    GROUP BY SK_ID_CURR
+)
+```
 
-| 운영 목표 | 임계값 | 승인율 | 승인군 연체율 | Recall | 비고 |
-|---|---|---|---|---|---|
-| 승인율 90% 유지 | 0.70 | 89.95% | 5.64% | 37.12% | 승인 문턱을 최대한 낮게 유지해야 할 때 |
-| 승인군 연체율 5% 이하 | 0.60 | 81.41% | 4.59% | 53.76% | **기본값으로 제안**. 승인율과 연체율 억제의 균형점 |
-| 연체자 포착률 70% 이상 | 0.45 | 65.68% | 3.30% | 73.17% | 손실 회피가 승인율보다 우선일 때 |
+카드(SK_ID_PREV)별로 `ROW_NUMBER() OVER (PARTITION BY ...)`로 최신 순위를 매긴 뒤 `rn=1`만 남기고, 잔액 합÷한도 합으로 가중 이용률을 계산한다.
 
-별도 운영 기준이 없다면 **임계값 0.60**을 기본값으로 제안한다. 승인율을 81%대로 유지하면서 승인군 연체율을 기저치의 절반 수준으로 낮추고, 동시에 실제 연체자의 절반 이상(53.8%)을 걸러낸다. 더 공격적으로 손실을 줄이려면 임계값 0.45(승인율 65.7%, Recall 73.2%) 구간을 검토할 수 있으나, 승인율 하락 폭이 커지는 만큼 비즈니스 쪽 승인이 필요하다.
+**bureau_balance 진짜 고아 제외 후 신청자 연결**. bureau_balance는 신청자 키(SK_ID_CURR)가 없어, bureau를 거쳐야 신청자에 연결할 수 있다.
 
-## 6. 판단 기록
+```sql
+bureau_balance_joined AS (
+    SELECT b.SK_ID_CURR, bb.STATUS
+    FROM read_csv_auto(bureau_balance) bb
+    INNER JOIN read_csv_auto(bureau) b ON bb.SK_ID_BUREAU = b.SK_ID_BUREAU
+),
+bureau_balance_agg AS (
+    SELECT SK_ID_CURR, COUNT(*) AS n_bureau_balance_records,
+           AVG(CASE WHEN STATUS IN ('1','2','3','4','5') THEN 1.0 ELSE 0.0 END) AS bureau_balance_delinquent_month_ratio
+    FROM bureau_balance_joined
+    GROUP BY SK_ID_CURR
+)
+```
 
-- **데이터셋 전환(AMEX → Home Credit)**: AMEX 데이터는 익명화된 190개 집계 feature만 제공해 "왜 이 변수가 중요한가"를 설명할 수 없었다. 해석 가능한 feature 구조가 필요해 8개 원본 테이블로 구성된 Home Credit 데이터로 전환했다. 전환 후 SHAP 상위 feature가 모두 의미를 설명할 수 있는 변수로 구성됐다.
-- **Lean(A) vs Full(B) 선택**: Full(B)은 컬럼 수가 Lean(A)의 2.4배(392개)였지만 AUC 개선은 +0.0036에 그쳤다. 해석 가능성을 우선해 Lean(A, 163개)을 최종 feature 세트로 채택했고, 서빙 모델도 그만큼 가볍고 빨라졌다.
-- **DAYS_EMPLOYED 365243 처리**: 전체 신청자의 18%(55,374건)가 비현실적인 재직일수(365243)를 가지고 있었고, 이 값이 은퇴자(Pensioner)의 99.98%와 무직자의 100%에서 나타났다. 결측이 아니라 "고용되지 않음"을 뜻하는 placeholder로 판단해 NULL로 치환하고 `DAYS_EMPLOYED_ANOMALY` 플래그를 추가했다. 처리 후 재직일수 분포에서 이상 스파이크가 사라졌다.
-- **공개 배포에서 `/predict` 차단**: Kaggle 대회 규정은 데이터를 대회 목적 외로 공유하는 것을 제한한다. `/predict`는 SK_ID_CURR만으로 사전계산된 feature(소득, 대출액 등 원본에 가까운 값)를 그대로 응답에 담아 이 원칙과 충돌할 수 있었다. `PUBLIC_DEPLOYMENT=true`일 때 `/predict`가 항상 403을 반환하도록 구현하고, 입력을 요청자가 직접 제공하는 `/predict/live`만 공개 데모로 열었다.
-- **모니터링 모델을 별도 held-out 모델로 분리**: 초기 구현에서 전체 데이터로 재학습된 서빙 모델을 그대로 배치 평가에 써서 AUC가 0.80~0.86으로 부풀려지는 in-sample 오염이 발견됐다. Phase 4와 동일한 80/20 split으로 별도의 held-out 전용 모델을 다시 학습해 수정했고, 수정 후 held-out AUC는 0.7833으로 Phase 4 검증치(0.7825)와 거의 일치했다.
+INNER JOIN 자체가 "bureau에 없는 진짜 고아"를 자동으로 제외하는 필터 역할을 하고, 이후 신청자 단위로 월별 연체 상태 비율을 집계한다.
 
-## 7. 한계와 다음 단계
+## 8. AI 활용 방식
 
-- **화폐 단위·EXT_SOURCE 출처 불명**: 공식 컬럼 설명에 금액 단위와 외부 신용점수의 산정 기관이 명시돼 있지 않다.
-- **하이퍼파라미터 미튜닝**: 전체 모델 비교는 튜닝 없는 1차 비교 기준이다.
-- **RandomForest 임계값 이슈**: `class_weight='balanced'`는 손실 가중치만 조정할 뿐 트리 투표 확률을 0.5 근처로 보정하지 않아, 기본 임계값에서 RF의 Recall이 사실상 0에 가까웠다(0.0014~0.0016). 이 비교에서는 RF 최적 임계값을 별도로 탐색하지 않았다.
-- **임계값 분석의 범위**: 금리·손실률(LGD)·회수율을 반영한 기대손실액 계산은 하지 않았다. 임계값은 held-out 61,503명 기준으로, 운영 데이터가 누적되면 주기적 재산출이 필요하다.
-- **`/predict/live`의 범위**: `bureau_balance`(월별 상태 이력) 중첩 입력은 지원하지 않아 관련 파생 feature는 항상 NULL로 처리된다.
-- **배포 인스턴스 상태**: AWS EC2 데모 인스턴스는 프리티어 사용 시간 관리를 위해 현재 stop 상태이며, 재시작 시 퍼블릭 IP가 바뀐다.
+**내가 정한 것**: 문제 정의, 5개 가설, 가설·모델 판정 기준, 제외 변수 원칙, 결론 표현.
 
-다음 단계로는 하이퍼파라미터 튜닝, RF 최적 임계값 탐색, 실제 운영 데이터 확보 시 기대손실액 기반 임계값 재산출을 검토할 수 있다.
+**AI(Claude Code)가 한 것**: 변수 생성·모델링 코드 작성과 실행, 문서 초안 작성.
 
-## 8. 재현 방법
+**검토하고 바로잡은 것**: AI가 작성한 1단계 보고서에서 고아 비율 분모 해석 오류를 발견했다("credit_card_balance의 94.4%가 고아" → 실제로는 previous_application의 94.4%가 카드 기록이 없는 것이고, credit_card_balance 자체의 고아 비율은 28.2%였다). 실행 중에는 DuckDB 중복행 오집계, 저카디널리티 변수 구간화 오류, 모델 파일명 불일치, 분위수 계산의 부동소수점 오류까지 총 4건의 버그를 발견해 수정했다. 자세한 내용은 [v2/docs/code_guide.md](v2/docs/code_guide.md)의 "실행 중 발견·수정한 버그" 절에 스크립트별로 정리했다.
+
+검증 체크리스트([v2/verification/](v2/verification/))를 직접 계산용으로 만들어 뒀지만, 이 저장소를 정리하는 시점까지 기록([verify_log.md](v2/verification/verify_log.md))은 비어 있다. 아직 체크리스트 전체를 손으로 재계산해 대조하지는 않았다.
+
+## 9. 재현 방법
 
 환경: Python 3.13
 
@@ -144,48 +229,43 @@ flowchart LR
 pip install -r requirements.txt
 
 # 1) 데이터 준비: Kaggle "Home Credit Default Risk"에서 8개 CSV를 내려받아
-#    data/raw/ 에 배치 (data/ 는 .gitignore 처리되어 저장소에 포함되지 않음)
+#    data/raw/에 배치한다(data/는 .gitignore 처리되어 저장소에 포함되지 않음)
 
-# 2) 분석 파이프라인 (순서대로)
-python3 scripts/phase1_validate_tables.py
-python3 scripts/build_features_leanA.py
-python3 scripts/build_features_fullB.py
-python3 scripts/phase4_modeling.py
-python3 scripts/phase4_shap_analysis.py
-python3 scripts/train_serving_model.py      # 서빙용 모델
-python3 scripts/train_monitoring_model.py   # 모니터링용 held-out 모델
-python3 scripts/phase9_threshold_analysis.py
-
-# 3) API 서버
-uvicorn app.main:app --reload               # http://127.0.0.1:8000/docs
-
-# 4) 모니터링 대시보드
-streamlit run dashboard/monitoring_dashboard.py
-
-# 5) Docker
-docker build -t home-credit-api:latest .
-docker run -d -p 8000:8000 -e PUBLIC_DEPLOYMENT=true home-credit-api:latest
+# 2) 순서대로 실행
+python3 v2/scripts/01_data_audit.py
+python3 v2/scripts/02_variable_catalog.py
+python3 v2/scripts/03_split.py
+python3 v2/scripts/04_build_hypothesis_features.py
+python3 v2/scripts/05_test_signal_hypotheses.py
+python3 v2/scripts/06_h2_followup.py
+python3 v2/scripts/07_models.py
+python3 v2/scripts/08_final_evaluation.py
 ```
 
-## 9. 저장소 구조
+## 10. 저장소 구조
 
 ```
 .
-├── app/            # FastAPI 서빙 (엔드포인트, 모델 로딩, 스키마)
-├── dashboard/       # Streamlit 드리프트 모니터링 대시보드
-├── scripts/         # Phase별 분석 스크립트(phase1~9) + 공통 전처리 모듈
-├── docs/            # Phase별 상세 기록, data dictionary, API 명세
-├── models/          # 학습된 모델(joblib), 컬럼 스키마
-├── assets/          # README용 그림·스크린샷
-├── reports/figures/ # SHAP 등 분석 과정 그림
-├── archive/amex/    # 이전 AMEX 버전(참고용)
-└── tests/           # pytest 단위 테스트
+├── v2/                   # 현재 버전: 원데이터 점검부터 최종 평가까지
+│   ├── scripts/          # 01~08 분석 스크립트
+│   ├── docs/             # 단계별 보고서, 그림
+│   └── verification/     # 검증 체크리스트, 노트북
+├── archive/
+│   ├── v1/               # 이전 버전(팀 모델링 + 개인 서빙·배포·모니터링)
+│   └── amex/             # 더 이전의 AMEX 데이터 버전
+├── docs/internal/        # 내부 작업 문서
+├── requirements.txt
+└── LICENSE
 ```
 
-## 10. 역할
+## 11. 역할
 
-부트캠프 팀 프로젝트(3명)로 Phase 1~4(데이터 검증, EDA, feature engineering, 모델링·SHAP 해석)까지 공동으로 진행했다. 이후 FastAPI 서빙, Docker 패키징, AWS EC2 배포, Streamlit 드리프트 모니터링, 임계값 분석(Phase 5~9)은 개인적으로 보완·확장했다(2026.08~09). 이 저장소는 그 흐름을 반영해 개인이 전체 분석을 재정리했다.
+부트캠프 팀 프로젝트(3명)로 시작했다. 3명이 각자 8개 테이블 결합부터 모델링까지 진행해 가장 좋은 모델을 채택했고, 본인은 기획서와 보고서를 담당했다. 이후 서빙·배포·모니터링은 개인적으로 확장했다([12. 이전 버전](#12-이전-버전v1) 참고). 이번 v2는 문제 정의부터 최종 평가까지 개인적으로 재설계했다.
 
-## 라이선스
+## 12. 이전 버전(v1)
 
-코드는 MIT 라이선스를 따른다. 데이터는 Kaggle "Home Credit Default Risk" 원 출처의 라이선스를 따르며 저장소에 포함하지 않는다.
+부트캠프 팀 모델링에 개인적으로 FastAPI 서빙, Docker 배포, AWS EC2, PSI 드리프트 모니터링을 더한 버전이다. 결과를 이미 알고 거꾸로 분석 스토리를 구성한 부분이 있어 v2에서는 가설을 먼저 세우고 결과를 검증하는 순서로 바꿨다. 자세한 내용은 [archive/v1/README.md](archive/v1/README.md) 참고.
+
+## 데이터 이용 조건과 라이선스
+
+코드는 MIT 라이선스를 따른다([LICENSE](LICENSE)). 데이터는 Kaggle "Home Credit Default Risk" 원 출처의 이용 조건을 따르며, 이 저장소에는 포함하지 않는다.

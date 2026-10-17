@@ -1,0 +1,1144 @@
+{
+  "n_train": 184506,
+  "n_valid": 61502,
+  "variable_selection": {
+    "base_set_no_age_n": 36,
+    "base_set_with_age_n": 37,
+    "iv_all": {
+      "AMT_ANNUITY": 0.02555,
+      "AMT_CREDIT": 0.04263,
+      "AMT_GOODS_PRICE": 0.08882,
+      "EXT_SOURCE_1": 0.14759,
+      "EXT_SOURCE_1_MISSING": 0.00489,
+      "EXT_SOURCE_2": 0.30554,
+      "EXT_SOURCE_2_MISSING": 0.0,
+      "EXT_SOURCE_3": 0.32243,
+      "EXT_SOURCE_3_MISSING": 0.00696,
+      "NAME_CONTRACT_TYPE": 0.01335,
+      "active_loan_count": 0.05353,
+      "age_years": 0.08367,
+      "annuity_to_income": 0.00603,
+      "avg_delay_days": 0.04576,
+      "bureau_balance_delinquent_month_ratio": 0.01304,
+      "bureau_currently_overdue_flag": 0.0138,
+      "bureau_max_overdue_amt": 0.0201,
+      "bureau_recent_1yr_new_loans": 0.07912,
+      "card_utilization": 0.07973,
+      "cc_dpd_month_ratio": 0.00598,
+      "credit_to_annuity": 0.13863,
+      "credit_to_goods": 0.068,
+      "credit_to_income": 0.0094,
+      "debt_to_income": 0.05375,
+      "employment_days": 0.11301,
+      "id_publish_days": 0.03714,
+      "late_payment_ratio": 0.06453,
+      "phone_change_days": 0.04354,
+      "pos_dpd_month_ratio": 0.02076,
+      "recent_1yr_apply_count": 0.01911,
+      "recent_1yr_late_ratio": 0.05807,
+      "recent_1yr_reject_count": 0.03047,
+      "registration_days": 0.02638,
+      "reject_ratio": 0.06766,
+      "total_credit_bureau_inquiries": 0.01734,
+      "underpay_ratio": 0.05037,
+      "unemployed_flag": 0.03265
+    },
+    "removed_by_iv_lt_0.02": [
+      "EXT_SOURCE_1_MISSING",
+      "EXT_SOURCE_2_MISSING",
+      "EXT_SOURCE_3_MISSING",
+      "NAME_CONTRACT_TYPE",
+      "annuity_to_income",
+      "bureau_balance_delinquent_month_ratio",
+      "bureau_currently_overdue_flag",
+      "cc_dpd_month_ratio",
+      "credit_to_income",
+      "recent_1yr_apply_count",
+      "total_credit_bureau_inquiries"
+    ],
+    "n_after_iv_filter": 26,
+    "removed_by_correlation": [
+      {
+        "dropped": "underpay_ratio",
+        "kept": "late_payment_ratio",
+        "corr": 0.845,
+        "dropped_iv": 0.05037,
+        "kept_iv": 0.06453
+      },
+      {
+        "dropped": "avg_delay_days",
+        "kept": "late_payment_ratio",
+        "corr": 0.794,
+        "dropped_iv": 0.04576,
+        "kept_iv": 0.06453
+      }
+    ],
+    "final_vars_with_age": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "age_years",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "final_vars_no_age": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "n_final_with_age": 24,
+    "n_final_no_age": 23
+  },
+  "champion": {
+    "valid_auc": 0.72248,
+    "valid_ks": 0.33091,
+    "valid_gini": 0.44496,
+    "medians": {
+      "EXT_SOURCE_1": 0.5044290890714999,
+      "EXT_SOURCE_2": 0.5661870259499292,
+      "EXT_SOURCE_3": 0.5352762504724826
+    },
+    "coefficients": {
+      "EXT_SOURCE_1": -2.0348,
+      "EXT_SOURCE_2": -2.34219,
+      "EXT_SOURCE_3": -2.91172,
+      "EXT_SOURCE_1_MISSING": 0.28519,
+      "EXT_SOURCE_2_MISSING": 0.09473,
+      "EXT_SOURCE_3_MISSING": 0.35159
+    },
+    "intercept": 0.78796,
+    "note": "실제 회사의 기존 심사 점수가 아니라, 외부 점수만 쓰는 심사를 가정한 대용 기준"
+  },
+  "scorecard_with_age": {
+    "label": "scorecard_with_age",
+    "var_list": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "age_years",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "grid_results": [
+      {
+        "C": 0.01,
+        "valid_auc": 0.75307
+      },
+      {
+        "C": 0.1,
+        "valid_auc": 0.75329
+      },
+      {
+        "C": 1,
+        "valid_auc": 0.7533
+      }
+    ],
+    "best_C": 1,
+    "valid_auc": 0.7533015346062621,
+    "valid_ks": 0.38114887414049153,
+    "valid_gini": 0.5066030692125243
+  },
+  "scorecard_no_age": {
+    "label": "scorecard_no_age",
+    "var_list": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "grid_results": [
+      {
+        "C": 0.01,
+        "valid_auc": 0.75293
+      },
+      {
+        "C": 0.1,
+        "valid_auc": 0.75319
+      },
+      {
+        "C": 1,
+        "valid_auc": 0.75321
+      }
+    ],
+    "best_C": 1,
+    "valid_auc": 0.7532136028129481,
+    "valid_ks": 0.3820087019451529,
+    "valid_gini": 0.5064272056258963
+  },
+  "lightgbm_with_age": {
+    "label": "lightgbm_with_age",
+    "var_list": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "age_years",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "grid_results": [
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 587,
+        "valid_auc": 0.76805
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 804,
+        "valid_auc": 0.76956
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 261,
+        "valid_auc": 0.76712
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 610,
+        "valid_auc": 0.76972
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 394,
+        "valid_auc": 0.76825
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 604,
+        "valid_auc": 0.76989
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 273,
+        "valid_auc": 0.76809
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 298,
+        "valid_auc": 0.76992
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 297,
+        "valid_auc": 0.76895
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 391,
+        "valid_auc": 0.76975
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 125,
+        "valid_auc": 0.76784
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 188,
+        "valid_auc": 0.76938
+      }
+    ],
+    "best_params": {
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "min_child_samples": 200,
+      "best_iteration": 298,
+      "valid_auc": 0.76992
+    },
+    "valid_auc": 0.7699247581648577,
+    "valid_ks": 0.4067393130835851,
+    "valid_gini": 0.5398495163297155
+  },
+  "lightgbm_no_age": {
+    "label": "lightgbm_no_age",
+    "var_list": [
+      "AMT_ANNUITY",
+      "AMT_CREDIT",
+      "AMT_GOODS_PRICE",
+      "EXT_SOURCE_1",
+      "EXT_SOURCE_2",
+      "EXT_SOURCE_3",
+      "active_loan_count",
+      "bureau_max_overdue_amt",
+      "bureau_recent_1yr_new_loans",
+      "card_utilization",
+      "credit_to_annuity",
+      "credit_to_goods",
+      "debt_to_income",
+      "employment_days",
+      "id_publish_days",
+      "late_payment_ratio",
+      "phone_change_days",
+      "pos_dpd_month_ratio",
+      "recent_1yr_late_ratio",
+      "recent_1yr_reject_count",
+      "registration_days",
+      "reject_ratio",
+      "unemployed_flag"
+    ],
+    "grid_results": [
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 708,
+        "valid_auc": 0.76644
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 875,
+        "valid_auc": 0.76796
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 459,
+        "valid_auc": 0.7659
+      },
+      {
+        "num_leaves": 15,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 511,
+        "valid_auc": 0.76717
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 406,
+        "valid_auc": 0.76627
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 420,
+        "valid_auc": 0.76697
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 205,
+        "valid_auc": 0.76578
+      },
+      {
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 390,
+        "valid_auc": 0.76727
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.03,
+        "min_child_samples": 50,
+        "best_iteration": 236,
+        "valid_auc": 0.76644
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.03,
+        "min_child_samples": 200,
+        "best_iteration": 419,
+        "valid_auc": 0.76728
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.05,
+        "min_child_samples": 50,
+        "best_iteration": 181,
+        "valid_auc": 0.76595
+      },
+      {
+        "num_leaves": 63,
+        "learning_rate": 0.05,
+        "min_child_samples": 200,
+        "best_iteration": 247,
+        "valid_auc": 0.7667
+      }
+    ],
+    "best_params": {
+      "num_leaves": 15,
+      "learning_rate": 0.03,
+      "min_child_samples": 200,
+      "best_iteration": 875,
+      "valid_auc": 0.76796
+    },
+    "valid_auc": 0.7679567895551149,
+    "valid_ks": 0.40740232657129893,
+    "valid_gini": 0.5359135791102299
+  },
+  "reference_full_set": {
+    "n_vars": 133,
+    "valid_auc": 0.77471,
+    "valid_ks": 0.41151,
+    "valid_gini": 0.54943
+  },
+  "selection": {
+    "model_selection": {
+      "lgbm_with_age_auc": 0.7699247581648577,
+      "scorecard_with_age_auc": 0.7533015346062621,
+      "auc_diff": 0.01662,
+      "rule": "LightGBM AUC - 스코어카드 AUC >= 0.01 이면 LightGBM, 아니면 스코어카드",
+      "selected_model_type": "lightgbm"
+    },
+    "age_decision": {
+      "with_age_auc": 0.7699247581648577,
+      "no_age_auc": 0.7679567895551149,
+      "auc_drop": 0.00197,
+      "rule": "나이를 뺐을 때 AUC 하락이 0.005 미만이면 나이를 뺀 버전이 최종",
+      "decision": "나이 제외",
+      "final_label": "lightgbm_no_age"
+    },
+    "reference_full_set": {
+      "n_vars": 133,
+      "valid_auc": 0.77471,
+      "valid_ks": 0.41151,
+      "valid_gini": 0.54943
+    }
+  },
+  "contribution": {
+    "type": "shap_top15",
+    "shap_top15": [
+      {
+        "variable": "EXT_SOURCE_2",
+        "mean_abs_shap": 0.3368
+      },
+      {
+        "variable": "EXT_SOURCE_3",
+        "mean_abs_shap": 0.28352
+      },
+      {
+        "variable": "EXT_SOURCE_1",
+        "mean_abs_shap": 0.18695
+      },
+      {
+        "variable": "credit_to_annuity",
+        "mean_abs_shap": 0.14256
+      },
+      {
+        "variable": "employment_days",
+        "mean_abs_shap": 0.1384
+      },
+      {
+        "variable": "recent_1yr_late_ratio",
+        "mean_abs_shap": 0.1128
+      },
+      {
+        "variable": "credit_to_goods",
+        "mean_abs_shap": 0.10505
+      },
+      {
+        "variable": "AMT_ANNUITY",
+        "mean_abs_shap": 0.0949
+      },
+      {
+        "variable": "late_payment_ratio",
+        "mean_abs_shap": 0.08157
+      },
+      {
+        "variable": "AMT_GOODS_PRICE",
+        "mean_abs_shap": 0.08103
+      },
+      {
+        "variable": "debt_to_income",
+        "mean_abs_shap": 0.07855
+      },
+      {
+        "variable": "card_utilization",
+        "mean_abs_shap": 0.06766
+      },
+      {
+        "variable": "bureau_max_overdue_amt",
+        "mean_abs_shap": 0.06156
+      },
+      {
+        "variable": "reject_ratio",
+        "mean_abs_shap": 0.05148
+      },
+      {
+        "variable": "phone_change_days",
+        "mean_abs_shap": 0.04506
+      }
+    ]
+  },
+  "points_table": {
+    "base_points": 557.3,
+    "factor": 28.8539,
+    "offset": 487.1229,
+    "variables": {
+      "AMT_ANNUITY": {
+        "beta": -0.32035,
+        "bin_points": {
+          "(결측)": 2.55,
+          "bin0": 1.07,
+          "bin1": 1.72,
+          "bin2": -0.31,
+          "bin3": -1.05,
+          "bin4": -0.29,
+          "bin5": -1.08,
+          "bin6": -2.17,
+          "bin7": -0.45,
+          "bin8": 0.2,
+          "bin9": 3.4
+        },
+        "bin_labels": {
+          "bin0": "[1616, 1.107e+04]",
+          "bin1": "[1.108e+04, 1.47e+04]",
+          "bin2": "[1.47e+04, 1.819e+04]",
+          "bin3": "[1.819e+04, 2.189e+04]",
+          "bin4": "[2.189e+04, 2.493e+04]",
+          "bin5": "[2.493e+04, 2.805e+04]",
+          "bin6": "[2.805e+04, 3.202e+04]",
+          "bin7": "[3.202e+04, 3.752e+04]",
+          "bin8": "[3.752e+04, 4.6e+04]",
+          "bin9": "[4.601e+04, 2.58e+05]",
+          "(결측)": "(결측)"
+        }
+      },
+      "AMT_CREDIT": {
+        "beta": 0.36296,
+        "bin_points": {
+          "bin0": -2.0,
+          "bin1": -0.27,
+          "bin2": -0.12,
+          "bin3": 2.57,
+          "bin4": 1.96,
+          "bin5": 2.9,
+          "bin6": 0.65,
+          "bin7": -1.42,
+          "bin8": -1.88,
+          "bin9": -4.43
+        },
+        "bin_labels": {
+          "bin0": "[4.5e+04, 1.8e+05]",
+          "bin1": "[1.806e+05, 2.547e+05]",
+          "bin2": "[2.548e+05, 3.073e+05]",
+          "bin3": "[3.076e+05, 4.327e+05]",
+          "bin4": "[4.328e+05, 5.148e+05]",
+          "bin5": "[5.149e+05, 6.042e+05]",
+          "bin6": "[6.044e+05, 7.552e+05]",
+          "bin7": "[7.555e+05, 9e+05]",
+          "bin8": "[9.001e+05, 1.134e+06]",
+          "bin9": "[1.134e+06, 4.05e+06]",
+          "(결측)": "(결측)"
+        }
+      },
+      "AMT_GOODS_PRICE": {
+        "beta": -0.41532,
+        "bin_points": {
+          "(결측)": -2.23,
+          "bin0": 1.11,
+          "bin1": -0.94,
+          "bin2": 0.51,
+          "bin3": -2.96,
+          "bin4": -6.61,
+          "bin5": 2.68,
+          "bin6": -0.64,
+          "bin7": 4.66,
+          "bin8": 2.8,
+          "bin9": 6.11
+        },
+        "bin_labels": {
+          "bin0": "[4.5e+04, 1.8e+05]",
+          "bin1": "[1.845e+05, 2.25e+05]",
+          "bin2": "[2.28e+05, 2.7e+05]",
+          "bin3": "[2.745e+05, 3.78e+05]",
+          "bin4": "[3.79e+05, 4.5e+05]",
+          "bin5": "[4.502e+05, 5.22e+05]",
+          "bin6": "[5.225e+05, 6.75e+05]",
+          "bin7": "[6.754e+05, 8.235e+05]",
+          "bin8": "[8.271e+05, 1.094e+06]",
+          "bin9": "[1.098e+06, 4.05e+06]",
+          "(결측)": "(결측)"
+        }
+      },
+      "EXT_SOURCE_1": {
+        "beta": -0.59844,
+        "bin_points": {
+          "(결측)": -1.03,
+          "bin0": -14.47,
+          "bin1": -7.18,
+          "bin2": -2.93,
+          "bin3": -1.06,
+          "bin4": 3.17,
+          "bin5": 5.22,
+          "bin6": 8.35,
+          "bin7": 11.81,
+          "bin8": 15.87,
+          "bin9": 20.38
+        },
+        "bin_labels": {
+          "bin0": "[0.01457, 0.2117]",
+          "bin1": "[0.2117, 0.2952]",
+          "bin2": "[0.2952, 0.3675]",
+          "bin3": "[0.3675, 0.4367]",
+          "bin4": "[0.4367, 0.5044]",
+          "bin5": "[0.5044, 0.5717]",
+          "bin6": "[0.5717, 0.639]",
+          "bin7": "[0.639, 0.7096]",
+          "bin8": "[0.7096, 0.7864]",
+          "bin9": "[0.7864, 0.9516]",
+          "(결측)": "(결측)"
+        }
+      },
+      "EXT_SOURCE_2": {
+        "beta": -0.78904,
+        "bin_points": {
+          "(결측)": -0.78,
+          "bin0": -21.3,
+          "bin1": -10.18,
+          "bin2": -5.07,
+          "bin3": -0.86,
+          "bin4": 1.65,
+          "bin5": 5.39,
+          "bin6": 7.7,
+          "bin7": 11.4,
+          "bin8": 15.27,
+          "bin9": 25.07
+        },
+        "bin_labels": {
+          "bin0": "[8.174e-08, 0.2156]",
+          "bin1": "[0.2156, 0.341]",
+          "bin2": "[0.341, 0.4405]",
+          "bin3": "[0.4405, 0.5124]",
+          "bin4": "[0.5124, 0.5662]",
+          "bin5": "[0.5662, 0.6087]",
+          "bin6": "[0.6087, 0.6459]",
+          "bin7": "[0.6459, 0.6822]",
+          "bin8": "[0.6822, 0.7222]",
+          "bin9": "[0.7222, 0.855]",
+          "(결측)": "(결측)"
+        }
+      },
+      "EXT_SOURCE_3": {
+        "beta": -0.63684,
+        "bin_points": {
+          "(결측)": -2.95,
+          "bin0": -18.77,
+          "bin1": -9.31,
+          "bin2": -4.13,
+          "bin3": 0.73,
+          "bin4": 5.44,
+          "bin5": 7.89,
+          "bin6": 9.56,
+          "bin7": 13.31,
+          "bin8": 16.2,
+          "bin9": 17.35
+        },
+        "bin_labels": {
+          "bin0": "[0.0005273, 0.2289]",
+          "bin1": "[0.2302, 0.3297]",
+          "bin2": "[0.3313, 0.4084]",
+          "bin3": "[0.4101, 0.4741]",
+          "bin4": "[0.4758, 0.5353]",
+          "bin5": "[0.5371, 0.5902]",
+          "bin6": "[0.592, 0.6414]",
+          "bin7": "[0.643, 0.6941]",
+          "bin8": "[0.6956, 0.749]",
+          "bin9": "[0.7504, 0.896]",
+          "(결측)": "(결측)"
+        }
+      },
+      "active_loan_count": {
+        "beta": -0.1825,
+        "bin_points": {
+          "(결측)": -1.42,
+          "bin0": 1.27,
+          "bin1": 0.49,
+          "bin2": -0.24,
+          "bin3": -0.83,
+          "bin4": -2.27
+        },
+        "bin_labels": {
+          "bin0": "[0, 1]",
+          "bin1": "[2, 2]",
+          "bin2": "[3, 3]",
+          "bin3": "[4, 4]",
+          "bin4": "[5, 32]",
+          "(결측)": "(결측)"
+        }
+      },
+      "age_years": {
+        "beta": 0.24014,
+        "bin_points": {
+          "bin0": 2.83,
+          "bin1": 2.24,
+          "bin2": 1.5,
+          "bin3": 0.61,
+          "bin4": -0.02,
+          "bin5": -0.22,
+          "bin6": -1.01,
+          "bin7": -1.73,
+          "bin8": -2.93,
+          "bin9": -3.74
+        },
+        "bin_labels": {
+          "bin0": "[21.01, 28.14]",
+          "bin1": "[28.14, 31.99]",
+          "bin2": "[31.99, 35.94]",
+          "bin3": "[35.94, 39.44]",
+          "bin4": "[39.44, 43.08]",
+          "bin5": "[43.09, 47.12]",
+          "bin6": "[47.12, 51.71]",
+          "bin7": "[51.71, 56.04]",
+          "bin8": "[56.04, 60.73]",
+          "bin9": "[60.73, 68.99]",
+          "(결측)": "(결측)"
+        }
+      },
+      "bureau_max_overdue_amt": {
+        "beta": -0.38398,
+        "bin_points": {
+          "(결측)": -0.55,
+          "bin0": 1.76,
+          "bin1": -2.82,
+          "bin2": -1.96,
+          "bin3": -2.33
+        },
+        "bin_labels": {
+          "bin0": "[0, 3704]",
+          "bin1": "[3704, 8312]",
+          "bin2": "[8312, 1.593e+04]",
+          "bin3": "[1.593e+04, 1.16e+08]",
+          "(결측)": "(결측)"
+        }
+      },
+      "bureau_recent_1yr_new_loans": {
+        "beta": -0.16991,
+        "bin_points": {
+          "(결측)": -1.32,
+          "bin0": 1.08,
+          "bin1": -0.56,
+          "bin2": -2.73
+        },
+        "bin_labels": {
+          "bin0": "[0, 1]",
+          "bin1": "[2, 2]",
+          "bin2": "[3, 34]",
+          "(결측)": "(결측)"
+        }
+      },
+      "card_utilization": {
+        "beta": -0.58998,
+        "bin_points": {
+          "(결측)": 0.75,
+          "bin0": 5.93,
+          "bin1": 0.21,
+          "bin2": -8.62,
+          "bin3": -13.36,
+          "bin4": -19.47
+        },
+        "bin_labels": {
+          "bin0": "[0, 0.382]",
+          "bin1": "[0.3827, 0.8198]",
+          "bin2": "[0.82, 0.9566]",
+          "bin3": "[0.9567, 1.018]",
+          "bin4": "[1.018, 3.927]",
+          "(결측)": "(결측)"
+        }
+      },
+      "credit_to_annuity": {
+        "beta": -0.47145,
+        "bin_points": {
+          "(결측)": 3.75,
+          "bin0": 7.16,
+          "bin1": -4.99,
+          "bin2": -2.7,
+          "bin3": -3.18,
+          "bin4": 4.48,
+          "bin5": -8.77,
+          "bin6": 6.47,
+          "bin7": 1.7,
+          "bin8": 1.67,
+          "bin9": 4.63
+        },
+        "bin_labels": {
+          "bin0": "[8.037, 10.52]",
+          "bin1": "[10.52, 14.66]",
+          "bin2": "[14.66, 17.78]",
+          "bin3": "[17.78, 19.54]",
+          "bin4": "[19.54, 20]",
+          "bin5": "[20.01, 21.58]",
+          "bin6": "[21.58, 25.21]",
+          "bin7": "[25.21, 30.14]",
+          "bin8": "[30.14, 34.06]",
+          "bin9": "[34.06, 45.31]",
+          "(결측)": "(결측)"
+        }
+      },
+      "credit_to_goods": {
+        "beta": -0.47374,
+        "bin_points": {
+          "(결측)": -2.54,
+          "bin0": 2.6,
+          "bin1": 3.77,
+          "bin2": 2.47,
+          "bin3": -1.36,
+          "bin4": -3.27,
+          "bin5": -2.91,
+          "bin6": -6.76
+        },
+        "bin_labels": {
+          "bin0": "[0.15, 1]",
+          "bin1": "[1.024, 1.119]",
+          "bin2": "[1.119, 1.145]",
+          "bin3": "[1.145, 1.168]",
+          "bin4": "[1.168, 1.211]",
+          "bin5": "[1.211, 1.277]",
+          "bin6": "[1.277, 6]",
+          "(결측)": "(결측)"
+        }
+      },
+      "debt_to_income": {
+        "beta": -0.11365,
+        "bin_points": {
+          "(결측)": -0.87,
+          "bin0": 1.33,
+          "bin1": 0.18,
+          "bin2": 0.1,
+          "bin3": -0.04,
+          "bin4": -0.21,
+          "bin5": -0.47,
+          "bin6": -0.55,
+          "bin7": -0.51
+        },
+        "bin_labels": {
+          "bin0": "[-13.83, 0]",
+          "bin1": "[1.25e-06, 0.514]",
+          "bin2": "[0.514, 1.165]",
+          "bin3": "[1.165, 2.06]",
+          "bin4": "[2.06, 3.373]",
+          "bin5": "[3.373, 5.367]",
+          "bin6": "[5.367, 9.143]",
+          "bin7": "[9.143, 1652]",
+          "(결측)": "(결측)"
+        }
+      },
+      "employment_days": {
+        "beta": -0.52428,
+        "bin_points": {
+          "(결측)": 6.49,
+          "bin0": -5.36,
+          "bin1": -6.16,
+          "bin2": -5.05,
+          "bin3": -4.11,
+          "bin4": -2.47,
+          "bin5": -0.57,
+          "bin6": 0.66,
+          "bin7": 2.82,
+          "bin8": 5.17,
+          "bin9": 9.8
+        },
+        "bin_labels": {
+          "bin0": "[0, 333]",
+          "bin1": "[334, 614]",
+          "bin2": "[615, 917]",
+          "bin3": "[918, 1248]",
+          "bin4": "[1249, 1648]",
+          "bin5": "[1649, 2160]",
+          "bin6": "[2161, 2792]",
+          "bin7": "[2793, 3680]",
+          "bin8": "[3681, 5337]",
+          "bin9": "[5338, 1.758e+04]",
+          "(결측)": "(결측)"
+        }
+      },
+      "id_publish_days": {
+        "beta": -0.25556,
+        "bin_points": {
+          "bin0": -1.9,
+          "bin1": -1.63,
+          "bin2": -1.02,
+          "bin3": -0.73,
+          "bin4": -0.32,
+          "bin5": 0.39,
+          "bin6": 0.3,
+          "bin7": 1.66,
+          "bin8": 1.94,
+          "bin9": 2.48
+        },
+        "bin_labels": {
+          "bin0": "[0, 732]",
+          "bin1": "[733, 1383]",
+          "bin2": "[1384, 2046]",
+          "bin3": "[2047, 2660]",
+          "bin4": "[2661, 3263]",
+          "bin5": "[3264, 3885]",
+          "bin6": "[3886, 4173]",
+          "bin7": "[4174, 4431]",
+          "bin8": "[4432, 4723]",
+          "bin9": "[4724, 6551]",
+          "(결측)": "(결측)"
+        }
+      },
+      "late_payment_ratio": {
+        "beta": -0.39547,
+        "bin_points": {
+          "(결측)": 3.35,
+          "bin0": 2.36,
+          "bin1": 0.91,
+          "bin2": -0.41,
+          "bin3": -2.52,
+          "bin4": -3.14,
+          "bin5": -5.61
+        },
+        "bin_labels": {
+          "bin0": "[0, 0.01562]",
+          "bin1": "[0.01571, 0.04762]",
+          "bin2": "[0.04787, 0.08571]",
+          "bin3": "[0.08589, 0.1429]",
+          "bin4": "[0.1436, 0.2381]",
+          "bin5": "[0.2385, 1]",
+          "(결측)": "(결측)"
+        }
+      },
+      "phone_change_days": {
+        "beta": -0.24207,
+        "bin_points": {
+          "(결측)": -9.31,
+          "bin0": -1.04,
+          "bin1": -1.48,
+          "bin2": -1.11,
+          "bin3": -1.16,
+          "bin4": -0.09,
+          "bin5": 0.71,
+          "bin6": 1.51,
+          "bin7": 2.0,
+          "bin8": 3.02
+        },
+        "bin_labels": {
+          "bin0": "[-0, 165]",
+          "bin1": "[166, 366]",
+          "bin2": "[367, 550]",
+          "bin3": "[551, 761]",
+          "bin4": "[762, 1064]",
+          "bin5": "[1065, 1430]",
+          "bin6": "[1431, 1721]",
+          "bin7": "[1722, 2164]",
+          "bin8": "[2165, 4292]",
+          "(결측)": "(결측)"
+        }
+      },
+      "pos_dpd_month_ratio": {
+        "beta": -0.19419,
+        "bin_points": {
+          "(결측)": 1.06,
+          "bin0": 0.22,
+          "bin1": -2.22
+        },
+        "bin_labels": {
+          "bin0": "[0, 0.05051]",
+          "bin1": "[0.05063, 0.989]",
+          "(결측)": "(결측)"
+        }
+      },
+      "recent_1yr_late_ratio": {
+        "beta": -0.39598,
+        "bin_points": {
+          "(결측)": 0.36,
+          "bin0": 1.71,
+          "bin1": -5.07,
+          "bin2": -6.59
+        },
+        "bin_labels": {
+          "bin0": "[0, 0.08333]",
+          "bin1": "[0.08511, 0.2]",
+          "bin2": "[0.2041, 1]",
+          "(결측)": "(결측)"
+        }
+      },
+      "recent_1yr_reject_count": {
+        "beta": 0.03618,
+        "bin_points": {
+          "(결측)": -0.33,
+          "bin0": -0.04,
+          "bin1": 0.54
+        },
+        "bin_labels": {
+          "bin0": "[0, 1]",
+          "bin1": "[2, 54]",
+          "(결측)": "(결측)"
+        }
+      },
+      "registration_days": {
+        "beta": -0.23478,
+        "bin_points": {
+          "bin0": -1.45,
+          "bin1": -0.73,
+          "bin2": -0.32,
+          "bin3": -0.73,
+          "bin4": -0.42,
+          "bin5": -0.57,
+          "bin6": 0.33,
+          "bin7": 0.68,
+          "bin8": 1.37,
+          "bin9": 2.61
+        },
+        "bin_labels": {
+          "bin0": "[-0, 695]",
+          "bin1": "[696, 1501]",
+          "bin2": "[1502, 2549]",
+          "bin3": "[2550, 3543]",
+          "bin4": "[3544, 4514]",
+          "bin5": "[4515, 5465]",
+          "bin6": "[5466, 6778]",
+          "bin7": "[6779, 8239]",
+          "bin8": "[8240, 9943]",
+          "bin9": "[9944, 2.467e+04]",
+          "(결측)": "(결측)"
+        }
+      },
+      "reject_ratio": {
+        "beta": -0.42143,
+        "bin_points": {
+          "(결측)": 3.89,
+          "bin0": 1.71,
+          "bin1": -0.85,
+          "bin2": -3.65,
+          "bin3": -7.37
+        },
+        "bin_labels": {
+          "bin0": "[0, 0.1429]",
+          "bin1": "[0.1481, 0.25]",
+          "bin2": "[0.2571, 0.4]",
+          "bin3": "[0.4054, 1]",
+          "(결측)": "(결측)"
+        }
+      },
+      "unemployed_flag": {
+        "beta": -0.12672,
+        "bin_points": {
+          "bin0": -0.28,
+          "bin1": 1.57
+        },
+        "bin_labels": {
+          "bin0": "[0, 0]",
+          "bin1": "[1, 1]",
+          "(결측)": "(결측)"
+        }
+      }
+    }
+  }
+}

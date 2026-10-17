@@ -1,0 +1,96 @@
+{
+  "bureau_bureau_balance": {
+    "a_bureau_rows_without_any_balance_record": {
+      "numerator": 942074,
+      "denominator": 1716428,
+      "pct": 54.886,
+      "meaning": "bureau 신용 중 bureau_balance에 월별 기록이 전혀 없는 신용의 비율 (데이터 오류 아님 - 월별 상태를 제공하지 않는 신용 유형이 있을 수 있음)"
+    },
+    "b_bureau_balance_rows_truly_orphan": {
+      "numerator": 3120184,
+      "denominator": 27299925,
+      "pct": 11.429,
+      "meaning": "bureau_balance 행 중 bureau에 SK_ID_BUREAU가 아예 없는 '진짜 고아' 비율 (참조 무결성 문제 여부)"
+    }
+  },
+  "previous_application_credit_card_balance": {
+    "a_prev_rows_without_any_cc_record": {
+      "numerator": 1577279,
+      "denominator": 1670214,
+      "pct": 94.436,
+      "meaning": "previous_application 행 중 카드 잔액 기록이 없는 비율 (신용카드가 아닌 상품이면 당연히 없음)"
+    },
+    "a_by_contract_type": [
+      {
+        "NAME_CONTRACT_TYPE": "Cash loans",
+        "total": 747553,
+        "without_cc": 747553.0,
+        "pct_without_cc": 100.0
+      },
+      {
+        "NAME_CONTRACT_TYPE": "Consumer loans",
+        "total": 729151,
+        "without_cc": 729151.0,
+        "pct_without_cc": 100.0
+      },
+      {
+        "NAME_CONTRACT_TYPE": "Revolving loans",
+        "total": 193164,
+        "without_cc": 100229.0,
+        "pct_without_cc": 51.888
+      },
+      {
+        "NAME_CONTRACT_TYPE": "XNA",
+        "total": 346,
+        "without_cc": 346.0,
+        "pct_without_cc": 100.0
+      }
+    ],
+    "b_cc_rows_truly_orphan": {
+      "numerator": 1082816,
+      "denominator": 3840312,
+      "pct": 28.196,
+      "meaning": "credit_card_balance 행 중 previous_application에 SK_ID_PREV가 아예 없는 '진짜 고아' 비율"
+    },
+    "c_cc_sk_id_curr_in_application": {
+      "numerator": 3840312,
+      "denominator": 3840312,
+      "pct": 100.0,
+      "meaning": "credit_card_balance의 SK_ID_CURR가 application_train/test에 존재하는 비율 (신청자 연결 가능 여부)"
+    }
+  },
+  "previous_application_POS_CASH_balance": {
+    "a_prev_rows_without_any_child_record": {
+      "numerator": 771311,
+      "denominator": 1670214,
+      "pct": 46.18
+    },
+    "b_child_rows_truly_orphan": {
+      "numerator": 340561,
+      "denominator": 10001358,
+      "pct": 3.405
+    },
+    "c_child_sk_id_curr_in_application": {
+      "numerator": 10001358,
+      "denominator": 10001358,
+      "pct": 100.0
+    }
+  },
+  "previous_application_installments_payments": {
+    "a_prev_rows_without_any_child_record": {
+      "numerator": 711309,
+      "denominator": 1670214,
+      "pct": 42.588
+    },
+    "b_child_rows_truly_orphan": {
+      "numerator": 1250826,
+      "denominator": 13605401,
+      "pct": 9.194
+    },
+    "c_child_sk_id_curr_in_application": {
+      "numerator": 13605401,
+      "denominator": 13605401,
+      "pct": 100.0
+    }
+  }
+}

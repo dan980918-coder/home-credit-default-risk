@@ -1,0 +1,170 @@
+{
+  "selected_model_type": "lightgbm",
+  "final_label": "lightgbm_no_age",
+  "n_holdout": 61503,
+  "base_rate_pct": 8.073,
+  "basic_performance": {
+    "champion": {
+      "auc": 0.72716,
+      "ks": 0.33865,
+      "gini": 0.45431
+    },
+    "new_score": {
+      "auc": 0.76975,
+      "ks": 0.40555,
+      "gini": 0.53951
+    }
+  },
+  "h6": {
+    "table": [
+      {
+        "approval_rate": 0.7,
+        "champion_bad_rate_pct": 4.522,
+        "new_score_bad_rate_pct": 3.798,
+        "diff_pp": 0.725,
+        "relative_reduction_pct": 16.02,
+        "diff_pp_ci_low": 0.592,
+        "diff_pp_ci_high": 0.871
+      },
+      {
+        "approval_rate": 0.8,
+        "champion_bad_rate_pct": 5.256,
+        "new_score_bad_rate_pct": 4.61,
+        "diff_pp": 0.646,
+        "relative_reduction_pct": 12.3,
+        "diff_pp_ci_low": 0.524,
+        "diff_pp_ci_high": 0.768
+      },
+      {
+        "approval_rate": 0.9,
+        "champion_bad_rate_pct": 6.242,
+        "new_score_bad_rate_pct": 5.821,
+        "diff_pp": 0.421,
+        "relative_reduction_pct": 6.74,
+        "diff_pp_ci_low": 0.327,
+        "diff_pp_ci_high": 0.529
+      }
+    ],
+    "same_bad_rate_approval_increase": {
+      "champion_bad_rate_at_80pct_pct": 5.256,
+      "new_score_approval_rate_for_same_bad_rate_pct": 86.0,
+      "approval_rate_increase_pp": 6.0,
+      "approval_rate_increase_ci": [
+        5.0,
+        7.0
+      ]
+    },
+    "swap_set_80": [
+      {
+        "group": "둘다승인",
+        "n": 45369,
+        "pct_of_total": 73.77,
+        "bad_rate_pct": 4.269
+      },
+      {
+        "group": "둘다거절",
+        "n": 8468,
+        "pct_of_total": 13.77,
+        "bad_rate_pct": 24.185
+      },
+      {
+        "group": "swap_out(현행승인,새점수거절)",
+        "n": 3833,
+        "pct_of_total": 6.23,
+        "bad_rate_pct": 16.932
+      },
+      {
+        "group": "swap_in(현행거절,새점수승인)",
+        "n": 3833,
+        "pct_of_total": 6.23,
+        "bad_rate_pct": 8.636
+      }
+    ],
+    "verdict": "채택",
+    "verdict_note": "세 승인율 모두 신뢰구간 하한>0"
+  },
+  "h7": {
+    "table": [
+      {
+        "r": 0.1,
+        "lgd": 0.4,
+        "breakeven_bad_rate_pct": 20.0,
+        "champion_best_approval_rate": 0.91,
+        "champion_best_bad_rate_pct": 6.341,
+        "champion_profit_index": 103.586,
+        "new_score_best_approval_rate": 0.89,
+        "new_score_best_bad_rate_pct": 5.642,
+        "new_score_profit_index": 105.714,
+        "profit_index_gain": 2.128,
+        "new_best_is_interior": true
+      },
+      {
+        "r": 0.1,
+        "lgd": 0.6,
+        "breakeven_bad_rate_pct": 14.29,
+        "champion_best_approval_rate": 0.88,
+        "champion_best_bad_rate_pct": 5.998,
+        "champion_profit_index": 113.991,
+        "new_score_best_approval_rate": 0.84,
+        "new_score_best_bad_rate_pct": 4.982,
+        "new_score_profit_index": 119.991,
+        "profit_index_gain": 5.999,
+        "new_best_is_interior": true
+      },
+      {
+        "r": 0.2,
+        "lgd": 0.4,
+        "breakeven_bad_rate_pct": 33.33,
+        "champion_best_approval_rate": 0.99,
+        "champion_best_bad_rate_pct": 7.741,
+        "champion_profit_index": 100.237,
+        "new_score_best_approval_rate": 0.98,
+        "new_score_best_bad_rate_pct": 7.363,
+        "new_score_profit_index": 100.554,
+        "profit_index_gain": 0.317,
+        "new_best_is_interior": true
+      },
+      {
+        "r": 0.2,
+        "lgd": 0.6,
+        "breakeven_bad_rate_pct": 25.0,
+        "champion_best_approval_rate": 0.96,
+        "champion_best_bad_rate_pct": 7.171,
+        "champion_profit_index": 101.046,
+        "new_score_best_approval_rate": 0.95,
+        "new_score_best_bad_rate_pct": 6.692,
+        "new_score_profit_index": 102.247,
+        "profit_index_gain": 1.201,
+        "new_best_is_interior": true
+      },
+      {
+        "r": 0.3,
+        "lgd": 0.4,
+        "breakeven_bad_rate_pct": 42.86,
+        "champion_best_approval_rate": 1.0,
+        "champion_best_bad_rate_pct": 8.073,
+        "champion_profit_index": 100.0,
+        "new_score_best_approval_rate": 0.99,
+        "new_score_best_bad_rate_pct": 7.683,
+        "new_score_profit_index": 100.042,
+        "profit_index_gain": 0.042,
+        "new_best_is_interior": true
+      },
+      {
+        "r": 0.3,
+        "lgd": 0.6,
+        "breakeven_bad_rate_pct": 33.33,
+        "champion_best_approval_rate": 0.99,
+        "champion_best_bad_rate_pct": 7.741,
+        "champion_profit_index": 100.237,
+        "new_score_best_approval_rate": 0.98,
+        "new_score_best_bad_rate_pct": 7.363,
+        "new_score_profit_index": 100.554,
+        "profit_index_gain": 0.317,
+        "new_best_is_interior": true
+      }
+    ],
+    "n_interior_optimum": 6,
+    "verdict": "채택"
+  }
+}

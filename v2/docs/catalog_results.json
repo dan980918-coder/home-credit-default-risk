@@ -1,0 +1,1762 @@
+{
+  "catalog": [
+    {
+      "column": "SK_ID_CURR",
+      "category": "식별자",
+      "description_en": "ID of loan in our sample",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 307511,
+      "min": 100002,
+      "median": 278202.0,
+      "max": 456255
+    },
+    {
+      "column": "TARGET",
+      "category": "타겟",
+      "description_en": "Target variable (1 - client with payment difficulties: he/she had late payment more than X days on at least one of the first Y installments of the loan in our sample, 0 - all other cases)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "NAME_CONTRACT_TYPE",
+      "category": "대출 조건",
+      "description_en": "Identification if loan is cash or revolving",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "top_categories": [
+        {
+          "NAME_CONTRACT_TYPE": "Cash loans",
+          "cnt": 278232
+        },
+        {
+          "NAME_CONTRACT_TYPE": "Revolving loans",
+          "cnt": 29279
+        }
+      ]
+    },
+    {
+      "column": "CODE_GENDER",
+      "category": "인적 사항",
+      "description_en": "Gender of the client",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 3,
+      "top_categories": [
+        {
+          "CODE_GENDER": "F",
+          "cnt": 202448
+        },
+        {
+          "CODE_GENDER": "M",
+          "cnt": 105059
+        },
+        {
+          "CODE_GENDER": "XNA",
+          "cnt": 4
+        }
+      ]
+    },
+    {
+      "column": "FLAG_OWN_CAR",
+      "category": "소득·재산",
+      "description_en": "Flag if the client owns a car",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "top_categories": [
+        {
+          "FLAG_OWN_CAR": "N",
+          "cnt": 202924
+        },
+        {
+          "FLAG_OWN_CAR": "Y",
+          "cnt": 104587
+        }
+      ]
+    },
+    {
+      "column": "FLAG_OWN_REALTY",
+      "category": "소득·재산",
+      "description_en": "Flag if client owns a house or flat",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "top_categories": [
+        {
+          "FLAG_OWN_REALTY": "Y",
+          "cnt": 213312
+        },
+        {
+          "FLAG_OWN_REALTY": "N",
+          "cnt": 94199
+        }
+      ]
+    },
+    {
+      "column": "CNT_CHILDREN",
+      "category": "가족",
+      "description_en": "Number of children the client has",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 15,
+      "min": 0,
+      "median": 0.0,
+      "max": 19
+    },
+    {
+      "column": "AMT_INCOME_TOTAL",
+      "category": "소득·재산",
+      "description_en": "Income of the client",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.0,
+      "n_unique": 2548,
+      "min": 25650.0,
+      "median": 147150.0,
+      "max": 117000000.0
+    },
+    {
+      "column": "AMT_CREDIT",
+      "category": "대출 조건",
+      "description_en": "Credit amount of the loan",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.0,
+      "n_unique": 5603,
+      "min": 45000.0,
+      "median": 513531.0,
+      "max": 4050000.0
+    },
+    {
+      "column": "AMT_ANNUITY",
+      "category": "대출 조건",
+      "description_en": "Loan annuity",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.004,
+      "n_unique": 13672,
+      "min": 1615.5,
+      "median": 24903.0,
+      "max": 258025.5
+    },
+    {
+      "column": "AMT_GOODS_PRICE",
+      "category": "대출 조건",
+      "description_en": "For consumer loans it is the price of the goods for which the loan is given",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.09,
+      "n_unique": 1002,
+      "min": 40500.0,
+      "median": 450000.0,
+      "max": 4050000.0
+    },
+    {
+      "column": "NAME_TYPE_SUITE",
+      "category": "가족",
+      "description_en": "Who was accompanying client when he was applying for the loan",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.42,
+      "n_unique": 7,
+      "top_categories": [
+        {
+          "NAME_TYPE_SUITE": "Unaccompanied",
+          "cnt": 248526
+        },
+        {
+          "NAME_TYPE_SUITE": "Family",
+          "cnt": 40149
+        },
+        {
+          "NAME_TYPE_SUITE": "Spouse, partner",
+          "cnt": 11370
+        },
+        {
+          "NAME_TYPE_SUITE": "Children",
+          "cnt": 3267
+        },
+        {
+          "NAME_TYPE_SUITE": "Other_B",
+          "cnt": 1770
+        }
+      ]
+    },
+    {
+      "column": "NAME_INCOME_TYPE",
+      "category": "고용·직업",
+      "description_en": "Clients income type (businessman, working, maternity leave,…)",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 8,
+      "top_categories": [
+        {
+          "NAME_INCOME_TYPE": "Working",
+          "cnt": 158774
+        },
+        {
+          "NAME_INCOME_TYPE": "Commercial associate",
+          "cnt": 71617
+        },
+        {
+          "NAME_INCOME_TYPE": "Pensioner",
+          "cnt": 55362
+        },
+        {
+          "NAME_INCOME_TYPE": "State servant",
+          "cnt": 21703
+        },
+        {
+          "NAME_INCOME_TYPE": "Unemployed",
+          "cnt": 22
+        }
+      ]
+    },
+    {
+      "column": "NAME_EDUCATION_TYPE",
+      "category": "고용·직업",
+      "description_en": "Level of highest education the client achieved",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 5,
+      "top_categories": [
+        {
+          "NAME_EDUCATION_TYPE": "Secondary / secondary special",
+          "cnt": 218391
+        },
+        {
+          "NAME_EDUCATION_TYPE": "Higher education",
+          "cnt": 74863
+        },
+        {
+          "NAME_EDUCATION_TYPE": "Incomplete higher",
+          "cnt": 10277
+        },
+        {
+          "NAME_EDUCATION_TYPE": "Lower secondary",
+          "cnt": 3816
+        },
+        {
+          "NAME_EDUCATION_TYPE": "Academic degree",
+          "cnt": 164
+        }
+      ]
+    },
+    {
+      "column": "NAME_FAMILY_STATUS",
+      "category": "가족",
+      "description_en": "Family status of the client",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 6,
+      "top_categories": [
+        {
+          "NAME_FAMILY_STATUS": "Married",
+          "cnt": 196432
+        },
+        {
+          "NAME_FAMILY_STATUS": "Single / not married",
+          "cnt": 45444
+        },
+        {
+          "NAME_FAMILY_STATUS": "Civil marriage",
+          "cnt": 29775
+        },
+        {
+          "NAME_FAMILY_STATUS": "Separated",
+          "cnt": 19770
+        },
+        {
+          "NAME_FAMILY_STATUS": "Widow",
+          "cnt": 16088
+        }
+      ]
+    },
+    {
+      "column": "NAME_HOUSING_TYPE",
+      "category": "거주지·지역",
+      "description_en": "What is the housing situation of the client (renting, living with parents, ...)",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 6,
+      "top_categories": [
+        {
+          "NAME_HOUSING_TYPE": "House / apartment",
+          "cnt": 272868
+        },
+        {
+          "NAME_HOUSING_TYPE": "With parents",
+          "cnt": 14840
+        },
+        {
+          "NAME_HOUSING_TYPE": "Municipal apartment",
+          "cnt": 11183
+        },
+        {
+          "NAME_HOUSING_TYPE": "Rented apartment",
+          "cnt": 4881
+        },
+        {
+          "NAME_HOUSING_TYPE": "Office apartment",
+          "cnt": 2617
+        }
+      ]
+    },
+    {
+      "column": "REGION_POPULATION_RELATIVE",
+      "category": "거주지·지역",
+      "description_en": "Normalized population of region where client lives (higher number means the client lives in more populated region)",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.0,
+      "n_unique": 81,
+      "min": 0.00029,
+      "median": 0.01885,
+      "max": 0.072508
+    },
+    {
+      "column": "DAYS_BIRTH",
+      "category": "인적 사항",
+      "description_en": "Client's age in days at the time of application",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 17460,
+      "min": -25229,
+      "median": -15750.0,
+      "max": -7489
+    },
+    {
+      "column": "DAYS_EMPLOYED",
+      "category": "고용·직업",
+      "description_en": "How many days before the application the person started current employment",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 12574,
+      "min": -17912,
+      "median": -1213.0,
+      "max": 365243
+    },
+    {
+      "column": "DAYS_REGISTRATION",
+      "category": "인적 사항",
+      "description_en": "How many days before the application did client change his registration",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.0,
+      "n_unique": 15688,
+      "min": -24672.0,
+      "median": -4504.0,
+      "max": 0.0
+    },
+    {
+      "column": "DAYS_ID_PUBLISH",
+      "category": "인적 사항",
+      "description_en": "How many days before the application did client change the identity document with which he applied for the loan",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 6168,
+      "min": -7197,
+      "median": -3254.0,
+      "max": 0
+    },
+    {
+      "column": "OWN_CAR_AGE",
+      "category": "소득·재산",
+      "description_en": "Age of client's car",
+      "dtype": "DOUBLE",
+      "missing_pct": 65.991,
+      "n_unique": 62,
+      "min": 0.0,
+      "median": 9.0,
+      "max": 91.0
+    },
+    {
+      "column": "FLAG_MOBIL",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide mobile phone (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 1.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_EMP_PHONE",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide work phone (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 1.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_WORK_PHONE",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide home phone (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_CONT_MOBILE",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Was mobile phone reachable (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 1.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_PHONE",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide home phone (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_EMAIL",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide email (1=YES, 0=NO)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "OCCUPATION_TYPE",
+      "category": "고용·직업",
+      "description_en": "What kind of occupation does the client have",
+      "dtype": "VARCHAR",
+      "missing_pct": 31.346,
+      "n_unique": 18,
+      "top_categories": [
+        {
+          "OCCUPATION_TYPE": null,
+          "cnt": 96391
+        },
+        {
+          "OCCUPATION_TYPE": "Laborers",
+          "cnt": 55186
+        },
+        {
+          "OCCUPATION_TYPE": "Sales staff",
+          "cnt": 32102
+        },
+        {
+          "OCCUPATION_TYPE": "Core staff",
+          "cnt": 27570
+        },
+        {
+          "OCCUPATION_TYPE": "Managers",
+          "cnt": 21371
+        }
+      ]
+    },
+    {
+      "column": "CNT_FAM_MEMBERS",
+      "category": "가족",
+      "description_en": "How many family members does client have",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.001,
+      "n_unique": 17,
+      "min": 1.0,
+      "median": 2.0,
+      "max": 20.0
+    },
+    {
+      "column": "REGION_RATING_CLIENT",
+      "category": "거주지·지역",
+      "description_en": "Our rating of the region where client lives (1,2,3)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 3,
+      "min": 1,
+      "median": 2.0,
+      "max": 3
+    },
+    {
+      "column": "REGION_RATING_CLIENT_W_CITY",
+      "category": "거주지·지역",
+      "description_en": "Our rating of the region where client lives with taking city into account (1,2,3)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 3,
+      "min": 1,
+      "median": 2.0,
+      "max": 3
+    },
+    {
+      "column": "WEEKDAY_APPR_PROCESS_START",
+      "category": "신청 시점",
+      "description_en": "On which day of the week did the client apply for the loan",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 7,
+      "top_categories": [
+        {
+          "WEEKDAY_APPR_PROCESS_START": "TUESDAY",
+          "cnt": 53901
+        },
+        {
+          "WEEKDAY_APPR_PROCESS_START": "WEDNESDAY",
+          "cnt": 51934
+        },
+        {
+          "WEEKDAY_APPR_PROCESS_START": "MONDAY",
+          "cnt": 50714
+        },
+        {
+          "WEEKDAY_APPR_PROCESS_START": "THURSDAY",
+          "cnt": 50591
+        },
+        {
+          "WEEKDAY_APPR_PROCESS_START": "FRIDAY",
+          "cnt": 50338
+        }
+      ]
+    },
+    {
+      "column": "HOUR_APPR_PROCESS_START",
+      "category": "신청 시점",
+      "description_en": "Approximately at what hour did the client apply for the loan",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 24,
+      "min": 0,
+      "median": 12.0,
+      "max": 23
+    },
+    {
+      "column": "REG_REGION_NOT_LIVE_REGION",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's permanent address does not match contact address (1=different, 0=same, at region level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "REG_REGION_NOT_WORK_REGION",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's permanent address does not match work address (1=different, 0=same, at region level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "LIVE_REGION_NOT_WORK_REGION",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's contact address does not match work address (1=different, 0=same, at region level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "REG_CITY_NOT_LIVE_CITY",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's permanent address does not match contact address (1=different, 0=same, at city level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "REG_CITY_NOT_WORK_CITY",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's permanent address does not match work address (1=different, 0=same, at city level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "LIVE_CITY_NOT_WORK_CITY",
+      "category": "거주지·지역",
+      "description_en": "Flag if client's contact address does not match work address (1=different, 0=same, at city level)",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "ORGANIZATION_TYPE",
+      "category": "고용·직업",
+      "description_en": "Type of organization where client works",
+      "dtype": "VARCHAR",
+      "missing_pct": 0.0,
+      "n_unique": 58,
+      "top_categories": [
+        {
+          "ORGANIZATION_TYPE": "Business Entity Type 3",
+          "cnt": 67992
+        },
+        {
+          "ORGANIZATION_TYPE": "XNA",
+          "cnt": 55374
+        },
+        {
+          "ORGANIZATION_TYPE": "Self-employed",
+          "cnt": 38412
+        },
+        {
+          "ORGANIZATION_TYPE": "Other",
+          "cnt": 16683
+        },
+        {
+          "ORGANIZATION_TYPE": "Medicine",
+          "cnt": 11193
+        }
+      ]
+    },
+    {
+      "column": "EXT_SOURCE_1",
+      "category": "외부 신용점수",
+      "description_en": "Normalized score from external data source",
+      "dtype": "DOUBLE",
+      "missing_pct": 56.381,
+      "n_unique": 114584,
+      "min": 0.014568132412445587,
+      "median": 0.5059979305057544,
+      "max": 0.9626927705613059
+    },
+    {
+      "column": "EXT_SOURCE_2",
+      "category": "외부 신용점수",
+      "description_en": "Normalized score from external data source",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.215,
+      "n_unique": 119831,
+      "min": 8.173616518884397e-08,
+      "median": 0.5659614260608526,
+      "max": 0.8549996664047012
+    },
+    {
+      "column": "EXT_SOURCE_3",
+      "category": "외부 신용점수",
+      "description_en": "Normalized score from external data source",
+      "dtype": "DOUBLE",
+      "missing_pct": 19.825,
+      "n_unique": 814,
+      "min": 0.0005272652387098817,
+      "median": 0.5352762504724826,
+      "max": 0.8960095494948396
+    },
+    {
+      "column": "APARTMENTS_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.75,
+      "n_unique": 2339,
+      "min": 0.0,
+      "median": 0.0876,
+      "max": 1.0
+    },
+    {
+      "column": "BASEMENTAREA_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 58.516,
+      "n_unique": 3780,
+      "min": 0.0,
+      "median": 0.0763,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BEGINEXPLUATATION_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 48.781,
+      "n_unique": 285,
+      "min": 0.0,
+      "median": 0.9816,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BUILD_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 66.498,
+      "n_unique": 149,
+      "min": 0.0,
+      "median": 0.7552,
+      "max": 1.0
+    },
+    {
+      "column": "COMMONAREA_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.872,
+      "n_unique": 3181,
+      "min": 0.0,
+      "median": 0.0211,
+      "max": 1.0
+    },
+    {
+      "column": "ELEVATORS_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 53.296,
+      "n_unique": 257,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "ENTRANCES_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.349,
+      "n_unique": 285,
+      "min": 0.0,
+      "median": 0.1379,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMAX_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 49.761,
+      "n_unique": 403,
+      "min": 0.0,
+      "median": 0.1667,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMIN_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 67.849,
+      "n_unique": 305,
+      "min": 0.0,
+      "median": 0.2083,
+      "max": 1.0
+    },
+    {
+      "column": "LANDAREA_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 59.377,
+      "n_unique": 3527,
+      "min": 0.0,
+      "median": 0.0481,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAPARTMENTS_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 68.355,
+      "n_unique": 1868,
+      "min": 0.0,
+      "median": 0.0756,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAREA_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.193,
+      "n_unique": 5199,
+      "min": 0.0,
+      "median": 0.0745,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAPARTMENTS_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.433,
+      "n_unique": 386,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAREA_AVG",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 55.179,
+      "n_unique": 3290,
+      "min": 0.0,
+      "median": 0.0036,
+      "max": 1.0
+    },
+    {
+      "column": "APARTMENTS_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.75,
+      "n_unique": 760,
+      "min": 0.0,
+      "median": 0.084,
+      "max": 1.0
+    },
+    {
+      "column": "BASEMENTAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 58.516,
+      "n_unique": 3841,
+      "min": 0.0,
+      "median": 0.0746,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BEGINEXPLUATATION_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 48.781,
+      "n_unique": 221,
+      "min": 0.0,
+      "median": 0.9816,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BUILD_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 66.498,
+      "n_unique": 154,
+      "min": 0.0,
+      "median": 0.7648,
+      "max": 1.0
+    },
+    {
+      "column": "COMMONAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.872,
+      "n_unique": 3128,
+      "min": 0.0,
+      "median": 0.019,
+      "max": 1.0
+    },
+    {
+      "column": "ELEVATORS_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 53.296,
+      "n_unique": 26,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "ENTRANCES_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.349,
+      "n_unique": 30,
+      "min": 0.0,
+      "median": 0.1379,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMAX_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 49.761,
+      "n_unique": 25,
+      "min": 0.0,
+      "median": 0.1667,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMIN_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 67.849,
+      "n_unique": 25,
+      "min": 0.0,
+      "median": 0.2083,
+      "max": 1.0
+    },
+    {
+      "column": "LANDAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 59.377,
+      "n_unique": 3563,
+      "min": 0.0,
+      "median": 0.0458,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAPARTMENTS_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 68.355,
+      "n_unique": 736,
+      "min": 0.0,
+      "median": 0.0771,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.193,
+      "n_unique": 5301,
+      "min": 0.0,
+      "median": 0.0731,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAPARTMENTS_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.433,
+      "n_unique": 167,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 55.179,
+      "n_unique": 3327,
+      "min": 0.0,
+      "median": 0.0011,
+      "max": 1.0
+    },
+    {
+      "column": "APARTMENTS_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.75,
+      "n_unique": 1148,
+      "min": 0.0,
+      "median": 0.0864,
+      "max": 1.0
+    },
+    {
+      "column": "BASEMENTAREA_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 58.516,
+      "n_unique": 3772,
+      "min": 0.0,
+      "median": 0.0758,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BEGINEXPLUATATION_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 48.781,
+      "n_unique": 245,
+      "min": 0.0,
+      "median": 0.9816,
+      "max": 1.0
+    },
+    {
+      "column": "YEARS_BUILD_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 66.498,
+      "n_unique": 151,
+      "min": 0.0,
+      "median": 0.7585,
+      "max": 1.0
+    },
+    {
+      "column": "COMMONAREA_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.872,
+      "n_unique": 3202,
+      "min": 0.0,
+      "median": 0.0208,
+      "max": 1.0
+    },
+    {
+      "column": "ELEVATORS_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 53.296,
+      "n_unique": 46,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "ENTRANCES_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.349,
+      "n_unique": 46,
+      "min": 0.0,
+      "median": 0.1379,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMAX_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 49.761,
+      "n_unique": 49,
+      "min": 0.0,
+      "median": 0.1667,
+      "max": 1.0
+    },
+    {
+      "column": "FLOORSMIN_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 67.849,
+      "n_unique": 47,
+      "min": 0.0,
+      "median": 0.2083,
+      "max": 1.0
+    },
+    {
+      "column": "LANDAREA_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 59.377,
+      "n_unique": 3560,
+      "min": 0.0,
+      "median": 0.0487,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAPARTMENTS_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 68.355,
+      "n_unique": 1097,
+      "min": 0.0,
+      "median": 0.0761,
+      "max": 1.0
+    },
+    {
+      "column": "LIVINGAREA_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 50.193,
+      "n_unique": 5281,
+      "min": 0.0,
+      "median": 0.0749,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAPARTMENTS_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 69.433,
+      "n_unique": 214,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 1.0
+    },
+    {
+      "column": "NONLIVINGAREA_MEDI",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 55.179,
+      "n_unique": 3323,
+      "min": 0.0,
+      "median": 0.0031,
+      "max": 1.0
+    },
+    {
+      "column": "FONDKAPREMONT_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "VARCHAR",
+      "missing_pct": 68.386,
+      "n_unique": 4,
+      "top_categories": [
+        {
+          "FONDKAPREMONT_MODE": null,
+          "cnt": 210295
+        },
+        {
+          "FONDKAPREMONT_MODE": "reg oper account",
+          "cnt": 73830
+        },
+        {
+          "FONDKAPREMONT_MODE": "reg oper spec account",
+          "cnt": 12080
+        },
+        {
+          "FONDKAPREMONT_MODE": "not specified",
+          "cnt": 5687
+        },
+        {
+          "FONDKAPREMONT_MODE": "org spec account",
+          "cnt": 5619
+        }
+      ]
+    },
+    {
+      "column": "HOUSETYPE_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "VARCHAR",
+      "missing_pct": 50.176,
+      "n_unique": 3,
+      "top_categories": [
+        {
+          "HOUSETYPE_MODE": null,
+          "cnt": 154297
+        },
+        {
+          "HOUSETYPE_MODE": "block of flats",
+          "cnt": 150503
+        },
+        {
+          "HOUSETYPE_MODE": "specific housing",
+          "cnt": 1499
+        },
+        {
+          "HOUSETYPE_MODE": "terraced house",
+          "cnt": 1212
+        }
+      ]
+    },
+    {
+      "column": "TOTALAREA_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "DOUBLE",
+      "missing_pct": 48.269,
+      "n_unique": 5116,
+      "min": 0.0,
+      "median": 0.0688,
+      "max": 1.0
+    },
+    {
+      "column": "WALLSMATERIAL_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "VARCHAR",
+      "missing_pct": 50.841,
+      "n_unique": 7,
+      "top_categories": [
+        {
+          "WALLSMATERIAL_MODE": null,
+          "cnt": 156341
+        },
+        {
+          "WALLSMATERIAL_MODE": "Panel",
+          "cnt": 66040
+        },
+        {
+          "WALLSMATERIAL_MODE": "Stone, brick",
+          "cnt": 64815
+        },
+        {
+          "WALLSMATERIAL_MODE": "Block",
+          "cnt": 9253
+        },
+        {
+          "WALLSMATERIAL_MODE": "Wooden",
+          "cnt": 5362
+        }
+      ]
+    },
+    {
+      "column": "EMERGENCYSTATE_MODE",
+      "category": "주택 건물 정보",
+      "description_en": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+      "dtype": "BOOLEAN",
+      "missing_pct": 47.398,
+      "n_unique": 2,
+      "top_categories": [
+        {
+          "EMERGENCYSTATE_MODE": false,
+          "cnt": 159428
+        },
+        {
+          "EMERGENCYSTATE_MODE": null,
+          "cnt": 145755
+        },
+        {
+          "EMERGENCYSTATE_MODE": true,
+          "cnt": 2328
+        }
+      ]
+    },
+    {
+      "column": "OBS_30_CNT_SOCIAL_CIRCLE",
+      "category": "주변인 연체 관측",
+      "description_en": "How many observation of client's social surroundings with observable 30 DPD (days past due) default",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.332,
+      "n_unique": 33,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 348.0
+    },
+    {
+      "column": "DEF_30_CNT_SOCIAL_CIRCLE",
+      "category": "주변인 연체 관측",
+      "description_en": "How many observation of client's social surroundings defaulted on 30 DPD (days past due) ",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.332,
+      "n_unique": 10,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 34.0
+    },
+    {
+      "column": "OBS_60_CNT_SOCIAL_CIRCLE",
+      "category": "주변인 연체 관측",
+      "description_en": "How many observation of client's social surroundings with observable 60 DPD (days past due) default",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.332,
+      "n_unique": 33,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 344.0
+    },
+    {
+      "column": "DEF_60_CNT_SOCIAL_CIRCLE",
+      "category": "주변인 연체 관측",
+      "description_en": "How many observation of client's social surroundings defaulted on 60 (days past due) DPD",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.332,
+      "n_unique": 9,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 24.0
+    },
+    {
+      "column": "DAYS_LAST_PHONE_CHANGE",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "How many days before application did client change phone",
+      "dtype": "DOUBLE",
+      "missing_pct": 0.0,
+      "n_unique": 3773,
+      "min": -4292.0,
+      "median": -757.0,
+      "max": 0.0
+    },
+    {
+      "column": "FLAG_DOCUMENT_2",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 2",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_3",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 3",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 1.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_4",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 4",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_5",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 5",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_6",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 6",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_7",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 7",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_8",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 8",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_9",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 9",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_10",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 10",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_11",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 11",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_12",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 12",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_13",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 13",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_14",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 14",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_15",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 15",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_16",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 16",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_17",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 17",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_18",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 18",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_19",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 19",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_20",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 20",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "FLAG_DOCUMENT_21",
+      "category": "연락처·서류 제출 여부",
+      "description_en": "Did client provide document 21",
+      "dtype": "BIGINT",
+      "missing_pct": 0.0,
+      "n_unique": 2,
+      "min": 0,
+      "median": 0.0,
+      "max": 1
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_HOUR",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client one hour before application",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 5,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 4.0
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_DAY",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client one day before application (excluding one hour before application)",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 9,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 9.0
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_WEEK",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client one week before application (excluding one day before application)",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 9,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 8.0
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_MON",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client one month before application (excluding one week before application)",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 24,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 27.0
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_QRT",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client 3 month before application (excluding one month before application)",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 11,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 261.0
+    },
+    {
+      "column": "AMT_REQ_CREDIT_BUREAU_YEAR",
+      "category": "신용조회 이력",
+      "description_en": "Number of enquiries to Credit Bureau about the client one day year (excluding last 3 months before application)",
+      "dtype": "DOUBLE",
+      "missing_pct": 13.502,
+      "n_unique": 25,
+      "min": 0.0,
+      "median": 1.0,
+      "max": 25.0
+    }
+  ],
+  "category_counts": {
+    "식별자": 1,
+    "타겟": 1,
+    "대출 조건": 4,
+    "인적 사항": 4,
+    "소득·재산": 4,
+    "가족": 4,
+    "고용·직업": 5,
+    "거주지·지역": 10,
+    "연락처·서류 제출 여부": 27,
+    "신청 시점": 2,
+    "외부 신용점수": 3,
+    "주택 건물 정보": 47,
+    "주변인 연체 관측": 4,
+    "신용조회 이력": 6
+  },
+  "sub_table_summary": {
+    "bureau": {
+      "n_rows": 1716428,
+      "n_cols": 17,
+      "columns": [
+        "SK_ID_CURR",
+        "SK_ID_BUREAU",
+        "CREDIT_ACTIVE",
+        "CREDIT_CURRENCY",
+        "DAYS_CREDIT",
+        "CREDIT_DAY_OVERDUE",
+        "DAYS_CREDIT_ENDDATE",
+        "DAYS_ENDDATE_FACT",
+        "AMT_CREDIT_MAX_OVERDUE",
+        "CNT_CREDIT_PROLONG",
+        "AMT_CREDIT_SUM",
+        "AMT_CREDIT_SUM_DEBT",
+        "AMT_CREDIT_SUM_LIMIT",
+        "AMT_CREDIT_SUM_OVERDUE",
+        "CREDIT_TYPE",
+        "DAYS_CREDIT_UPDATE",
+        "AMT_ANNUITY"
+      ],
+      "avg_rows_per_entity": 5.61,
+      "median_rows_per_entity": 4.0,
+      "max_rows_per_entity": 116
+    },
+    "bureau_balance": {
+      "n_rows": 27299925,
+      "n_cols": 3,
+      "columns": [
+        "SK_ID_BUREAU",
+        "MONTHS_BALANCE",
+        "STATUS"
+      ],
+      "avg_rows_per_entity": 33.4,
+      "median_rows_per_entity": 26.0,
+      "max_rows_per_entity": 97
+    },
+    "previous_application": {
+      "n_rows": 1670214,
+      "n_cols": 37,
+      "columns": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "NAME_CONTRACT_TYPE",
+        "AMT_ANNUITY",
+        "AMT_APPLICATION",
+        "AMT_CREDIT",
+        "AMT_DOWN_PAYMENT",
+        "AMT_GOODS_PRICE",
+        "WEEKDAY_APPR_PROCESS_START",
+        "HOUR_APPR_PROCESS_START",
+        "FLAG_LAST_APPL_PER_CONTRACT",
+        "NFLAG_LAST_APPL_IN_DAY",
+        "RATE_DOWN_PAYMENT",
+        "RATE_INTEREST_PRIMARY",
+        "RATE_INTEREST_PRIVILEGED",
+        "NAME_CASH_LOAN_PURPOSE",
+        "NAME_CONTRACT_STATUS",
+        "DAYS_DECISION",
+        "NAME_PAYMENT_TYPE",
+        "CODE_REJECT_REASON",
+        "NAME_TYPE_SUITE",
+        "NAME_CLIENT_TYPE",
+        "NAME_GOODS_CATEGORY",
+        "NAME_PORTFOLIO",
+        "NAME_PRODUCT_TYPE",
+        "CHANNEL_TYPE",
+        "SELLERPLACE_AREA",
+        "NAME_SELLER_INDUSTRY",
+        "CNT_PAYMENT",
+        "NAME_YIELD_GROUP",
+        "PRODUCT_COMBINATION",
+        "DAYS_FIRST_DRAWING",
+        "DAYS_FIRST_DUE",
+        "DAYS_LAST_DUE_1ST_VERSION",
+        "DAYS_LAST_DUE",
+        "DAYS_TERMINATION",
+        "NFLAG_INSURED_ON_APPROVAL"
+      ],
+      "avg_rows_per_entity": 1.0,
+      "median_rows_per_entity": 1.0,
+      "max_rows_per_entity": 1
+    },
+    "POS_CASH_balance": {
+      "n_rows": 10001358,
+      "n_cols": 8,
+      "columns": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "MONTHS_BALANCE",
+        "CNT_INSTALMENT",
+        "CNT_INSTALMENT_FUTURE",
+        "NAME_CONTRACT_STATUS",
+        "SK_DPD",
+        "SK_DPD_DEF"
+      ],
+      "avg_rows_per_entity": 10.68,
+      "median_rows_per_entity": 10.0,
+      "max_rows_per_entity": 96
+    },
+    "installments_payments": {
+      "n_rows": 13605401,
+      "n_cols": 8,
+      "columns": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "NUM_INSTALMENT_VERSION",
+        "NUM_INSTALMENT_NUMBER",
+        "DAYS_INSTALMENT",
+        "DAYS_ENTRY_PAYMENT",
+        "AMT_INSTALMENT",
+        "AMT_PAYMENT"
+      ],
+      "avg_rows_per_entity": 13.64,
+      "median_rows_per_entity": 10.0,
+      "max_rows_per_entity": 293
+    },
+    "credit_card_balance": {
+      "n_rows": 3840312,
+      "n_cols": 23,
+      "columns": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "MONTHS_BALANCE",
+        "AMT_BALANCE",
+        "AMT_CREDIT_LIMIT_ACTUAL",
+        "AMT_DRAWINGS_ATM_CURRENT",
+        "AMT_DRAWINGS_CURRENT",
+        "AMT_DRAWINGS_OTHER_CURRENT",
+        "AMT_DRAWINGS_POS_CURRENT",
+        "AMT_INST_MIN_REGULARITY",
+        "AMT_PAYMENT_CURRENT",
+        "AMT_PAYMENT_TOTAL_CURRENT",
+        "AMT_RECEIVABLE_PRINCIPAL",
+        "AMT_RECIVABLE",
+        "AMT_TOTAL_RECEIVABLE",
+        "CNT_DRAWINGS_ATM_CURRENT",
+        "CNT_DRAWINGS_CURRENT",
+        "CNT_DRAWINGS_OTHER_CURRENT",
+        "CNT_DRAWINGS_POS_CURRENT",
+        "CNT_INSTALMENT_MATURE_CUM",
+        "NAME_CONTRACT_STATUS",
+        "SK_DPD",
+        "SK_DPD_DEF"
+      ],
+      "avg_rows_per_entity": 36.82,
+      "median_rows_per_entity": 21.0,
+      "max_rows_per_entity": 96
+    }
+  }
+}
