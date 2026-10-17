@@ -2752,43 +2752,56 @@
           "dtype": "numeric",
           "n_valid": 184506,
           "missing_pct": 0.0,
-          "iv": 0.0,
-          "iv_strength": "없음",
+          "iv": 0.03265,
+          "iv_strength": "약함",
           "bins": [
             {
               "bin": "bin0",
-              "range": "[0, 1]",
-              "n": 184506,
-              "n_bad": 14895,
-              "n_good": 169611,
-              "pct_of_total": 100.0,
-              "bad_rate_pct": 8.073,
-              "ci_low_pct": 7.949,
-              "ci_high_pct": 8.198,
-              "woe": 0.0,
-              "iv_contrib": 0.0
+              "range": "[0, 0]",
+              "n": 151281,
+              "n_bad": 13098,
+              "n_good": 138183,
+              "pct_of_total": 81.99,
+              "bad_rate_pct": 8.658,
+              "ci_low_pct": 8.517,
+              "ci_high_pct": 8.801,
+              "woe": -0.0763,
+              "iv_contrib": 0.00493
+            },
+            {
+              "bin": "bin1",
+              "range": "[1, 1]",
+              "n": 33225,
+              "n_bad": 1797,
+              "n_good": 31428,
+              "pct_of_total": 18.01,
+              "bad_rate_pct": 5.409,
+              "ci_low_pct": 5.17,
+              "ci_high_pct": 5.657,
+              "woe": 0.4289,
+              "iv_contrib": 0.02772
             }
           ],
           "direction_check": {
-            "spearman_rho": null,
+            "spearman_rho": -1.0,
             "spearman_p": null,
             "risky_bin": {
-              "bin": "bin0",
-              "n": 184506,
-              "bad_rate_pct": 8.073,
-              "ci_low_pct": 7.949,
-              "ci_high_pct": 8.198
+              "bin": "bin1",
+              "n": 33225,
+              "bad_rate_pct": 5.409,
+              "ci_low_pct": 5.17,
+              "ci_high_pct": 5.657
             },
             "safe_bin": {
               "bin": "bin0",
-              "n": 184506,
-              "bad_rate_pct": 8.073,
-              "ci_low_pct": 7.949,
-              "ci_high_pct": 8.198
+              "n": 151281,
+              "bad_rate_pct": 8.658,
+              "ci_low_pct": 8.517,
+              "ci_high_pct": 8.801
             },
-            "multiplier": 1.0,
-            "multiplier_ci_low": 0.978,
-            "multiplier_ci_high": 1.022
+            "multiplier": 0.625,
+            "multiplier_ci_low": 0.595,
+            "multiplier_ci_high": 0.655
           }
         }
       ],
@@ -3957,6 +3970,20 @@
       "missing_pct": 0.0
     },
     {
+      "variable": "REGION_RATING_CLIENT_W_CITY",
+      "dtype": "numeric",
+      "iv": 0.05373,
+      "iv_strength": "약함",
+      "missing_pct": 0.0
+    },
+    {
+      "variable": "REGION_RATING_CLIENT",
+      "dtype": "numeric",
+      "iv": 0.05062,
+      "iv_strength": "약함",
+      "missing_pct": 0.0
+    },
+    {
       "variable": "NAME_EDUCATION_TYPE",
       "dtype": "categorical",
       "iv": 0.04811,
@@ -3999,6 +4026,20 @@
       "missing_pct": 48.219
     },
     {
+      "variable": "FLAG_EMP_PHONE",
+      "dtype": "numeric",
+      "iv": 0.03262,
+      "iv_strength": "약함",
+      "missing_pct": 0.0
+    },
+    {
+      "variable": "REG_CITY_NOT_WORK_CITY",
+      "dtype": "numeric",
+      "iv": 0.03251,
+      "iv_strength": "약함",
+      "missing_pct": 0.0
+    },
+    {
       "variable": "LIVINGAREA_AVG",
       "dtype": "numeric",
       "iv": 0.03059,
@@ -4018,13 +4059,6 @@
       "iv": 0.03014,
       "iv_strength": "약함",
       "missing_pct": 50.152
-    },
-    {
-      "variable": "REGION_RATING_CLIENT_W_CITY",
-      "dtype": "numeric",
-      "iv": 0.02984,
-      "iv_strength": "약함",
-      "missing_pct": 0.0
     },
     {
       "variable": "LIVINGAREA_MODE",
@@ -4062,9 +4096,9 @@
       "missing_pct": 53.226
     },
     {
-      "variable": "REGION_RATING_CLIENT",
+      "variable": "FLAG_DOCUMENT_3",
       "dtype": "numeric",
-      "iv": 0.0279,
+      "iv": 0.02811,
       "iv_strength": "약함",
       "missing_pct": 0.0
     },
@@ -4130,6 +4164,13 @@
       "iv": 0.02391,
       "iv_strength": "약함",
       "missing_pct": 50.28
+    },
+    {
+      "variable": "REG_CITY_NOT_LIVE_CITY",
+      "dtype": "numeric",
+      "iv": 0.02333,
+      "iv_strength": "약함",
+      "missing_pct": 0.0
     },
     {
       "variable": "EMERGENCYSTATE_MODE",
@@ -4300,6 +4341,20 @@
       "missing_pct": 69.829
     },
     {
+      "variable": "LIVE_CITY_NOT_WORK_CITY",
+      "dtype": "numeric",
+      "iv": 0.0135,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
+      "variable": "FLAG_DOCUMENT_6",
+      "dtype": "numeric",
+      "iv": 0.01243,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
       "variable": "COMMONAREA_MODE",
       "dtype": "numeric",
       "iv": 0.01218,
@@ -4342,6 +4397,20 @@
       "missing_pct": 69.371
     },
     {
+      "variable": "FLAG_WORK_PHONE",
+      "dtype": "numeric",
+      "iv": 0.01001,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
+      "variable": "FLAG_PHONE",
+      "dtype": "numeric",
+      "iv": 0.00787,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
       "variable": "FLAG_OWN_CAR",
       "dtype": "categorical",
       "iv": 0.00637,
@@ -4363,9 +4432,23 @@
       "missing_pct": 0.421
     },
     {
+      "variable": "FLAG_DOCUMENT_8",
+      "dtype": "numeric",
+      "iv": 0.00102,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
       "variable": "CNT_CHILDREN",
       "dtype": "numeric",
       "iv": 0.00075,
+      "iv_strength": "없음",
+      "missing_pct": 0.0
+    },
+    {
+      "variable": "REG_REGION_NOT_WORK_REGION",
+      "dtype": "numeric",
+      "iv": 0.00063,
       "iv_strength": "없음",
       "missing_pct": 0.0
     },
@@ -4391,28 +4474,7 @@
       "missing_pct": 0.0
     },
     {
-      "variable": "FLAG_EMP_PHONE",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "FLAG_WORK_PHONE",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
       "variable": "FLAG_CONT_MOBILE",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "FLAG_PHONE",
       "dtype": "numeric",
       "iv": 0.0,
       "iv_strength": "없음",
@@ -4433,13 +4495,6 @@
       "missing_pct": 0.0
     },
     {
-      "variable": "REG_REGION_NOT_WORK_REGION",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
       "variable": "LIVE_REGION_NOT_WORK_REGION",
       "dtype": "numeric",
       "iv": 0.0,
@@ -4447,35 +4502,7 @@
       "missing_pct": 0.0
     },
     {
-      "variable": "REG_CITY_NOT_LIVE_CITY",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "REG_CITY_NOT_WORK_CITY",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "LIVE_CITY_NOT_WORK_CITY",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
       "variable": "FLAG_DOCUMENT_2",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "FLAG_DOCUMENT_3",
       "dtype": "numeric",
       "iv": 0.0,
       "iv_strength": "없음",
@@ -4496,21 +4523,7 @@
       "missing_pct": 0.0
     },
     {
-      "variable": "FLAG_DOCUMENT_6",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
       "variable": "FLAG_DOCUMENT_7",
-      "dtype": "numeric",
-      "iv": 0.0,
-      "iv_strength": "없음",
-      "missing_pct": 0.0
-    },
-    {
-      "variable": "FLAG_DOCUMENT_8",
       "dtype": "numeric",
       "iv": 0.0,
       "iv_strength": "없음",
@@ -4674,6 +4687,14 @@
         "iv": 0.13863,
         "iv_strength": "중간",
         "spearman_rho": -0.1515,
+        "opposed_direction": true
+      },
+      {
+        "hypothesis": "H4_생활안정성",
+        "variable": "unemployed_flag",
+        "iv": 0.03265,
+        "iv_strength": "약함",
+        "spearman_rho": -1.0,
         "opposed_direction": true
       },
       {

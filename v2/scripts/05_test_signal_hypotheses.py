@@ -120,15 +120,23 @@ def bin_numeric(x, y, max_bins=MAX_BINS, min_frac=MIN_FRAC):
     y_valid = y[valid_mask]
     n_valid = len(x_valid)
 
-    if n_valid == 0 or x_valid.nunique() <= 1:
+    n_unique = x_valid.nunique()
+    if n_valid == 0 or n_unique <= 1:
         bin_id = pd.Series(0, index=x_valid.index)
         edges_desc = {0: f"{x_valid.min() if n_valid else np.nan}"}
     else:
-        try:
-            qcats, edges = pd.qcut(x_valid, q=max_bins, retbins=True, duplicates="drop")
-            bin_id = pd.Series(qcats.cat.codes.values, index=x_valid.index)
-        except Exception:
-            bin_id = pd.Series(0, index=x_valid.index)
+        if n_unique <= max_bins:
+            # 저카디널리티 숫자형(예: 0/1 플래그, 소수의 정수값): qcut이 중복 경계를 드롭하며
+            # 서로 다른 값을 한 구간에 합쳐버리는 문제를 피하기 위해 값 자체를 구간으로 사용한다.
+            uniq_vals = sorted(x_valid.unique())
+            val_to_code = {v: i for i, v in enumerate(uniq_vals)}
+            bin_id = x_valid.map(val_to_code)
+        else:
+            try:
+                qcats, edges = pd.qcut(x_valid, q=max_bins, retbins=True, duplicates="drop")
+                bin_id = pd.Series(qcats.cat.codes.values, index=x_valid.index)
+            except Exception:
+                bin_id = pd.Series(0, index=x_valid.index)
 
         # 반복 병합: 구간 비중<5% 또는 한쪽 클래스가 없는 구간을 이웃과 합친다
         for _ in range(max_bins):
