@@ -2,6 +2,9 @@
 data/
 *.parquet
 
+# 검증 키트: 원본 행 단위 내보내기 파일(신청자 개인 데이터) — 집계표는 커밋 가능
+v2/verification/exports/
+
 # OS
 .DS_Store
 
