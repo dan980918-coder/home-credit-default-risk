@@ -1,0 +1,23 @@
+{
+  "total": {
+    "n": 307511,
+    "target_rate_pct": 8.073
+  },
+  "train": {
+    "n": 184506,
+    "pct_of_total": 60.0,
+    "target_rate_pct": 8.073
+  },
+  "valid": {
+    "n": 61502,
+    "pct_of_total": 20.0,
+    "target_rate_pct": 8.073
+  },
+  "holdout": {
+    "n": 61503,
+    "pct_of_total": 20.0,
+    "target_rate_pct_NOT_OPENED": "이번 단계에서 열람하지 않음 (holdout_ids.csv에 TARGET 미저장)"
+  },
+  "method": "TARGET 기준 층화추출(stratified), random_state=42",
+  "note": "application_train에 절대 날짜 컬럼이 없어 시간순(time-based) 분할이 불가능하므로 무작위 층화추출을 사용했다. 최종 평가(holdout) 세트는 이번 단계에서 TARGET을 절대 열어보지 않는다."
+}
