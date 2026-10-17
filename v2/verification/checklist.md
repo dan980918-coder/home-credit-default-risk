@@ -1,6 +1,6 @@
 # 검증 체크리스트
 
-연체 위험 기반 대출 승인 기준 설계 (Loan Approval Risk Scoring) — v2 재분석 1~3단계 직접 검증용
+연체 위험 기반 대출 승인 기준 설계 (Loan Approval Risk Scoring) — v2 재분석 1~4단계 직접 검증용
 
 > "실제값", "통과", "메모" 칸은 비워 두었다. 직접 계산·대조한 뒤 채운다. 추적용 신청자 3명과 이력 없는 신청자 1명은 아래 "추적용 신청자" 절에 고정돼 있다(seed=20251017).
 
@@ -40,3 +40,9 @@
 | 14 | 최소 구간 크기 | `hypothesis_results.json`의 5개 핵심변수(late_payment_ratio, annuity_to_income, reject_ratio, employment_days, credit_to_goods) 각각의 `bins` 배열에서 `pct_of_total` 값이 모두 5.0 이상인지 확인(결측 구간 제외하지 않고 전부) | 모든 구간 pct_of_total ≥ 5.0 이어야 함(구간화 규칙, `05_test_signal_hypotheses.py` 141~160행의 병합 로직) | | | |
 | **E. 원칙 준수** |||||||
 | 15 | 제외 변수 | `v2/docs/03_features.md`와 `v2/docs/feature_build_log.json`의 `excluded_always`에 `CODE_GENDER`, `OBS_30_CNT_SOCIAL_CIRCLE`, `DEF_30_CNT_SOCIAL_CIRCLE`, `OBS_60_CNT_SOCIAL_CIRCLE`, `DEF_60_CNT_SOCIAL_CIRCLE` 5개가 들어 있는지, `hypothesis_features.parquet`의 컬럼 목록에 이 5개가 없는지 확인. 시간창 계산은 `04_build_hypothesis_features.py`의 128행(`DAYS_CREDIT >= -365`), 147~148행(`DAYS_INSTALMENT >= -365`) 등에서 `>=` 비교가 0 이하(음수 또는 0) 값만 포함하는 조건인지 코드로 직접 확인 | `feature_build_log.json`의 `excluded_always`에 5개 전부 명시, parquet 컬럼에 없음. 시간창 조건은 전부 `-365` 이상 즉 과거~최근 365일(0 이하)만 포함 | | | |
+| **F. 4단계 최종평가** |||||||
+| 16 | 승인율 80% 연체율 | `v2/data/predictions/test_scores.parquet`을 CSV로 내보낸 뒤(`python3 -c "import pandas as pd; pd.read_parquet('v2/data/predictions/test_scores.parquet').to_csv('test_scores.csv', index=False)"`), 스프레드시트에서 `new_score` 기준 상위 80%(하위 20% 거절)를 승인으로 두고, 그 승인군의 TARGET 평균을 계산 | 4.610% (출처: `07_final_evaluation.md` §2-1, `final_evaluation_results.json`의 `h6.table`에서 `approval_rate=0.8`) | | | |
+| 17 | 스왑셋 네 그룹 | 같은 CSV에서 `champion_score` 상위 80% 임계값과 `new_score` 상위 80% 임계값을 각각 구하고, 각 신청자가 (현행승인/거절) × (새점수승인/거절) 중 어디에 속하는지 세어 네 그룹 인원을 센다 | 둘다승인 45,369명 / 둘다거절 8,468명 / swap-out(현행승인·새점수거절) 3,833명 / swap-in(현행거절·새점수승인) 3,833명 (출처: `07_final_evaluation.md` §2-3) | | | |
+| 18 | 이익 지수 재계산 | 같은 CSV에서 r=20%, LGD=60% 조합의 승인율 80% 지점 이익을 직접 계산: 이익=Σ(승인&TARGET=0) 0.2×AMT_CREDIT − Σ(승인&TARGET=1) 0.6×AMT_CREDIT. 이를 "전원승인 이익"(모든 행 기준 같은 공식)으로 나누고 100을 곱해 지수로 환산. champion_score와 new_score 각각 계산 | champion 이익지수 ≈ 94.49 / new_score 이익지수 ≈ 96.43 (주의: 이 수치는 `07_final_evaluation.md`의 H7 표에 있는 "이익 최대 지점"의 지수가 아니라 — 그 표는 각 모델의 최적 승인율(각각 96%/95%)에서의 값이다 — 승인율을 80%로 고정했을 때의 값이므로 별도로 계산된 참고값이다) | | | |
+| 19 | 점수표 확인 | (스코어카드가 최종 선택된 경우만 해당) `06_scorecard_points.md`의 배점표로 신청자 1명(예: SK_ID_CURR=264637)의 점수를 직접 합산해 문서의 계산 예시(최종 점수 543.56)와 대조 | 543.56점 (출처: `06_scorecard_points.md` "신청자 1명 점수 계산 예시"). **참고**: 4단계 선택 규칙 적용 결과 최종 모델은 스코어카드가 아니라 **LightGBM**이었다(`06_modeling.md` §8) — 이 항목은 스코어카드 후보 자체의 점수표 정합성만 검증하는 것이며, 최종평가에 쓰인 모델과는 별개다. | | | |
+| 20 | 최종평가 미사용 확인 | `grep -n "holdout" v2/scripts/07_models.py` 실행 | `07_models.py`에서 `holdout`이 나오는 줄은 전부 주석/문구(예: "holdout_ids.csv는 이 스크립트에서 전혀 읽지 않는다")뿐이어야 하며, `pd.read_csv`나 `open(...)`처럼 `holdout_ids.csv` 파일을 실제로 여는 코드는 **없어야** 한다. `holdout_ids.csv`를 실제로 읽는 코드는 `08_final_evaluation.py`에만 있어야 정상 | | | |
