@@ -204,7 +204,8 @@ results = {
 # -----------------------------------------------------------------
 def approve_mask(score, approval_rate):
     """score: 높을수록 안전. approval_rate 비율만큼 상위(안전)를 승인."""
-    threshold = np.quantile(score, 1 - approval_rate)
+    q = np.clip(1 - approval_rate, 0.0, 1.0)  # 부동소수점 오차(예: arange 끝값)로 [0,1] 밖으로 나가는 것 방지
+    threshold = np.quantile(score, q)
     return score >= threshold
 
 

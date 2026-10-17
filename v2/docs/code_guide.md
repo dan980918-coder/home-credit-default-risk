@@ -184,6 +184,96 @@ def compute_iv_table(bin_series, y, order_map=None):
 
 ---
 
+## 06_h2_followup.py — H2 기각 원인 탐색
+
+* **목적**: H2(상환부담)가 기각된 이유로 "기존 심사가 이미 부담이 큰 신청자를 걸러냈다"는 가설을 정황 증거로 탐색한다(단정하지 않음).
+* **입력**: `v2/data/features/hypothesis_features.parquet`, `v2/data/splits/train_ids.csv`
+* **출력**: `v2/docs/h2_followup_results.json`, `v2/docs/figures/h2_*.png`(3개)
+
+**처리 순서**:
+1. (44~50행) 학습 세트만 merge.
+2. (53~70행) `annuity_to_income`의 백분위(50/90/95/99/99.9)·최댓값·히스토그램 2종(전체/상위 0.5% 제외 확대).
+3. (77~105행) `credit_to_annuity` 10분위별 `ext_source_mean` 평균과 연체율, 상관계수 계산.
+4. (112~145행) `ext_source_mean` 5분위 안에서 `credit_to_annuity` 5분위별 연체율과 Spearman 상관(분위별로 분리 계산).
+
+**주요 판단**: 모든 관찰을 "정황 증거"로만 서술하고 인과를 단정하지 않았다 — annuity_to_income 분포에 하드 절단이 없다는 점(관찰1)과 ext_source 통제 시 credit_to_annuity의 역방향 신호가 약해진다는 점(관찰3)을 근거로 "부분적으로 부합"이라는 조심스러운 해석을 달았다.
+
+**실행 중 발견·수정한 버그**: 없음.
+
+---
+
+## 07_models.py — 모델링 (Champion / 스코어카드 / LightGBM)
+
+* **목적**: 학습 세트로 학습, 검증 세트로 변수·모델·하이퍼파라미터를 선택한다. 최종평가 세트는 전혀 읽지 않는다(체크리스트 20번 검증 대상).
+* **입력**: `hypothesis_features.parquet`, `train_ids.csv`, `valid_ids.csv`
+* **출력**: `v2/docs/modeling_results.json`, `v2/data/models/*.pkl`(커밋 안 함 — 08번 스크립트가 재사용)
+
+**처리 순서**:
+1. (44~56행) 학습/검증 merge. 제외 변수(CODE_GENDER+SOCIAL_CIRCLE 4개)가 특징 테이블에 없는지 assert로 확인(50~52행). EXT_SOURCE 결측 플래그 3개 생성.
+2. (79~98행) 변수 세트 정의: 기본세트(나이 제외 36개/나이 포함 37개), 참고용 전체세트(133개).
+3. (115~179행) `bin_numeric_fit/transform`: 3단계와 동일한 분위수+5%병합 알고리즘을 "학습(fit)"과 "적용(transform)"으로 분리 재구현 — 검증·최종평가 세트는 **학습 세트에서 학습한 경계**로만 변환해야 하기 때문(182~226행의 `bin_categorical_fit/transform`도 동일 원칙).
+4. (228~245행) 기본세트 전체 변수에 대해 학습세트 기준 구간화+WOE+IV 계산.
+5. (249~281행) 변수 선택 1단계(IV≥0.02) 후 2단계(WOE 상관 |r|>0.7, 반복적으로 최대상관쌍의 저IV변수 제거).
+6. (288~303행) Champion: EXT_SOURCE_1/2/3+결측플래그 6개, 학습세트 중앙값 대체, 로지스틱회귀.
+7. (306~332행) `build_scorecard()`: WOE 변환 후 C∈{0.01,0.1,1} 그리드를 검증 AUC로 선택.
+8. (349~383행) `build_lightgbm()`: num_leaves×learning_rate×min_child_samples 12조합 그리드, 검증세트 early stopping.
+9. (398~415행) 참고용 전체세트 LightGBM 1회 학습(그리드 없이 고정 하이퍼파라미터).
+10. (418~440행) 선택 규칙 적용: ①LightGBM−스코어카드 AUC≥0.01 비교 ②선택된 모델의 나이 유무 AUC 차이<0.005 비교.
+11. (444~461행) 변수 기여도: 스코어카드면 계수, LightGBM이면 SHAP(`shap.TreeExplainer`, 학습세트 2만명 표본).
+12. (465~486행) 점수표 변환: `Factor=PDO/ln2`, `Offset=600-Factor·ln(50)`, `base_points=Offset-Factor·intercept`, `bin_points=-Factor·β·WOE`.
+
+**핵심 쿼리·코드 발췌** (WOE→점수 변환 공식, 475~486행):
+```python
+FACTOR = PDO / np.log(2)
+OFFSET = BASE_SCORE - FACTOR * np.log(BASE_ODDS_GOOD_TO_BAD)
+base_points = OFFSET - FACTOR * sc_intercept
+bin_points = {b: round(float(-FACTOR * beta * woe), 2) for b, woe in woe_map.items()}
+```
+TARGET=1(연체)을 예측하는 로지스틱회귀에서 `ln(오즈_정상) = -(intercept+Σβ·WOE)`이므로, 표준 스코어카드 공식(`Score=Offset+Factor·ln(오즈_정상)`)에 대입하면 부호가 반전된다 — 이 반전을 명시적으로 유도해 코드에 반영했다(06_scorecard_points.md에 유도 과정 전문 수록).
+
+**주요 판단**:
+* fit/transform을 분리한 것은 검증·최종평가 데이터가 "학습 세트가 정한 규칙"으로만 평가받아야 한다는 원칙을 코드로 강제하기 위함이다(데이터 누수 방지).
+* 선택 규칙(모델선택 0.01, 나이판정 0.005)은 전부 코드 상수로 고정하고 결과를 본 뒤 바꾸지 않았다.
+* LightGBM은 원값(WOE 아님)을 그대로 입력했다 — 트리 모델은 단조 변환에 불변이므로 WOE 변환이 불필요하다.
+
+**실행 중 발견·수정한 버그**:
+**모델 아티팩트 파일명 불일치**: 모델을 저장하는 루프에서 파일명으로 쓴 축약형 키(`lgbm_with_age`)와 `selection.json`에 기록한 `final_label`(`build_lightgbm()` 내부에서 지은 `lightgbm_with_age`, "lgbm"이 아니라 "lightgbm" 전체 단어)이 서로 달라, 08번 스크립트가 `lightgbm_no_age_model.pkl`을 찾다가 `FileNotFoundError`로 즉시 실패했다. 증상은 08 실행 시 첫 로드 단계에서 바로 터지는 명확한 에러라 원인 파악은 빨랐다. 수정: 저장 루프가 임의의 축약 키 대신 `result["label"]`(각 결과 딕셔너리 자체가 가진 label)을 그대로 파일명에 쓰도록 변경(539~541행) — 두 군데서 같은 문자열을 따로 짓지 않고 한 출처만 쓰도록 통일했다.
+
+---
+
+## 08_final_evaluation.py — 최종 평가
+
+* **목적**: 07에서 확정된 모델(선택 규칙 적용 결과)을 최종평가(holdout) 세트에 딱 한 번 적용해 H6(스왑셋)·H7(수익)을 검증한다.
+* **입력**: `hypothesis_features.parquet`, `holdout_ids.csv`, `data/raw/application_train.csv`(holdout의 TARGET을 여기서 처음 연다), `v2/data/models/*.pkl`
+* **출력**: `v2/docs/final_evaluation_results.json`, `v2/docs/figures/{tradeoff_champion_vs_challenger,swap_set_80,profit_scenarios}.png`, `v2/data/predictions/test_scores.parquet`(커밋 안 함)
+
+**처리 순서**:
+1. (44~52행) `holdout_ids.csv`(SK_ID_CURR만)에 원본 CSV의 TARGET을 **처음으로** merge — 이 스크립트가 최종평가 TARGET을 여는 유일한 지점이다.
+2. (69~81행) 07에서 저장한 `selection.json`으로 어떤 모델이 최종인지 확인 후 해당 `.pkl`만 로드.
+3. (103~141행) 점수 계산: Champion과 새 점수 모두 "P(정상상환) = 1-P(연체)"로 통일(높을수록 안전). 스코어카드가 선택됐다면 포인트 스케일도 별도 계산.
+4. (152~165행) AUC/KS/Gini와 기저 연체율.
+5. (170~220행) H6: `approve_mask()`(분위수 기반 상위 X% 승인)로 승인율 70/80/90%의 승인군 연체율 계산, 같은 연체율 기준 승인율 증가폭 탐색(1%p 그리드 스캔), 1,000회 복원추출 부트스트랩으로 95% CI, 승인율 80% 스왑셋 4그룹.
+6. (263~300행) H7: r×LGD 6개 조합 각각에 대해 승인율 50~100%(1%p) 이익곡선을 그려 최대 지점 탐색, 본전연체율(`r/(r+LGD)`) 계산.
+7. (303~365행) 그림 3개 생성.
+8. (368~372행) 예측 결과 parquet 저장(SK_ID_CURR, TARGET, AMT_CREDIT, champion_score, new_score).
+
+**핵심 쿼리·코드 발췌** (승인율 기준 승인 마스크, 부동소수점 안전 처리):
+```python
+def approve_mask(score, approval_rate):
+    q = np.clip(1 - approval_rate, 0.0, 1.0)
+    threshold = np.quantile(score, q)
+    return score >= threshold
+```
+
+**주요 판단**:
+* champion_score와 new_score를 "높을수록 안전"으로 통일해 스코어카드(점수)든 LightGBM(확률)이든 동일한 `approve_mask()` 로직을 재사용할 수 있게 했다.
+* H7의 "전원승인 이익=100" 기준값은 모델과 무관하게 r/LGD 조합마다 고정된 하나의 값(승인율 100%는 두 모델이 같은 집단을 승인하므로 동일)이라, 두 모델의 이익 지수를 같은 분모로 정규화해 직접 비교할 수 있다.
+
+**실행 중 발견·수정한 버그**:
+**근사치 1.0 분위수 계산 오류**: 승인율 그리드를 `np.arange(0.50, 1.0001, 0.01)`로 만들었는데 부동소수점 누적오차로 마지막 값이 `1.0000000000000004`처럼 1을 미세하게 초과해, `np.quantile(score, 1-approval_rate)`에서 `1-approval_rate`가 아주 작은 음수가 되어 "Quantiles must be in the range [0, 1]" 오류로 즉시 중단됐다. 증상은 H6 1·2번 계산까지는 정상 출력되다가 부트스트랩 루프 진입 직전에 터지는 형태였다. 원인은 `np.arange`의 부동소수점 끝값 처리 특성. 수정: `approve_mask()`에서 분위수 인자를 `np.clip(..., 0.0, 1.0)`으로 강제 범위 제한(207행).
+
+---
+
 ## SQL 하이라이트 후보
 
 README에 쓸 만한 쿼리 2개를 선정했다. 기준: 집계+조건부계산+윈도우함수(또는 CTE 다단 구성)를 함께 쓴 쿼리.
