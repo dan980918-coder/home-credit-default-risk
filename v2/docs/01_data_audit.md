@@ -14,8 +14,8 @@
 
 | 심각도 | 문제 | 분석에 미치는 영향 | 처리 제안 |
 |---|---|---|---|
-| 상 | bureau_balance의 54.9%(942,074/1,716,428건)가 bureau와 연결되지 않는 신용(SK_ID_BUREAU)이다 | bureau_balance 단독으로는 신청자 단위 월별 이력을 절반밖에 못 구성 — bureau 기준으로 집계한 파생변수는 그만큼 커버리지가 낮음 | bureau_balance를 쓸 때는 orphan 비율을 명시하고, bureau 기준 집계와 bureau_balance 기준 집계의 모집단이 다름을 구분 |
-| 상 | credit_card_balance의 94.4%(1,577,279/1,670,214건)가 previous_application과 연결되지 않는 신청(SK_ID_PREV)이다 | credit_card_balance를 previous_application에 조인하면 거의 모든 신용카드 이력이 유실됨 | credit_card_balance는 SK_ID_CURR로 직접 연결해 쓰고, previous_application 조인 경로는 쓰지 않는다 |
+| 상 | **[2단계에서 정정]** bureau의 54.9%(942,074/1,716,428건)는 bureau_balance 월별 기록이 전혀 없다. 반면 bureau_balance 자체의 '진짜 고아'(bureau에 SK_ID_BUREAU가 없는 행) 비율은 11.4%(3,120,184/27,299,925건)로 서로 다른 수치다 — 최초 보고서는 이 둘을 "bureau_balance의 54.9%"로 한 문장에 뭉뚱그려 분모 주체가 뒤섞여 있었다 | bureau_balance 단독으로는 신청자 단위 월별 이력을 절반밖에 못 구성 — bureau 기준으로 집계한 파생변수는 그만큼 커버리지가 낮음 | bureau_balance를 쓸 때는 두 비율(bureau 쪽 미보유 54.9% / bureau_balance 쪽 진짜고아 11.4%)을 분리해서 명시 |
+| 상 | **[2단계에서 정정]** previous_application의 94.4%(1,577,279/1,670,214건)는 카드 잔액 기록이 없다(상품 자체가 카드가 아니므로 당연함). 반면 credit_card_balance 자체의 '진짜 고아'(previous_application에 SK_ID_PREV가 없는 행) 비율은 28.2%(1,082,816/3,840,312건)다 — 최초 보고서는 이를 "credit_card_balance의 94.4%가 연결되지 않는다"로 잘못 표기했다 | credit_card_balance를 previous_application에 조인하면 진짜 고아 28.2%만큼 유실되고(94.4%가 아님), SK_ID_CURR는 100% application에 존재함 | credit_card_balance는 (진짜 고아 28.2%를 제외한 뒤) SK_ID_CURR로 신청자에 직접 연결해 쓴다 |
 | 상 | 주택 건물 정보 47개 컬럼 중 다수가 결측률 50~70%이며, AVG/MODE/MEDI 세 버전이 동일 정보를 반복 기록 | 결측 보완(imputation) 전략 없이 쓰면 분석 대상이 신청자의 절반 이하로 줄어듦; 3개 버전 중복 사용 시 다중공선성 위험 | 결측 처리 전략을 별도로 정하고, AVG/MODE/MEDI 중 하나만 대표로 선택하거나 결측 자체를 "정보 없음" 신호로 활용 |
 | 중 | DAYS_EMPLOYED에 365243(약 1000년)이라는 특수값이 55,374건(18.0%) 있다 | 그대로 쓰면 "1000년간 재직"이라는 비현실적 값이 평균·분포를 왜곡함 | 365243을 결측(NaN) 또는 별도 플래그("무직/연금수급자 특수값")로 치환 |
 | 중 | previous_application의 DAYS_FIRST_DRAWING/FIRST_DUE/LAST_DUE/TERMINATION에도 365243이 다수(최대 93,864~934,444건) 존재 | 날짜 차이 계산 시 극단값으로 왜곡 | 동일하게 365243을 결측으로 치환 후 사용 |
@@ -93,13 +93,44 @@ graph LR
 | credit_card_balance → previous_application | 3,840,312 | 1,082,816 | 28.20% | 1,670,214 | **1,577,279** | **94.44%** |
 
 * "bureau → application_train" 고아(14.63%)는 application_test의 신청자이기 때문일 가능성이 높다. 실제로 bureau와 previous_application을 **train+test 합친 집합**과 비교하면 고아 행이 **0건**이다(아래 참고). 즉 bureau/previous_application은 train/test 신청자를 모두 포괄하도록 구성되어 있다.
-* bureau_balance의 54.89% 부모 미매칭은 bureau 쪽 신용 중 절반 이상이 월별 상태 기록(bureau_balance)을 갖지 않는다는 뜻이다. 데이터 오류가 아니라 **원천적으로 월별 상태를 제공하지 않는 신용 유형이 많다**고 해석하는 것이 합리적이다.
-* credit_card_balance의 94.44% 부모 미매칭은 Home Credit 신용카드를 발급받은 신청자가 전체 과거 신청의 극히 일부(약 5.6%)뿐임을 뜻한다. 신용카드 보유 자체가 드문 사건이다.
+* **(정정) "bureau_balance → bureau" 행의 "부모 미매칭 54.89%"는 bureau_balance가 아니라 bureau 쪽 수치다.** 즉 "**bureau** 신용 1,716,428건 중 54.89%(942,074건)가 bureau_balance 월별 기록을 전혀 갖지 않는다"는 뜻이다. bureau_balance 자체의 고아 비율(진짜 고아, bureau_balance 행 기준)은 같은 줄의 "자식→부모 고아 비율" 11.43%다. 데이터 오류가 아니라 **원천적으로 월별 상태를 제공하지 않는 신용 유형이 많다**고 해석하는 것이 합리적이다.
+* **(정정) "credit_card_balance → previous_application" 행의 "부모 미매칭 94.44%"도 credit_card_balance가 아니라 previous_application 쪽 수치다.** 즉 "**previous_application** 신청 1,670,214건 중 94.44%(1,577,279건)가 카드 잔액 기록을 전혀 갖지 않는다"는 뜻이며, Home Credit 신용카드를 발급받은 신청자가 전체 과거 신청의 극히 일부(약 5.6%)뿐임을 의미한다. credit_card_balance 자체의 고아 비율(진짜 고아, credit_card_balance 행 기준)은 같은 줄의 "자식→부모 고아 비율" **28.20%**다 — 즉 신용카드 이력의 28.2%만 previous_application과 연결되지 않으며, 나머지 71.8%는 정상 연결된다.
+
+### 2-3-1. previous_application → credit_card_balance, 상품 종류(NAME_CONTRACT_TYPE)별 분해
+
+| NAME_CONTRACT_TYPE | previous_application 건수 | 카드 잔액 기록 없는 건수 | 비율 |
+|---|---|---|---|
+| Cash loans | 747,553 | 747,553 | 100.0% |
+| Consumer loans | 729,151 | 729,151 | 100.0% |
+| Revolving loans | 193,164 | 100,229 | 51.89% |
+| XNA | 346 | 346 | 100.0% |
+
+Revolving loans(리볼빙, 신용카드성 상품)만 카드 잔액 기록과 매칭될 수 있고 그중에서도 51.9%만 실제 기록이 있다. Cash loans/Consumer loans는 정의상 카드 상품이 아니므로 카드 잔액 기록이 없는 것이 100% 정상이다 — "previous_application의 94.4%가 카드 기록이 없다"는 수치는 상품 구성상 당연한 결과이지 데이터 문제가 아니다.
+
+### 2-3-2. credit_card_balance의 SK_ID_CURR 연결 가능성
+
+| 확인 | 건수 | 비율 |
+|---|---|---|
+| credit_card_balance 중 SK_ID_CURR가 application_train/test에 존재 | 3,840,312 / 3,840,312 | **100.0%** |
+| POS_CASH_balance 중 SK_ID_CURR가 application_train/test에 존재 | 10,001,358 / 10,001,358 | 100.0% |
+| installments_payments 중 SK_ID_CURR가 application_train/test에 존재 | 13,605,401 / 13,605,401 | 100.0% |
+
+credit_card_balance/POS_CASH_balance/installments_payments는 모두 **자체적으로 SK_ID_CURR 컬럼을 보유**하며, 그 값이 100% application_train/test에 존재한다. 즉 이 세 테이블은 previous_application을 거치지 않고도 신청자에 직접 연결할 수 있다 — 아래 "연결 경로 원칙"의 근거다.
 
 | 비교 | 고아 행 | 전체 행 | 비율 |
 |---|---|---|---|
 | bureau vs (application_train ∪ application_test) | 0 | 1,716,428 | 0.0% |
 | previous_application vs (application_train ∪ application_test) | 0 | 1,670,214 | 0.0% |
+
+### 2-3-3. 연결 경로 원칙 (3단계 변수 생성에 적용)
+
+하위 테이블을 신청자 단위로 집계할 때는 다음 원칙을 따른다:
+
+1. 먼저 "진짜 고아"(자식 테이블의 키가 상위 테이블에 없는 행 — 위 "자식→부모 고아" 비율)를 제외한다.
+2. 그 다음 **각 테이블이 자체적으로 보유한 SK_ID_CURR**로 신청자에 직접 연결한다 — installments_payments/POS_CASH_balance/credit_card_balance는 모두 SK_ID_CURR을 자체 보유하므로 previous_application을 거칠 필요가 없다(2-3-2 참고).
+3. bureau_balance만 SK_ID_CURR이 없으므로, 진짜 고아를 제외한 뒤 bureau를 거쳐 SK_ID_CURR을 얻는다.
+
+이 원칙에 따르면 credit_card_balance는 previous_application 조인 시 유실되던 94.4%가 아니라, 진짜 고아 28.2%만 제외하고 71.8%를 살려 쓸 수 있다 — 이번 재분석(3단계)의 변수 생성은 이 원칙을 적용했다.
 
 ---
 
@@ -255,6 +286,35 @@ previous_application은 XNA(정보없음)·XAP(해당없음)가 거의 모든 �
 
 ```bash
 python3 -I v2/scripts/01_data_audit.py
+python3 -I v2/scripts/03a_orphan_recheck.py
 ```
 
-DuckDB로 8개 원본 CSV를 직접 스캔하며, 결과는 `v2/docs/audit_results.json`과 `v2/docs/figures/*.png`에 저장된다.
+DuckDB로 8개 원본 CSV를 직접 스캔하며, 결과는 `v2/docs/audit_results.json`, `v2/docs/orphan_recheck_results.json`과 `v2/docs/figures/*.png`에 저장된다.
+
+---
+
+## 수정 기록 (3단계에서 재검증 후 반영)
+
+### 무엇이 틀렸는가
+
+최초 보고서의 "발견된 문제 요약" 표에서 아래 두 항목의 **주어(어느 테이블의 비율인지)가 뒤바뀌어 있었다**:
+
+1. ~~"bureau_balance의 54.9%(942,074/1,716,428건)가 bureau와 연결되지 않는다"~~
+   → 실제로는 **bureau의 54.9%**(942,074/1,716,428, bureau 전체 행 기준)가 bureau_balance 월별 기록을 전혀 갖지 않는다는 뜻이었다. bureau_balance 자체의 진짜 고아 비율은 전혀 다른 수치인 **11.4%**(3,120,184/27,299,925, bureau_balance 전체 행 기준)다.
+2. ~~"credit_card_balance의 94.4%(1,577,279/1,670,214건)가 previous_application과 연결되지 않는다"~~
+   → 실제로는 **previous_application의 94.4%**(1,577,279/1,670,214, previous_application 전체 행 기준)가 카드 잔액 기록을 전혀 갖지 않는다는 뜻이었다. credit_card_balance 자체의 진짜 고아 비율은 전혀 다른 수치인 **28.2%**(1,082,816/3,840,312, credit_card_balance 전체 행 기준)다.
+
+### 왜 틀렸는가
+
+최초 보고서 작성 시 "부모 미매칭 비율"(부모 테이블의 키 중 자식 테이블에 전혀 등장하지 않는 비율 — 분자·분모 모두 **부모** 테이블 기준)을 상단 요약 문장으로 옮기면서, 문장의 주어를 분모가 속한 **부모** 테이블이 아니라 **자식** 테이블(bureau_balance, credit_card_balance) 이름으로 잘못 적었다. 2-3절의 상세 표 자체(자식→부모 고아 11.43%/28.20%, 부모 미매칭 54.89%/94.44%)는 처음부터 두 방향 모두 올바르게 계산되어 있었고, 틀린 것은 이를 산문으로 요약하며 분모의 주체를 혼동한 서술뿐이었다. `v2/scripts/03a_orphan_recheck.py`로 (a)/(b)/(c) 세 가지 지표를 명칭을 명시해 재계산하여 교차 검증했다.
+
+### 올바른 해석과 처리 방침
+
+| 관계 | (a) 상위 테이블 중 하위 기록 없음 | (b) 하위 테이블 중 진짜 고아 | (c) SK_ID_CURR 연결 가능 |
+|---|---|---|---|
+| bureau ↔ bureau_balance | bureau의 54.89%(942,074/1,716,428) | bureau_balance의 11.43%(3,120,184/27,299,925) | 해당없음(bureau_balance는 SK_ID_CURR 미보유) |
+| previous_application ↔ credit_card_balance | previous_application의 94.44%(1,577,279/1,670,214) — 상품별로는 Cash/Consumer 100%, Revolving 51.89% | credit_card_balance의 28.20%(1,082,816/3,840,312) | credit_card_balance의 100.0%(3,840,312/3,840,312) |
+| previous_application ↔ POS_CASH_balance | previous_application의 46.18%(771,311/1,670,214) | POS_CASH_balance의 3.41%(340,561/10,001,358) | POS_CASH_balance의 100.0% |
+| previous_application ↔ installments_payments | previous_application의 42.59%(711,309/1,670,214) | installments_payments의 9.19%(1,250,826/13,605,401) | installments_payments의 100.0% |
+
+**처리 방침**: 하위 테이블(bureau_balance/POS_CASH_balance/installments_payments/credit_card_balance)을 신청자 단위로 집계할 때는 (b) 진짜 고아만 제외하고, (c)에서 확인했듯 각 테이블이 자체 보유한 SK_ID_CURR로 직접 신청자에 연결한다(2-3-3절 "연결 경로 원칙" 참고). (a) 수치는 "상위 테이블(계약) 대비 하위 이력 보유율"로서 그 자체로 유의미하지만, 그것을 하위 테이블의 "고아 비율"로 읽어서는 안 된다는 점이 이번 수정의 핵심이다. 3단계 변수 생성(`v2/scripts/04_build_hypothesis_features.py`)은 이 수정된 방침을 그대로 적용했다.
